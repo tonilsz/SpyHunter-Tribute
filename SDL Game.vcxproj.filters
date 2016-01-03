@@ -19,9 +19,6 @@
     <ClCompile Include="Main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Log.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -48,6 +45,27 @@
     </ClCompile>
     <ClCompile Include="ModuleRoad.cpp">
       <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadLine.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadSegment.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadLoop.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCars.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleDriver.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCollision.cpp">
+      <Filter>CoreModules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +119,27 @@
     </ClInclude>
     <ClInclude Include="ModuleRoad.h">
       <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.cpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadLine.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadSegment.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadLoop.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleCars.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleDriver.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleCollision.h">
+      <Filter>CoreModules</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

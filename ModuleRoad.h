@@ -4,35 +4,44 @@
 #include "Module.h"
 #include "Animation.h"
 #include "Globals.h"
+#include "RoadLoop.h"
+
+#include <vector>
+using namespace std;
+
+enum LOOP_TYPE
+{
+	LOOP_1,
+	LOOP_2
+
+};
 
 struct SDL_Texture;
 
-class ModuleSceneKen : public Module
+#define LOOP1 vector<SEGMENT_TYPE>{ SEGMENT_FAT_A, SEGMENT_FAT_A, SEGMENT_FAT_A}
+
+class ModuleRoad : public Module
 {
 public:
-	ModuleSceneKen( bool start_enabled = true);
-	~ModuleSceneKen();
+	ModuleRoad(bool start_enabled = true);
+	~ModuleRoad();
 
 	bool Start();
+	bool Resume();
 	update_status Update();
-	bool CleanUp();
+	bool Stop();
+	void AddLine();
 
-public:
-	
 	SDL_Texture* graphics = nullptr;
-	SDL_Rect ground;
-	SDL_Rect background;
-	SDL_Rect background_ship;
-	SDL_Rect mooring_f;
-	SDL_Rect mooring_b;
-	Animation flag;
-	Animation girl;
-	Animation boat;
-	Animation pair;
-	Animation green;
-	Animation blue;
-	Animation brown;
-	Animation pink;
+	int pos_loop;
+	int pos_segment;
+	int pos_line;
+	vector<RoadLoop*> road;
+	list<RoadLine*> screen;
+
+private:
+	void GenerateLine();
+
 };
 
 #endif // __MODULESCENEKEN_H__

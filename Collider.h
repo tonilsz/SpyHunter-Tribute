@@ -6,46 +6,57 @@
 
 enum COLLIDER_TYPE
 {
-	COLLIDER_NONE,
-	COLLIDER_PLAYER,
-	COLLIDER_CAR,
-	COLLIDER_MAX
+	COL_NONE = -1,
+	COL_CAR,
+	COL_PLAYER,
+	COL_TRUCK,
+	COL_ROAD_LORD,
+	COL_MAD_BOMBER,
+	COL_OIL,
+	COL_SPRAY,
+	COL_BULLET,
+	COL_BULLET_ENEMY,
+	COL_ROCKET,
+	COL_BOMB,
+	COL_ROAD_OUT,
+	COL_ROAD_BORDER,
+	COL_PUDDLE,
+	COL_MAX
 };
 
 enum COLISION_STATE
 {
-	COLISION_START,
-	COLISION_DURING,
-	COLISION_END
+	COL_START,
+	COL_DURING,
+	COL_END
 };
 
-struct Collider
+class Collider
 {
-	int id;
+public:
 	SDL_Rect rect;
-	bool enabled;
+	bool to_delete;
 	COLLIDER_TYPE type;
 	Module* callback;
-	bool isCollising;
 
-	Collider(){}
-
-	Collider(int id, SDL_Rect rectangle, COLLIDER_TYPE type, Module* callback = NULL) :
-		id(id),
+	bool isCollising; Collider::Collider(SDL_Rect rectangle, COLLIDER_TYPE type, Module* callback = NULL) :
 		rect(rectangle),
 		type(type),
 		callback(callback),
-		enabled(true),
+		to_delete(false),
 		isCollising(false)
 	{}
 
-	void SetPos(fPoint pos)
+	void Collider::SetPos(fPoint pos)
 	{
 		rect.x = pos.x;
 		rect.y = pos.y;
 	}
 
-	bool CheckCollision(SDL_Rect r) const;
+	bool Collider::CheckCollision(SDL_Rect r) const
+	{
+		return SDL_HasIntersection(&rect, &r);
+	}
 };
 
 #endif // __COLLIDER_H__

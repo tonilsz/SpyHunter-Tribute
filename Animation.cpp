@@ -1,4 +1,10 @@
-#include "Animation.h"
+/*#include "Animation.h"
+
+#include <vector>
+
+struct SDL_Rect;
+
+using namespace std;
 
 	Animation::Animation() : frames(), speed(1.0f), current_frame(0.0f)
 	{}
@@ -24,3 +30,4 @@
 			frame = 0;
 		current_frame = frame;
 	}
+	*/

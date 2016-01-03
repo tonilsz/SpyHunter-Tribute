@@ -1,5 +1,5 @@
-#ifndef __APPLICATION_CPP__
-#define __APPLICATION_CPP__
+#ifndef __APPLICATION_H__
+#define __APPLICATION_H__
 
 #include<list>
 #include "Globals.h"
@@ -11,8 +11,8 @@ class ModuleTextures;
 class ModuleInput;
 class ModuleAudio;
 class ModulePlayer;
-class ModuleCar;
 class ModuleRoad;
+class ModuleDriver;
 
 class Application
 {
@@ -32,9 +32,9 @@ public:
 	ModuleInput* input;
 	ModuleAudio* audio;
 	ModulePlayer* player;
-	ModuleParticules* particules;
-	ModuleCar* car;
-	ModuleCollision* masks;
+	ModuleRoad* road;
+	ModuleDriver* driver;
+	//ModuleCollision* masks;
 
 private:
 
@@ -44,4 +44,4 @@ private:
 
 extern Application* App;
 
-#endif // __APPLICATION_CPP__
+#endif // __APPLICATION_H__

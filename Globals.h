@@ -35,16 +35,13 @@ enum update_status
 	 }
 
 // Configuration -----------
-#define ROAD_TILE_WIDTH 32
-#define ROAD_TILE_HEIGHT 64
-#define STILE_WIDTH 32
-#define STILE_HEIGHT 32
-#define MTILE_WIDTH 64
-#define MTILE_HEIGHT 64
-#define LTILE_WIDTH 96
-#define LTILE_HEIGHT 96
-#define SCREEN_WIDTH 13 * ROAD_TILE_WIDTH
-#define SCREEN_HEIGHT 7.5 * ROAD_TILE_HEIGHT
+#define RTILE_WIDTH 32
+#define RTILE_HEIGHT 64
+#define STILE_SIZE 32
+#define MTILE_SIZE 64
+#define LTILE_SIZE 96
+#define SCREEN_HEIGHT 15 * RTILE_WIDTH
+#define SCREEN_WIDTH 7.5 * RTILE_HEIGHT
 #define SCREEN_SIZE 1
 #define FULLSCREEN false
 #define VSYNC true

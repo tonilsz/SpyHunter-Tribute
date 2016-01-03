@@ -15,12 +15,18 @@
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModuleAudio.cpp" />
+    <ClCompile Include="ModuleCars.cpp" />
+    <ClCompile Include="ModuleCollision.cpp" />
+    <ClCompile Include="ModuleDriver.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModulePlayer.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleRoad.cpp" />
     <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
+    <ClCompile Include="RoadLine.cpp" />
+    <ClCompile Include="RoadLoop.cpp" />
+    <ClCompile Include="RoadSegment.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -29,10 +35,14 @@
     <ClInclude Include="AnimationMultiple.h" />
     <ClInclude Include="AnimationMultiple.cpp" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Collider.cpp" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleAudio.h" />
+    <ClInclude Include="ModuleCars.h" />
+    <ClInclude Include="ModuleCollision.h" />
+    <ClInclude Include="ModuleDriver.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModulePlayer.h" />
     <ClInclude Include="ModuleRender.h" />
@@ -40,6 +50,9 @@
     <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="RoadLine.h" />
+    <ClInclude Include="RoadLoop.h" />
+    <ClInclude Include="RoadSegment.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

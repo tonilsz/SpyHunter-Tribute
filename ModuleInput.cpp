@@ -40,7 +40,7 @@ bool ModuleInput::Start()
 }
 
 // Called before the first frame
-bool ModuleInput::Start()
+bool ModuleInput::Resume()
 {
 	return true;
 }
@@ -62,21 +62,23 @@ update_status ModuleInput::PreUpdate()
 			if (keyboard[i] == KEY_IDLE){
 				keyboard[i] = KEY_DOWN;
 				if (keyboard[SDL_SCANCODE_SPACE]) {
-					App->player->position.x = 100;
-					App->player->position.y = 110;
-					App->player->mask->SetPos(App->player->position);
+					//GUN
 				}
 				else if (keyboard[SDL_SCANCODE_H]) {
 					//hadouken
-					App->player->SetState(HADOUKEN);
+					//App->player->SetState(HADOUKEN);
 				}
 				else if (keyboard[SDL_SCANCODE_W]) {
-					//jump
-					App->player->SetState(JUMP);
+					//up gear
+					App->player->UpGear();
+				}
+				else if (keyboard[SDL_SCANCODE_S]) {
+					//down gear
+					App->player->DownGear();
 				}
 				else if (keyboard[SDL_SCANCODE_F1]) {
-					//jump
-					App->masks->debug_enabled = !App->masks->debug_enabled;
+					//DEBUG
+					//App->masks->debug_enabled = !App->masks->debug_enabled;
 				}
 			}
 			else{
@@ -84,11 +86,11 @@ update_status ModuleInput::PreUpdate()
 
 				if (keyboard[SDL_SCANCODE_D]) {
 					//Move foward
-					App->player->SetMovement(FOWARD);
+					App->player->SetMovement(RIGHT);
 				}
 				else if (keyboard[SDL_SCANCODE_A]) {
 					//Move Backward
-					App->player->SetMovement(BACKWARD);
+					App->player->SetMovement(LEFT);
 				}
 			}
 		}

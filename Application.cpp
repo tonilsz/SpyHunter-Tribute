@@ -5,28 +5,29 @@
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "ModulePlayer.h"
-#include "ModuleParticules.h"
-#include "ModuleCar.h"
+#include "ModuleParticles.h"
+#include "ModuleRoad.h"
+#include "ModuleDriver.h"
+#include "ModuleCars.h"
 
 using namespace std;
 
 Application::Application()
 {
 
-	// Order matters: they will init/start/pre/update/post in this order
+	// Core Modules
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(window = new ModuleWindow());
-
+	//modules.push_back(masks = new ModuleCollision());
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(audio = new ModuleAudio());
 
 	// Game Modules
+	modules.push_back(road = new ModuleRoad());
+	modules.push_back(driver = new ModuleDriver());
 	modules.push_back(player = new ModulePlayer(false));
-
-	modules.push_back(car = new ModuleCar(false));
-	modules.push_back(particules = new ModuleParticules());
-	modules.push_back(masks = new ModuleCollision());
+	//modules.push_back(particules = new ModuleParticles());
 }
 
 Application::~Application()

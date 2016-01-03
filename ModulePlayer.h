@@ -6,45 +6,33 @@
 #include "Globals.h"
 #include "Point.h"
 #include "Timer.h"
+#include "ModuleCars.h"
 #include "ModuleCollision.h"
 
 
 struct SDL_Texture;
 
-enum state {IDLE, BACKWARD, FOWARD, HADOUKEN, JUMP, WON};
-
-class ModulePlayer : public Module
+class ModulePlayer : public ModuleCars
 {
 public:
-	ModulePlayer(bool start_enabled = true);
+	ModulePlayer(bool start_enabled = true, CARS car = PLAYER);
 	~ModulePlayer();
 
 	bool Start();
-	bool Init();
+	bool Resume();
 	update_status PreUpdate();
 	update_status Update();
 	bool CleanUp();
 	bool OnCollision(Collider* a, Collider *b, COLISION_STATE status);
 	void SetState(int new_state);
-	void SetMovement(int new_state);
+	void SetMovement(Movement new_state);
+	void UpGear();
+	void DownGear();
 
-public:
+	int pos;
+	SDL_Rect turbo;
 
-	SDL_Texture* graphics = nullptr;
-	Animation idle;
-	Animation backward;
-	Animation foward;
-	Animation jump;
-	Animation hado;
-	Animation won;
-	fPoint position;
-	fPoint last_position;
-	int moving = IDLE;
-	int state = IDLE;
-	Timer jump_live;
-	Timer hado_live;
-	Timer won_live;
-	Collider* mask;
+private:
 };
 
 #endif // __MODULEPLAYER_H__

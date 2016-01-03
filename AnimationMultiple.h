@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ANIMATION_MULTI_H__
+#define __ANIMATION_MULTI_H__
 #include <vector>
 
 using namespace std;
@@ -21,3 +22,4 @@ public:
 
 	void SetMultiFrame(int frame);
 };
+#endif // __ANIMATION_MULTI_H__

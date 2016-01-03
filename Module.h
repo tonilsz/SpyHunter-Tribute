@@ -29,13 +29,13 @@ public:
 		return true;
 	}
 
-	 bool Disable()
-	 {
-		 if(active == true)
-			 return active = !Stop();
+	bool Disable()
+	{
+		if(active == true)
+			return active = !Stop();
 
-		 return true;
-	 }
+		return true;
+	}
 
 	virtual bool Start()
 	{
@@ -69,7 +69,7 @@ public:
 
 	virtual bool OnColision(Collider* a, Collider *b, COLISION_STATE status)
 	{
-		LOG("Collision not controled between: %s and  %s\n", a->type, b->type);
+		//LOG("Collision not controled between: %s and  %s\n", (char)a->type, (char)b->type);
 		return true;
 	}
 
