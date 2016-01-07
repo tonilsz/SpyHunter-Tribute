@@ -13,6 +13,7 @@ class ModuleAudio;
 class ModulePlayer;
 class ModuleRoad;
 class ModuleDriver;
+class ModuleCollision;
 
 class Application
 {
@@ -34,7 +35,7 @@ public:
 	ModulePlayer* player;
 	ModuleRoad* road;
 	ModuleDriver* driver;
-	//ModuleCollision* masks;
+	ModuleCollision* masks;
 
 private:
 

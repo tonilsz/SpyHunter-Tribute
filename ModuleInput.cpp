@@ -5,6 +5,7 @@
 #include "ModuleRoad.h"
 #include "ModuleWindow.h"
 #include "ModuleParticles.h"
+#include "ModuleRender.h"
 #include "ModuleCars.h"
 #include "SDL/include/SDL.h"
 
@@ -78,7 +79,11 @@ update_status ModuleInput::PreUpdate()
 				}
 				else if (keyboard[SDL_SCANCODE_F1]) {
 					//DEBUG
-					//App->masks->debug_enabled = !App->masks->debug_enabled;
+					App->masks->debug_mode = !App->masks->debug_mode;
+				}
+				else if (keyboard[SDL_SCANCODE_F2]) {
+					//DEBUG
+					App->renderer->printer_mode = !App->renderer->printer_mode;
 				}
 			}
 			else{

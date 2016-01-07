@@ -26,6 +26,7 @@ public:
 	bool Shadow(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera = true);
 
 public:
+	bool printer_mode;
 	SDL_Renderer* renderer = nullptr;
 	SDL_Rect camera;
 };

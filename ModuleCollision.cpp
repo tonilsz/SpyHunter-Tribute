@@ -7,7 +7,7 @@
 struct SDL_Texture;
 
 
-ModuleCollision::ModuleCollision(bool start_enabled) : Module(start_enabled), debug_mode(false)
+ModuleCollision::ModuleCollision(bool start_enabled) : Module(start_enabled), debug_mode(true)
 {
 	for (int i = 0; i < COL_MAX; i++)
 		for (int j = 0; j < COL_MAX; j++)
@@ -76,16 +76,22 @@ bool ModuleCollision::Start()
 update_status ModuleCollision::PreUpdate()
 {
 	// Remove all colliders scheduled for deletion
-	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end();)
-	{
-		if ((*it)->to_delete == true)
+		for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); )
 		{
-			RELEASE(*it);
-			it = colliders.erase(it);
+			if ((*it)->to_delete == true)
+			{
+				RELEASE(*it);
+				it = colliders.erase(it);
+			}
+			if ((*it)->to_erase == true)
+			{
+				(*it)->rect.y = 0;
+				(*it)->to_erase = false;
+				it = colliders.erase(it);
+			}
+			if (colliders.size() != 0)
+				++it;
 		}
-		else
-			++it;
-	}
 
 	return UPDATE_CONTINUE;
 }
@@ -187,6 +193,12 @@ Collider* ModuleCollision::AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module
 	return ret;
 }
 
+void ModuleCollision::AddColliderGroup(vector<Collider*>* mask)
+{
+	for (vector<Collider*>::iterator it = mask->begin(); it != mask->end(); ++it)
+		colliders.push_back(*it);
+}
+
 void ModuleCollision::CollisionTratement(Collider* c1, Collider* c2){
 	if (matrix[c1->type][c2->type] && c1->callback){
 		if (!c1->isCollising){
@@ -201,3 +213,19 @@ void ModuleCollision::CollisionTratement(Collider* c1, Collider* c2){
 		c1->callback->OnColision(c1, c2, COL_END);
 	}
 }
+
+void ModuleCollision::DisplaceRoad(){
+
+	for (list<Collider*>::reverse_iterator it = colliders.rbegin(); it != colliders.rend(); ++it)
+		(*it)->rect.y += RTILE_HEIGHT;
+
+}
+
+void ModuleCollision::DeleteBottomRoad(){
+
+	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
+		if ((*it)->rect.y > RTILE_HEIGHT * 8)
+			(*it)->to_erase = true;
+
+}
+

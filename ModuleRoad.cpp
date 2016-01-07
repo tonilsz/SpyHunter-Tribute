@@ -18,8 +18,6 @@ pos_loop(0),
 pos_segment(0),
 pos_line(0)
 {
-	road.push_back(new RoadLoop(new LOOP1, (SEGMENT_AMBIENT)A_FOREST));
-	road.push_back(new RoadLoop(new LOOP1, (SEGMENT_AMBIENT)A_FOREST));
 }
 
 ModuleRoad::~ModuleRoad()
@@ -29,6 +27,8 @@ ModuleRoad::~ModuleRoad()
 bool ModuleRoad::Start()
 {
 	LOG("Loading Road scene");
+
+	road.push_back(new RoadLoop(new LOOP1, (SEGMENT_AMBIENT)A_FOREST));
 
 	graphics = App->textures->Load("scene.png");
 
@@ -43,46 +43,11 @@ bool ModuleRoad::Resume()
 	LOG("Resume Road scene");
 
 	int i = 0;
-	/*
-	for (vector<RoadLoop*>::iterator it_loop = road.begin(); it_loop != road.end() && i < 9; ++it_loop)
-		for (vector<RoadSegment*>::iterator it_segment = (*it_loop)->loop.begin(); it_segment != (*it_loop)->loop.end() && i < 9; ++it_segment)
-			for (vector<RoadLine*>::iterator it_line = (*it_segment)->segment.begin(); it_line != (*it_segment)->segment.end() && i < 9; ++it_line)
-			{
-				screen.push_back((*it_line));
-				++i;
-			}
-	*/
 
-	/*
-	pos_loop(0),
-		pos_segment(0),
-		pos_line(0)
-	for (vector<RoadLoop*>::iterator it_loop = road.begin(); it_loop != road.end() && i < 9; ++it_loop)
-		for (vector<RoadSegment*>::iterator it_segment = (*it_loop)->loop.begin(); it_segment != (*it_loop)->loop.end() && i < 9; ++it_segment){
-			RoadLine* current_line = (*it_segment)->GetCourrentLine();
-			for (vector<RoadLine*>::iterator it_line = current_line.begin(); it_line != (*it_segment)->segment.end() && i < 9; ++it_line)
-			{
-				screen.push_back((*it_line));
-				++i;
-			}
-		}
-	for (; i < 9; ++i){
-		road.begin()[pos_loop][pos_segment][++pos_line];
-		if (pos_line == (road.begin()[pos_loop]->loop.begin()[pos_segment]->segment.begin()[pos_line]->line.size()){
-			pos_line = 0;
-			++pos_segment;
-			if (pos_segment == (road.begin()[pos_loop])->loop.size()){
-				pos_segment = 0;
-				++pos_loop;
-				if (pos_loop == road.size()){
-					pos_loop = 0;
-				}
-			}
-		}
-	}
-	*/
 	for (; i < 9; ++i){
 		GenerateLine();
+		if (i!=8)
+			App->masks->DisplaceRoad();
 	}
 	return i == 9;
 }
@@ -111,13 +76,19 @@ update_status ModuleRoad::Update()
 
 void ModuleRoad::AddLine(){
 	screen.pop_front();
+	App->masks->DisplaceRoad();
+	App->masks->DeleteBottomRoad();
+
 	GenerateLine();
+
 }
 
 void ModuleRoad::GenerateLine(){
 
 	RoadLine *ptr_line = road.begin()[pos_loop]->loop.begin()[pos_segment]->segment.begin()[pos_line];
 	screen.push_back(ptr_line);
+	if (ptr_line->mask!=NULL)
+		App->masks->AddColliderGroup(ptr_line->mask);
 
 	++pos_line;
 	if (pos_line == road.begin()[pos_loop]->loop.begin()[pos_segment]->segment.size()){

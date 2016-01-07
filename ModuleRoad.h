@@ -18,8 +18,6 @@ enum LOOP_TYPE
 
 struct SDL_Texture;
 
-#define LOOP1 vector<SEGMENT_TYPE>{ SEGMENT_FAT_A, SEGMENT_FAT_A, SEGMENT_FAT_A}
-
 class ModuleRoad : public Module
 {
 public:

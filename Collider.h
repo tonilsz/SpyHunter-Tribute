@@ -36,14 +36,17 @@ class Collider
 public:
 	SDL_Rect rect;
 	bool to_delete;
+	bool to_erase;
 	COLLIDER_TYPE type;
 	Module* callback;
+	bool isCollising; 
 
-	bool isCollising; Collider::Collider(SDL_Rect rectangle, COLLIDER_TYPE type, Module* callback = NULL) :
+	Collider::Collider(SDL_Rect rectangle, COLLIDER_TYPE type, Module* callback = NULL) :
 		rect(rectangle),
 		type(type),
 		callback(callback),
 		to_delete(false),
+		to_erase(false),
 		isCollising(false)
 	{}
 

@@ -7,6 +7,8 @@
 #include "Point.h"
 #include "Collider.h"
 
+#include<vector>
+
 
 class ModuleCollision : public Module
 {
@@ -22,6 +24,9 @@ public:
 	bool Stop();
 
 	Collider* AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module* callback = NULL);
+	void AddColliderGroup(vector<Collider*>* mask);
+	void DisplaceRoad();
+	void DeleteBottomRoad();
 
 	list<Collider*> colliders;
 	bool matrix[COL_MAX][COL_MAX];

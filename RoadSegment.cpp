@@ -1,4 +1,8 @@
 #include "RoadSegment.h"
+#include "Collider.h"
+#include "Application.h"
+#include "ModuleCollision.h"
+#include "ModuleRoad.h"
 
 RoadSegment::RoadSegment(const SEGMENT_TYPE &type):
 pos(0)
@@ -27,14 +31,24 @@ void RoadSegment::GenerateSegment(const SEGMENT_TYPE &type){
 	//generate new road
 	switch (type){
 	case SEGMENT_FAT_A:
-		segment.push_back(new RoadLine(new S_FAT_A_1, NULL));
-		segment.push_back(new RoadLine(new S_FAT_A_2, NULL));
-		segment.push_back(new RoadLine(new S_FAT_A_3, NULL));
-		segment.push_back(new RoadLine(new S_FAT_A_4, NULL));
-		segment.push_back(new RoadLine(new S_FAT_A_1, NULL));
-		segment.push_back(new RoadLine(new S_FAT_A_2, NULL));
-		segment.push_back(new RoadLine(new S_FAT_A_3, NULL));
-		segment.push_back(new RoadLine(new S_FAT_A_4, NULL));
+		segment.push_back(new RoadLine(new S_FAT_A_1, new C_FAT));
+		segment.push_back(new RoadLine(new S_FAT_A_2, new C_FAT));
+		segment.push_back(new RoadLine(new S_FAT_A_3, new C_FAT));
+		segment.push_back(new RoadLine(new S_FAT_A_4, new C_FAT));
+		segment.push_back(new RoadLine(new S_FAT_A_1, new C_FAT));
+		segment.push_back(new RoadLine(new S_FAT_A_2, new C_FAT));
+		segment.push_back(new RoadLine(new S_FAT_A_3, new C_FAT));
+		segment.push_back(new RoadLine(new S_FAT_A_4, new C_FAT));
+		break;
+	case SEGMENT_CUR_LC:
+		segment.push_back(new RoadLine(new S_CUR_LC_1, NULL));
+		segment.push_back(new RoadLine(new S_CUR_LC_2, NULL));
+		segment.push_back(new RoadLine(new S_CUR_LC_3, NULL));
+		segment.push_back(new RoadLine(new S_CUR_LC_4, NULL));
+		segment.push_back(new RoadLine(new S_CUR_LC_5, NULL));
+		segment.push_back(new RoadLine(new S_CUR_LC_6, NULL));
+		segment.push_back(new RoadLine(new S_CUR_LC_7, NULL));
+		segment.push_back(new RoadLine(new S_CUR_LC_8, NULL));
 		break;
 	/*
 	SEGMENT_FAT_A,

@@ -7,7 +7,8 @@
 #include "ModulePlayer.h"
 #include "SDL/include/SDL.h"
 
-ModuleRender::ModuleRender()
+ModuleRender::ModuleRender() : Module(),
+printer_mode(true)
 {
 	camera.x = 0;
 	camera.y = -1.5 * RTILE_HEIGHT;
@@ -53,7 +54,20 @@ update_status ModuleRender::PreUpdate()
 update_status ModuleRender::Update()
 {
 	// debug camera
+	if (App->masks->debug_mode){
 
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+			App->renderer->camera.y += 4;
+
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+			App->renderer->camera.y -= 4;
+
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+			App->renderer->camera.x += 4;
+
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+			App->renderer->camera.x -= 4;
+	}
 	return UPDATE_CONTINUE;
 }
 
@@ -81,34 +95,35 @@ bool ModuleRender::Stop()
 bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed, RENDER_TYPE type, int dist)
 {
 	bool ret = true;
-	SDL_Rect rect;
-	rect.x = (int)(camera.x * speed) + x * SCREEN_SIZE;
-	rect.y = (int)(camera.y * speed) + y * SCREEN_SIZE;
+	if (printer_mode){
+		SDL_Rect rect;
+		rect.x = (int)(camera.x * speed) + x * SCREEN_SIZE;
+		rect.y = (int)(camera.y * speed) + y * SCREEN_SIZE;
 
-	if (type != RENDER_ROAD)
-		rect.y -= App->player->pos;
-	if (type == RENDER_CAR)
-		rect.y -= dist;
+		if (type != RENDER_ROAD)
+			rect.y -= App->player->pos;
+		if (type == RENDER_CAR)
+			rect.y -= dist;
 
-	if (section != NULL)
-	{
-		rect.w = section->w;
-		rect.h = section->h;
+		if (section != NULL)
+		{
+			rect.w = section->w;
+			rect.h = section->h;
+		}
+		else
+		{
+			SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
+		}
+
+		rect.w *= SCREEN_SIZE;
+		rect.h *= SCREEN_SIZE;
+
+		if (SDL_RenderCopy(renderer, texture, section, &rect) != 0)
+		{
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+			ret = false;
+		}
 	}
-	else
-	{
-		SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
-	}
-
-	rect.w *= SCREEN_SIZE;
-	rect.h *= SCREEN_SIZE;
-
-	if (SDL_RenderCopy(renderer, texture, section, &rect) != 0)
-	{
-		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-		ret = false;
-	}
-
 	return ret;
 }
 
