@@ -41,14 +41,14 @@ void RoadSegment::GenerateSegment(const SEGMENT_TYPE &type){
 		segment.push_back(new RoadLine(new S_FAT_A_4, new C_FAT));
 		break;
 	case SEGMENT_CUR_LC:
-		segment.push_back(new RoadLine(new S_CUR_LC_1, NULL));
-		segment.push_back(new RoadLine(new S_CUR_LC_2, NULL));
-		segment.push_back(new RoadLine(new S_CUR_LC_3, NULL));
-		segment.push_back(new RoadLine(new S_CUR_LC_4, NULL));
-		segment.push_back(new RoadLine(new S_CUR_LC_5, NULL));
-		segment.push_back(new RoadLine(new S_CUR_LC_6, NULL));
-		segment.push_back(new RoadLine(new S_CUR_LC_7, NULL));
-		segment.push_back(new RoadLine(new S_CUR_LC_8, NULL));
+		segment.push_back(new RoadLine(new S_CUR_LC_1, new C_CUR_LC_1));
+		segment.push_back(new RoadLine(new S_CUR_LC_2, new C_CUR_LC_2));
+		segment.push_back(new RoadLine(new S_CUR_LC_3, new C_CUR_LC_3));
+		segment.push_back(new RoadLine(new S_CUR_LC_4, new C_CUR_LC_4));
+		segment.push_back(new RoadLine(new S_CUR_LC_5, new C_CUR_LC_5));
+		segment.push_back(new RoadLine(new S_CUR_LC_6, new C_CUR_LC_6));
+		segment.push_back(new RoadLine(new S_CUR_LC_7, new C_CUR_LC_7));
+		segment.push_back(new RoadLine(new S_CUR_LC_8, new C_CUR_LC_8));
 		break;
 	/*
 	SEGMENT_FAT_A,

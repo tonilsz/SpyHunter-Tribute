@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleCollision.h"
 #include "ModuleRender.h"
+#include "ModuleRoad.h"
 #include "Collider.h"
 
 struct SDL_Texture;
@@ -85,7 +86,7 @@ update_status ModuleCollision::PreUpdate()
 			}
 			if ((*it)->to_erase == true)
 			{
-				(*it)->rect.y = 0;
+				(*it)->rect.y -= 9 * RTILE_HEIGHT;
 				(*it)->to_erase = false;
 				it = colliders.erase(it);
 			}
@@ -224,7 +225,7 @@ void ModuleCollision::DisplaceRoad(){
 void ModuleCollision::DeleteBottomRoad(){
 
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
-		if ((*it)->rect.y > RTILE_HEIGHT * 8)
+		if ((*it)->rect.y >= RTILE_HEIGHT * 9)
 			(*it)->to_erase = true;
 
 }
