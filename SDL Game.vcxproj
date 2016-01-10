@@ -27,6 +27,7 @@
     <ClCompile Include="RoadLine.cpp" />
     <ClCompile Include="RoadLoop.cpp" />
     <ClCompile Include="RoadSegment.cpp" />
+    <ClCompile Include="RoadSegmentDefinition.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

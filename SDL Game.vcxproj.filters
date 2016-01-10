@@ -67,6 +67,9 @@
     <ClCompile Include="ModuleCollision.cpp">
       <Filter>CoreModules</Filter>
     </ClCompile>
+    <ClCompile Include="RoadSegmentDefinition.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">

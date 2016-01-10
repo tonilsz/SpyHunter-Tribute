@@ -84,13 +84,13 @@ update_status ModuleCollision::PreUpdate()
 				RELEASE(*it);
 				it = colliders.erase(it);
 			}
-			if ((*it)->to_erase == true)
+			else if ((*it)->to_erase == true)
 			{
 				(*it)->rect.y -= 9 * RTILE_HEIGHT;
 				(*it)->to_erase = false;
 				it = colliders.erase(it);
 			}
-			if (colliders.size() != 0)
+			else
 				++it;
 		}
 

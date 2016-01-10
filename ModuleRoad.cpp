@@ -27,8 +27,25 @@ ModuleRoad::~ModuleRoad()
 bool ModuleRoad::Start()
 {
 	LOG("Loading Road scene");
+	//Test Road
+	road.push_back(new RoadLoop(new LOOP0, (SEGMENT_AMBIENT)A_FOREST));
+
+	//True Loop
+	road.push_back(new RoadLoop(new LOOP1, (SEGMENT_AMBIENT)A_FOREST));
+	road.push_back(new RoadLoop(new LOOP2, (SEGMENT_AMBIENT)A_DESERT));
+	road.push_back(new RoadLoop(new LOOP3, (SEGMENT_AMBIENT)A_GREY));
+	road.push_back(new RoadLoop(new LOOP4, (SEGMENT_AMBIENT)A_FOREST));
+	road.push_back(new RoadLoop(new LOOP5, (SEGMENT_AMBIENT)A_GREY));
+	road.push_back(new RoadLoop(new LOOP6, (SEGMENT_AMBIENT)A_GREEN));
 
 	road.push_back(new RoadLoop(new LOOP1, (SEGMENT_AMBIENT)A_FOREST));
+	road.push_back(new RoadLoop(new LOOP2, (SEGMENT_AMBIENT)A_DESERT));
+	road.push_back(new RoadLoop(new LOOP3, (SEGMENT_AMBIENT)A_GREY));
+	road.push_back(new RoadLoop(new LOOP4, (SEGMENT_AMBIENT)A_FOREST));
+	road.push_back(new RoadLoop(new LOOP5, (SEGMENT_AMBIENT)A_GREY));
+	road.push_back(new RoadLoop(new LOOP6, (SEGMENT_AMBIENT)A_GREEN));
+
+	road.push_back(new RoadLoop(new LOOP7, (SEGMENT_AMBIENT)A_SNOW));
 
 	graphics = App->textures->Load("scene.png");
 

@@ -32,10 +32,6 @@ using namespace std;
 #define T_RECT_A2 SDL_Rect {96,64,32,64}
 #define T_RECT_B1 SDL_Rect {128,64,32,64}
 #define T_RECT_B2 SDL_Rect {160,64,32,64}
-// Bifurcartion Tiles -------------
-#define T_BIF_L SDL_Rect {192,64,32,64} 
-#define T_BIF SDL_Rect {224,64,32,64}
-#define T_BIF_R SDL_Rect {288,64,32,64}
 // Road  Minus Tiles -------------
 #define T_RMINUS_A1 SDL_Rect {0,128,32,64}
 #define T_RMINUS_A2 SDL_Rect {32,128,32,64}
@@ -52,8 +48,8 @@ using namespace std;
 #define T_RMINUS_G1 SDL_Rect {384,128,32,64}
 #define T_RMINUS_G2 SDL_Rect {416,128,32,64}
 // Grass Minus Tiles -------------
-#define T_GMINUS_A1 SDL_Rect {0,192,32,64}
-#define T_GMINUS_A2 SDL_Rect {32,192,32,64}
+//#define T_GMINUS_A1 SDL_Rect {0,192,32,64}
+//#define T_GMINUS_A2 SDL_Rect {32,192,32,64}
 #define T_GMINUS_B1 SDL_Rect {64,192,32,64}
 #define T_GMINUS_B2 SDL_Rect {96,192,32,64}
 #define T_GMINUS_C1 SDL_Rect {128,192,32,64} 
@@ -169,6 +165,25 @@ using namespace std;
 #define T_WATER_TRANS_B2 SDL_Rect {448,512,32,64}
 #define T_WATER_TRANS_B3 SDL_Rect {480,512,32,64}
 #define T_WATER_TRANS_B4 SDL_Rect {512,512,32,64}
+// Bifurcartion Tiles -------------
+#define T_BIF_A1 SDL_Rect {0,576,32,64} 
+#define T_BIF_A SDL_Rect {32,576,32,64}
+#define T_BIF_A2 SDL_Rect {64,576,32,64}
+#define T_BIF_B1 SDL_Rect {96,576,32,64} 
+#define T_BIF_B SDL_Rect {128,576,32,64}
+#define T_BIF_B2 SDL_Rect {160,576,32,64}
+#define T_BIF_C1 SDL_Rect {192,576,32,64} 
+#define T_BIF_C SDL_Rect {224,576,32,64}
+#define T_BIF_C2 SDL_Rect {256,576,32,64}
+#define T_BIF_D1 SDL_Rect {288,576,32,64} 
+#define T_BIF_D SDL_Rect {320,576,32,64}
+#define T_BIF_D2 SDL_Rect {352,576,32,64}
+#define T_BIF_E1 SDL_Rect {384,576,32,64} 
+#define T_BIF_E SDL_Rect {416,576,32,64}
+#define T_BIF_E2 SDL_Rect {448,576,32,64}
+#define T_BIF_F1 SDL_Rect {480,576,32,64} 
+#define T_BIF_F SDL_Rect {512,576,32,64}
+#define T_BIF_F2 SDL_Rect {544,576,32,64}
 
 class RoadLine
 {

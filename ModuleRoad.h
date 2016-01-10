@@ -11,8 +11,13 @@ using namespace std;
 
 enum LOOP_TYPE
 {
+	LOOP_0,
 	LOOP_1,
-	LOOP_2
+	LOOP_2,
+	LOOP_3,
+	LOOP_4,
+	LOOP_5,
+	LOOP_6
 
 };
 
