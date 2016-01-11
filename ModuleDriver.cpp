@@ -33,25 +33,25 @@ bool ModuleDriver::Resume()
 {
 	LOG("Init Cars");
 
-
 	graphics = App->textures->Load("cars.png"); // arcade version
 
 	AddCar(MOTO, 0);
-	AddCar(RED_CAR, 2);
-	AddCar(BLUE_CAR, 4);
-	//mask = App->masks->AddCollider(SDL_Rect{ position.x, position.y, 60, 90 }, COLLIDER_PLAYER, this);
+	//AddCar(RED_CAR, 2);
+	//AddCar(BLUE_CAR, 4);
 
 	return true;
 }
 
 // Unload assets
 bool ModuleDriver::CleanUp()
-{
+{ 
+	bool ret = true;
 	LOG("Unloading Cars");
 
 	App->textures->Unload(graphics);
 
-	//App->masks->eraseCollider(mask->id);
+	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end(); ++it)
+		ret = ret || (*it)->CleanUp();
 
 	return true;
 }

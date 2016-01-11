@@ -25,7 +25,7 @@ public:
 	bool CleanUp();
 	bool OnCollision(Collider* a, Collider *b, COLISION_STATE status);
 	void SetState(int new_state);
-	void SetMovement(Movement new_state);
+	//void SetMovement(Movement new_state);
 	void UpGear();
 	void DownGear();
 

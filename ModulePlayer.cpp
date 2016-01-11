@@ -48,7 +48,7 @@ bool ModulePlayer::Resume()
 {
 	LOG("Resume player");
 
-	//mask = App->masks->AddCollider(SDL_Rect{ position.x, position.y, 60, 90 }, COLLIDER_PLAYER, this);
+	mask = App->masks->AddCollider(SDL_Rect{ position.x + 21, position.y, 24, 41 }, COL_PLAYER, this);
 
 	return true;
 }
@@ -80,6 +80,7 @@ update_status ModulePlayer::PreUpdate()
 	}
 
 	last_position = position;
+	mask->rect.y = position.y - pos - ( gear);
 	return UPDATE_CONTINUE;
 }
 
@@ -95,7 +96,7 @@ void ModulePlayer::SetState(int new_state){
 	}*/
 
 }
-
+/*
 void ModulePlayer::SetMovement(Movement new_state){
 		moving = new_state;
 		if (moving == RIGHT){
@@ -111,7 +112,7 @@ void ModulePlayer::SetMovement(Movement new_state){
 		//mask->SetPos(position);
 		}
 
-}
+}*/
 
 update_status ModulePlayer::Update()
 {

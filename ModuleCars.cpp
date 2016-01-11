@@ -41,6 +41,7 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 		crash.frames.push_back({ MTILE_SIZE * 9, MTILE_SIZE * i, MTILE_SIZE, MTILE_SIZE });
 	crash.speed = 0.2f;
 
+
 }
 
 ModuleCars::~ModuleCars()
@@ -60,7 +61,33 @@ bool ModuleCars::Resume()
 {
 	LOG("Init Cars");
 
-	//mask = App->masks->AddCollider(SDL_Rect{ position.x, position.y, 60, 90 }, COLLIDER_PLAYER, this);
+	COLLIDER_TYPE colider = COL_CAR;
+	int dif = 10;
+
+	mask = App->masks->AddCollider(SDL_Rect{ position.x + dif, position.y, 44, 44 }, colider, this);
+
+
+	/*
+	enum CARS { PLAYER = 0, RED_CAR = 1, BLUE_CAR = 2, MOTO = 3, TRUCK = 4, ROAD_LORD = 6, SWITCH_BLADE = 7, ENFORCER = 8, MAD_BOMBER = 10 };
+	enum COLLIDER_TYPE
+	{
+	COL_NONE = -1,
+	COL_CAR,
+	COL_PLAYER,
+	COL_TRUCK,
+	COL_ROAD_LORD,
+	COL_MAD_BOMBER,
+	COL_OIL,
+	COL_SPRAY,
+	COL_BULLET,
+	COL_BULLET_ENEMY,
+	COL_ROCKET,
+	COL_BOMB,
+	COL_ROAD_OUT,
+	COL_ROAD_BORDER,
+	COL_PUDDLE,
+	COL_MAX
+	};*/
 
 	return true;
 }
@@ -70,7 +97,7 @@ bool ModuleCars::CleanUp()
 {
 	LOG("Unloading Cars");
 
-	//App->masks->eraseCollider(mask->id);
+	App->masks->colliders.remove(mask);
 
 	return true;
 }
@@ -107,18 +134,20 @@ void ModuleCars::SetState(int new_state){
 
 void ModuleCars::SetMovement(Movement new_state){
 	moving = new_state;
+	int dif = position.x - mask->rect.x;
 	if (moving == RIGHT){
-		position.x += 4;
-		if (position.x > (App->window->screen_surface->w - MTILE_SIZE))
-			position.x = (App->window->screen_surface->w - MTILE_SIZE);
+		mask->rect.x += 4;
+		if (mask->rect.x > (App->window->screen_surface->w - mask->rect.w)){
+			mask->rect.x = (App->window->screen_surface->w - mask->rect.w);
+		}
 	}
 	else{
-		position.x -= 4;
-		if (position.x < 0)
-			position.x = 0;
-
-		//mask->SetPos(position);
+		mask->rect.x -= 4;
+		if (mask->rect.x < 0){
+			mask->rect.x = 0;
+		}
 	}
+	position.x = mask->rect.x - dif;
 
 }
 
