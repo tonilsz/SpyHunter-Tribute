@@ -46,15 +46,6 @@
     <ClCompile Include="ModuleRoad.cpp">
       <Filter>GameModules</Filter>
     </ClCompile>
-    <ClCompile Include="RoadLine.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="RoadSegment.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="RoadLoop.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Main</Filter>
     </ClCompile>
@@ -67,8 +58,20 @@
     <ClCompile Include="ModuleCollision.cpp">
       <Filter>CoreModules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleParticles.cpp">
+      <Filter>CoreModules</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadLine.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadLoop.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadSegment.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
     <ClCompile Include="RoadSegmentDefinition.cpp">
-      <Filter>Utils</Filter>
+      <Filter>GameModules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -126,15 +129,6 @@
     <ClInclude Include="Collider.cpp">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="RoadLine.h">
-      <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="RoadSegment.h">
-      <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="RoadLoop.h">
-      <Filter>Main</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleCars.h">
       <Filter>GameModules</Filter>
     </ClInclude>
@@ -143,6 +137,18 @@
     </ClInclude>
     <ClInclude Include="ModuleCollision.h">
       <Filter>CoreModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleParticles.h">
+      <Filter>CoreModules</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadLine.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadLoop.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadSegment.h">
+      <Filter>GameModules</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

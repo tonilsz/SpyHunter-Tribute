@@ -19,6 +19,7 @@
     <ClCompile Include="ModuleCollision.cpp" />
     <ClCompile Include="ModuleDriver.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
+    <ClCompile Include="ModuleParticles.cpp" />
     <ClCompile Include="ModulePlayer.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleRoad.cpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="ModuleCollision.h" />
     <ClInclude Include="ModuleDriver.h" />
     <ClInclude Include="ModuleInput.h" />
+    <ClInclude Include="ModuleParticles.h" />
     <ClInclude Include="ModulePlayer.h" />
     <ClInclude Include="ModuleRender.h" />
     <ClInclude Include="ModuleRoad.h" />

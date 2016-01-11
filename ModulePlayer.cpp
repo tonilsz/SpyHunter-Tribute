@@ -23,10 +23,12 @@ ModulePlayer::ModulePlayer(bool start_enabled, CARS car)
 
 	last_position = position;
 
-	turbo.x = MTILE_SIZE * 3;
+	turbo.x = MTILE_SIZE * 12;
 	turbo.y = MTILE_SIZE * PLAYER;
 	turbo.w = MTILE_SIZE;
 	turbo.h = MTILE_SIZE;
+
+	state_timer = Timer();
 
 }
 
@@ -114,18 +116,46 @@ void ModulePlayer::SetMovement(Movement new_state){
 
 }*/
 
+void ModulePlayer::SetWeapon(Weapon new_weapon){
+	weapon = new_weapon;
+}
+
 update_status ModulePlayer::Update()
 {
 
-	switch (moving){
-	case STRAIGHT:
-		App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
+	switch (state){
+	case IDLE:
+		switch (moving){
+		case STRAIGHT:
+			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
+				switch (weapon){
+					case GUN:
+						App->particles->addParticle(position.x, position.y, COL_BULLET);
+						break;
+					case OIL:
+						App->particles->addParticle(position.x, position.y, COL_OIL);
+						break;
+					case SPRAY:
+						App->particles->addParticle(position.x, position.y, COL_SPRAY);
+						break;
+					case ROCKET:
+						App->particles->addParticle(position.x, position.y, COL_ROCKET);
+						break;
+				}
+				weapon = NONE;
+			break;
+		case RIGHT:
+			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &right, 1.0f, RENDER_PLAYER);
+			break;
+		case LEFT:
+			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &left, 1.0f, RENDER_PLAYER);
+			break;
+		}
 		break;
-	case RIGHT:
-		App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &right, 1.0f, RENDER_PLAYER);
-		break;
-	case LEFT:
-		App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &left, 1.0f, RENDER_PLAYER);
+	case TURBO:
+		App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &turbo, 1.0f, RENDER_PLAYER);
+		if (state_timer.GetTime() > 100)
+			state = IDLE;
 		break;
 	}
 	/*
@@ -239,8 +269,11 @@ bool ModulePlayer::OnCollision(Collider* a, Collider *b, COLISION_STATE status)
 	return true;
 }
 void ModulePlayer::UpGear(){
-	if (gear < 8)
+	if (gear < 8){
 		gear += 4;
+		state = TURBO;
+		state_timer.Start();
+	}
 }
 
 void ModulePlayer::DownGear(){

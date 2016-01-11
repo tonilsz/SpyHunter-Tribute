@@ -34,6 +34,7 @@ class Animation
 public:
 	float speed = 1.0f;
 	bool loop = true;
+	bool repeat = false;
 	vector<SDL_Rect> frames;
 
 private:
@@ -41,7 +42,7 @@ private:
 	int loops = 0;
 
 public:
-	Animation() : frames(), speed(1.0f), current_frame(0.0f)
+	Animation(bool repeat = true) : frames(), speed(1.0f), current_frame(0.0f), repeat(repeat)
 	{}
 
 	SDL_Rect& GetCurrentFrame()
@@ -58,6 +59,16 @@ public:
 	const SDL_Rect& PeekCurrentFrame() const
 	{
 		return frames[(int)current_frame];
+	}
+
+	SDL_Rect& GetLastFrame() 	
+	{
+		return frames[(frames.size() - 1)];
+	}
+
+	SDL_Rect& GetFirstFrame()
+	{
+		return frames[0];
 	}
 
 	bool Finished()

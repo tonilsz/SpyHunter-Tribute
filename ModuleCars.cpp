@@ -37,8 +37,8 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 	left.w = MTILE_SIZE;
 	left.h = MTILE_SIZE;
 
-	for (int i = 0; i < 8; ++i)
-		crash.frames.push_back({ MTILE_SIZE * 9, MTILE_SIZE * i, MTILE_SIZE, MTILE_SIZE });
+	for (int i = 3; i < 11; ++i)
+		crash.frames.push_back({ MTILE_SIZE * i, MTILE_SIZE * car_type, MTILE_SIZE, MTILE_SIZE });
 	crash.speed = 0.2f;
 
 
@@ -87,7 +87,8 @@ bool ModuleCars::Resume()
 	COL_ROAD_BORDER,
 	COL_PUDDLE,
 	COL_MAX
-	};*/
+	};
+	*/
 
 	return true;
 }
@@ -133,22 +134,23 @@ void ModuleCars::SetState(int new_state){
 }
 
 void ModuleCars::SetMovement(Movement new_state){
-	moving = new_state;
+
 	int dif = position.x - mask->rect.x;
+
+	moving = new_state;
 	if (moving == RIGHT){
 		mask->rect.x += 4;
-		if (mask->rect.x > (App->window->screen_surface->w - mask->rect.w)){
-			mask->rect.x = (App->window->screen_surface->w - mask->rect.w);
-		}
 	}
-	else{
+	else if (moving == LEFT){
 		mask->rect.x -= 4;
-		if (mask->rect.x < 0){
-			mask->rect.x = 0;
-		}
 	}
-	position.x = mask->rect.x - dif;
 
+	if (mask->rect.x < 0)
+		mask->rect.x = 0;
+	if (mask->rect.x >(App->window->screen_surface->w - MTILE_SIZE))
+		mask->rect.x = (App->window->screen_surface->w - MTILE_SIZE);
+
+	position.x = mask->rect.x + dif;
 }
 
 update_status ModuleCars::Update()

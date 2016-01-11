@@ -38,21 +38,22 @@ struct Particle{
 	int killing = 0;
 };
 
-class ModuleParticules : public Module
+class ModuleParticles : public Module
 {
 public:
-	ModuleParticules(bool start_enabled = true);
-	~ModuleParticules();
+	ModuleParticles(bool start_enabled = true);
+	~ModuleParticles();
 
 	bool Start();
-	bool Init();
+	bool Resume();
 	update_status Update();
 	bool CleanUp();
-	bool addParticle(float x, float y);
+	bool addParticle(float x, float y, COLLIDER_TYPE type);
 	bool deleteParticle(int id);
 	bool OnColision(Collider* a, Collider *b, COLISION_STATE status);
 
 	std::vector<pair<Particle*, Collider*>> particles;
+	SDL_Texture* graphics = nullptr;
 };
 
 #endif // __MODULEPARTICULES_H__

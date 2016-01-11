@@ -26,13 +26,15 @@ public:
 	bool OnCollision(Collider* a, Collider *b, COLISION_STATE status);
 	void SetState(int new_state);
 	//void SetMovement(Movement new_state);
+	void SetWeapon(Weapon new_state);
 	void UpGear();
 	void DownGear();
 
 	int pos;
 	SDL_Rect turbo;
+	Timer state_timer;
+	Weapon weapon = NONE;
 
-private:
 };
 
 #endif // __MODULEPLAYER_H__

@@ -27,7 +27,7 @@ Application::Application()
 	modules.push_back(road = new ModuleRoad());
 	modules.push_back(driver = new ModuleDriver());
 	modules.push_back(player = new ModulePlayer(false));
-	//modules.push_back(particules = new ModuleParticles());
+	modules.push_back(particles = new ModuleParticles());
 }
 
 Application::~Application()

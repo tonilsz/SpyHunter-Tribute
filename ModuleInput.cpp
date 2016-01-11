@@ -65,10 +65,6 @@ update_status ModuleInput::PreUpdate()
 				if (keyboard[SDL_SCANCODE_SPACE]) {
 					//GUN
 				}
-				else if (keyboard[SDL_SCANCODE_H]) {
-					//hadouken
-					//App->player->SetState(HADOUKEN);
-				}
 				else if (keyboard[SDL_SCANCODE_W]) {
 					//up gear
 					App->player->UpGear();
@@ -76,6 +72,18 @@ update_status ModuleInput::PreUpdate()
 				else if (keyboard[SDL_SCANCODE_S]) {
 					//down gear
 					App->player->DownGear();
+				}
+				else if (keyboard[SDL_SCANCODE_H]) {
+					App->player->SetWeapon(GUN);
+				}
+				else if (keyboard[SDL_SCANCODE_J]) {
+					App->player->SetWeapon(OIL);
+				}
+				else if (keyboard[SDL_SCANCODE_K]) {
+					App->player->SetWeapon(SPRAY);
+				}
+				else if (keyboard[SDL_SCANCODE_L]) {
+					App->player->SetWeapon(ROCKET);
 				}
 				else if (keyboard[SDL_SCANCODE_F1]) {
 					//DEBUG
