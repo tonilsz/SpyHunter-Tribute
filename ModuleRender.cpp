@@ -102,7 +102,7 @@ bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, f
 
 		if (type != RENDER_ROAD)
 			rect.y -= App->player->pos;
-		if (type == RENDER_CAR)
+		if (type == RENDER_OTHER)
 			rect.y -= dist;
 
 		if (section != NULL)

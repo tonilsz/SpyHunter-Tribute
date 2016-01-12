@@ -46,6 +46,7 @@ public:
 
 	bool Start();
 	bool Resume();
+	update_status PreUpdate();
 	update_status Update();
 	bool CleanUp();
 	bool addParticle(float x, float y, COLLIDER_TYPE type);

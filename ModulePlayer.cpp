@@ -130,16 +130,16 @@ update_status ModulePlayer::Update()
 			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
 				switch (weapon){
 					case GUN:
-						App->particles->addParticle(position.x, position.y, COL_BULLET);
+						App->particles->addParticle(position.x + 21, position.y - STILE_SIZE, COL_BULLET);
 						break;
 					case OIL:
-						App->particles->addParticle(position.x, position.y, COL_OIL);
+						App->particles->addParticle(position.x + 21, position.y + mask->rect.h, COL_OIL);
 						break;
 					case SPRAY:
-						App->particles->addParticle(position.x, position.y, COL_SPRAY);
+						App->particles->addParticle(position.x + 21, position.y + mask->rect.h, COL_SPRAY);
 						break;
 					case ROCKET:
-						App->particles->addParticle(position.x, position.y, COL_ROCKET);
+						App->particles->addParticle(position.x + 21, position.y - STILE_SIZE, COL_ROCKET);
 						break;
 				}
 				weapon = NONE;
@@ -158,107 +158,7 @@ update_status ModulePlayer::Update()
 			state = IDLE;
 		break;
 	}
-	/*
-	switch (state){
-	case IDLE:
-		switch (moving){
-		case IDLE:
-			break;
-		case FOWARD:
-			App->renderer->Blit(graphics, position.x, position.y, &(foward.GetCurrentFrame()), 0.75f);
-			break;
-		case BACKWARD:
-			App->renderer->Blit(graphics, position.x, position.y, &(backward.GetCurrentFrame()), 0.75f);
-			break;
-		}
-		break;
-	case JUMP:
-		if (jump_llive.running == true){
-			if (jump_live.GetTime() < 100){
-				App->renderer->Blit(graphics, position.x, position.y - 44, &(jump.GetFrame(0)), 0.75f);
-			}
-			else if (jump_live.GetTime() < 200){
-				App->renderer->Blit(graphics, position.x, position.y - 44, &(jump.GetFrame(1)), 0.75f);
-			}
-			else if (jump_live.GetTime() < 300){
-				App->renderer->Blit(graphics, position.x, position.y - 44, &(jump.GetFrame(2)), 0.75f);
-			}
-			else if (jump_live.GetTime() < 500){
-				App->renderer->Blit(graphics, position.x, position.y - 44, &(jump.GetFrame(3)), 0.75f);
-			}
-			else if (jump_live.GetTime() < 600){
-				App->renderer->Blit(graphics, position.x, position.y - 44, &(jump.GetFrame(4)), 0.75f);
-			}
-			else if (jump_live.GetTime() < 700){
-				App->renderer->Blit(graphics, position.x, position.y - 44, &(jump.GetFrame(5)), 0.75f);
-			}
-			else {
-				App->renderer->Blit(graphics, position.x, position.y - 44, &(jump.GetFrame(6)), 0.75f);
-			}
 
-			if (jump_live.GetTime() > 800)
-				jump_live.Stop();
-
-		}
-		else{
-			state = IDLE;
-		}
-
-		break;
-	case HADOUKEN:
-		if (hado_live.running == true){
-			if (hado_live.GetTime() < 100){
-				App->renderer->Blit(graphics, position.x, position.y, &(hado.GetFrame(0)), 0.75f);
-			}
-			else if (hado_live.GetTime() < 200){
-				App->renderer->Blit(graphics, position.x, position.y, &(hado.GetFrame(1)), 0.75f);
-			}
-			else if (hado_live.GetTime() < 300){
-				App->renderer->Blit(graphics, position.x, position.y, &(hado.GetFrame(2)), 0.75f);
-			}
-			else {
-				App->renderer->Blit(graphics, position.x, position.y, &(hado.GetFrame(3)), 0.75f);
-			}
-
-			if (hado_live.GetTime() > 500){
-				hado_live.Stop();
-				state = IDLE;
-			}
-
-		}
-		else{
-			state = IDLE;
-		}
-		break;
-	case WON:
-		if (won_live.running == true){
-			if (won_live.GetTime() < 100){
-				App->renderer->Blit(graphics, position.x, position.y-32, &(won.GetFrame(0)), 0.75f);
-			}
-			else if (won_live.GetTime() < 200){
-				App->renderer->Blit(graphics, position.x, position.y - 32, &(won.GetFrame(1)), 0.75f);
-			}
-			else if (won_live.GetTime() < 300){
-				App->renderer->Blit(graphics, position.x, position.y - 32, &(won.GetFrame(2)), 0.75f);
-			}
-			else {
-				App->renderer->Blit(graphics, position.x, position.y - 32, &(won.GetFrame(3)), 0.75f);
-			}
-
-			if (won_live.GetTime() > 5000){
-				won_live.Stop();
-				state = IDLE;
-			}
-
-		}
-		else{
-			state = IDLE;
-		}
-		break;
-	}
-
-	
-	*/
 	last_position = position;
 	return UPDATE_CONTINUE;
 }

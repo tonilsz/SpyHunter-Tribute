@@ -53,17 +53,49 @@ bool ModuleParticles::CleanUp()
 	return true;
 }
 
+update_status ModuleParticles::PreUpdate()
+{
+	// Remove all colliders scheduled for deletion
+	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end();)
+	{
+		if (!(*it).first->live.running)
+		{
+			RELEASE((*it).first);
+			it = particles.erase(it);
+		}
+		else
+		++it;
+	}
+
+	return UPDATE_CONTINUE;
+}
+
+
 // Update
 update_status ModuleParticles::Update()
 {
 
 	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end(); ++it)
 	{
-		delete it->first;
-		if (it->first->anim.Finished())
-			App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetCurrentFrame()), 1.0f, RENDER_CAR);
-		else
-			App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetCurrentFrame()), 1.0f, RENDER_CAR);
+		it->first->pos.y += App->player->gear;
+		it->second->rect.y = (int)it->first->pos.y - App->renderer->camera.y - (RTILE_HEIGHT * 1.5);
+
+		if (it->first->live.GetTime() < 50)
+			App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
+		else{
+			if (it->first->live.GetTime() > 800){
+				(*it).first->live.Stop();
+				App->masks->colliders.remove((*it).second);
+				delete((*it).second);
+			}
+			else{
+
+			}
+			if ((it->first->live.GetTime() % 100) < 50)
+				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
+			else
+				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(2)), 1.0f, RENDER_OTHER);
+		}
 	}
 	
 	/*
@@ -138,30 +170,30 @@ bool ModuleParticles::addParticle(float x, float y, COLLIDER_TYPE type){
 
 	switch (type){
 	case COL_BULLET:
-		particle->anim.frames.push_back({ STILE_SIZE * OIL, STILE_SIZE * 0, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * OIL, STILE_SIZE * 1, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * OIL, STILE_SIZE * 2, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 0, STILE_SIZE * GUN, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 1, STILE_SIZE * GUN, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 2, STILE_SIZE * GUN, STILE_SIZE, STILE_SIZE });
 		particle->anim.speed = 0.2f;
 		break;
 	case COL_OIL:
-		particle->anim.frames.push_back({ STILE_SIZE * GUN, STILE_SIZE * 0, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * GUN, STILE_SIZE * 1, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * GUN, STILE_SIZE * 2, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 0, STILE_SIZE * OIL, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 1, STILE_SIZE * OIL, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 2, STILE_SIZE * OIL, STILE_SIZE, STILE_SIZE });
 		particle->anim.speed = 0.2f;
 		break;
 	case COL_SPRAY:
-		particle->anim.frames.push_back({ STILE_SIZE * SPRAY, STILE_SIZE * 0, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * SPRAY, STILE_SIZE * 1, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * SPRAY, STILE_SIZE * 2, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 0, STILE_SIZE * SPRAY, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 1, STILE_SIZE * SPRAY, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 2, STILE_SIZE * SPRAY, STILE_SIZE, STILE_SIZE });
 		particle->anim.speed = 0.2f; 
 		break;
 	case COL_BULLET_ENEMY:
 		//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
 		break;
 	case COL_ROCKET:
-		particle->anim.frames.push_back({ STILE_SIZE * ROCKET, STILE_SIZE * 0, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * ROCKET, STILE_SIZE * 1, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * ROCKET, STILE_SIZE * 2, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 0, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 1, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
+		particle->anim.frames.push_back({ STILE_SIZE * 2, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
 		particle->anim.speed = 0.2f;
 		break;
 	case COL_BOMB:

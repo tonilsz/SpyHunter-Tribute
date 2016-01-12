@@ -73,15 +73,6 @@ update_status ModuleInput::PreUpdate()
 					//down gear
 					App->player->DownGear();
 				}
-				else if (keyboard[SDL_SCANCODE_H]) {
-					App->player->SetWeapon(GUN);
-				}
-				else if (keyboard[SDL_SCANCODE_J]) {
-					App->player->SetWeapon(OIL);
-				}
-				else if (keyboard[SDL_SCANCODE_K]) {
-					App->player->SetWeapon(SPRAY);
-				}
 				else if (keyboard[SDL_SCANCODE_L]) {
 					App->player->SetWeapon(ROCKET);
 				}
@@ -92,6 +83,15 @@ update_status ModuleInput::PreUpdate()
 				else if (keyboard[SDL_SCANCODE_F2]) {
 					//DEBUG
 					App->renderer->printer_mode = !App->renderer->printer_mode;
+				}
+				else if (keyboard[SDL_SCANCODE_H]) {
+					App->player->SetWeapon(GUN);
+				}
+				else if (keyboard[SDL_SCANCODE_J]) {
+					App->player->SetWeapon(OIL);
+				}
+				else if (keyboard[SDL_SCANCODE_K]) {
+					App->player->SetWeapon(SPRAY);
 				}
 			}
 			else{

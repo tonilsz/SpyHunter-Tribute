@@ -8,7 +8,7 @@ struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
 
-enum RENDER_TYPE{RENDER_PLAYER, RENDER_ROAD, RENDER_CAR};
+enum RENDER_TYPE{RENDER_PLAYER, RENDER_ROAD, RENDER_OTHER};
 
 class ModuleRender : public Module
 {

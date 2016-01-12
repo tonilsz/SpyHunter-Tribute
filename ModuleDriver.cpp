@@ -35,9 +35,14 @@ bool ModuleDriver::Resume()
 
 	graphics = App->textures->Load("cars.png"); // arcade version
 
-	AddCar(MOTO, 0);
-	//AddCar(RED_CAR, 2);
-	//AddCar(BLUE_CAR, 4);
+	AddCar(MOTO, 7);
+	AddCar(RED_CAR, 1);
+	AddCar(BLUE_CAR, 2);
+	AddCar(TRUCK, 3);
+	AddCar(ROAD_LORD, 4);
+	AddCar(SWITCH_BLADE, 5);
+	AddCar(ENFORCER, 6);
+	AddCar(MAD_BOMBER, 0);
 
 	return true;
 }
@@ -53,7 +58,7 @@ bool ModuleDriver::CleanUp()
 	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end(); ++it)
 		ret = ret || (*it)->CleanUp();
 
-	return true;
+	return ret;
 }
 
 

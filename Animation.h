@@ -45,6 +45,10 @@ public:
 	Animation(bool repeat = true) : frames(), speed(1.0f), current_frame(0.0f), repeat(repeat)
 	{}
 
+	void SetCurrentFrame(const float &pos){
+		current_frame = pos;
+	}
+
 	SDL_Rect& GetCurrentFrame()
 	{
 		current_frame += speed;
@@ -61,14 +65,11 @@ public:
 		return frames[(int)current_frame];
 	}
 
-	SDL_Rect& GetLastFrame() 	
+	SDL_Rect& GetFrame(int frame)
 	{
-		return frames[(frames.size() - 1)];
-	}
-
-	SDL_Rect& GetFirstFrame()
-	{
-		return frames[0];
+		if (frame > frames.size())
+			frame = 0;
+		return frames[frame];
 	}
 
 	bool Finished()
