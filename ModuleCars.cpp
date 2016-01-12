@@ -43,10 +43,12 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 		crash.speed = 0.2f;
 	}
 	else{
-		idle.frames.push_back({ LTILE_SIZE * 0, MTILE_SIZE * 10, LTILE_SIZE, LTILE_SIZE });
-		idle.frames.push_back({ LTILE_SIZE * 0, MTILE_SIZE * 10 + LTILE_SIZE, LTILE_SIZE, LTILE_SIZE });
-		idle.frames.push_back({ LTILE_SIZE * 0, MTILE_SIZE * 10, LTILE_SIZE, LTILE_SIZE });
-		idle.frames.push_back({ LTILE_SIZE * 1, MTILE_SIZE * 10 + LTILE_SIZE, LTILE_SIZE, LTILE_SIZE });
+		idle.frames.push_back({ LTILE_SIZE * 0, MTILE_SIZE * 10 + (LTILE_SIZE * 0), LTILE_SIZE, LTILE_SIZE });
+		idle.frames.push_back({ LTILE_SIZE * 0, MTILE_SIZE * 10 + (LTILE_SIZE * 1), LTILE_SIZE, LTILE_SIZE });
+		idle.frames.push_back({ LTILE_SIZE * 0 + (LTILE_SIZE * 4), MTILE_SIZE * 10 + (LTILE_SIZE * 2), LTILE_SIZE, LTILE_SIZE });
+		idle.frames.push_back({ LTILE_SIZE * 0, MTILE_SIZE * 10 + (LTILE_SIZE * 0), LTILE_SIZE, LTILE_SIZE });
+		idle.frames.push_back({ LTILE_SIZE * 0, MTILE_SIZE * 10 + (LTILE_SIZE * 1), LTILE_SIZE, LTILE_SIZE });
+		idle.frames.push_back({ LTILE_SIZE * 0 + (LTILE_SIZE * 5), MTILE_SIZE * 10 + (LTILE_SIZE * 2), LTILE_SIZE, LTILE_SIZE });
 		idle.speed = 0.4f;
 
 		right.x = LTILE_SIZE * 2;
@@ -182,6 +184,7 @@ update_status ModuleCars::Update()
 			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
 		}
 		else{
+			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
 			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
 			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
 		}

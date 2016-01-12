@@ -84,15 +84,6 @@ update_status ModuleInput::PreUpdate()
 					//DEBUG
 					App->renderer->printer_mode = !App->renderer->printer_mode;
 				}
-				else if (keyboard[SDL_SCANCODE_H]) {
-					App->player->SetWeapon(GUN);
-				}
-				else if (keyboard[SDL_SCANCODE_J]) {
-					App->player->SetWeapon(OIL);
-				}
-				else if (keyboard[SDL_SCANCODE_K]) {
-					App->player->SetWeapon(SPRAY);
-				}
 			}
 			else{
 				keyboard[i] = KEY_REPEAT;
@@ -104,6 +95,15 @@ update_status ModuleInput::PreUpdate()
 				else if (keyboard[SDL_SCANCODE_A]) {
 					//Move Backward
 					App->player->SetMovement(LEFT);
+				}
+				else if (keyboard[SDL_SCANCODE_H]) {
+					App->player->SetWeapon(GUN);
+				}
+				else if (keyboard[SDL_SCANCODE_J]) {
+					App->player->SetWeapon(OIL);
+				}
+				else if (keyboard[SDL_SCANCODE_K]) {
+					App->player->SetWeapon(SPRAY);
 				}
 			}
 		}

@@ -132,42 +132,44 @@ update_status ModuleCollision::PostUpdate()
 		for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
 		{
 			Collider* col = *it;
-			Uint8 alpha = 100;
-			switch (col->type)
-			{
-			case COL_NONE:
-				App->renderer->Shadow(col->rect, 255, 255, 255, alpha);
-				break;
-			case COL_CAR:
-			case COL_TRUCK:
-			case COL_ROAD_LORD:
-				App->renderer->Shadow(col->rect, 0, 0, 255, alpha);
-				break;
-			case COL_PLAYER:
-				App->renderer->Shadow(col->rect, 0, 255, 0, alpha);
-				break;
-			case COL_MAD_BOMBER:
-				App->renderer->Shadow(col->rect, 255, 0, 0, alpha);
-				break;
-			case COL_ROAD_OUT:
-				App->renderer->Shadow(col->rect, 255, 255, 0, alpha);
-				break;
-			case COL_ROAD_BORDER:
-				App->renderer->Shadow(col->rect, 0, 255, 255, alpha);
-				break;
-			case COL_PUDDLE:
-				App->renderer->Shadow(col->rect, 0, 0, 0, alpha);
-				break;
-			case COL_OIL:
-			case COL_SPRAY:
-			case COL_BULLET:
-			case COL_ROCKET:
-				App->renderer->Shadow(col->rect, 255, 255, 255, alpha);
-				break;
-			case COL_BULLET_ENEMY:
-			case COL_BOMB:
-				App->renderer->Shadow(col->rect, 255, 128, 255, alpha);
-				break;
+			if (col->enabled){
+				Uint8 alpha = 100;
+				switch (col->type)
+				{
+				case COL_NONE:
+					App->renderer->Shadow(col->rect, 255, 255, 255, alpha);
+					break;
+				case COL_CAR:
+				case COL_TRUCK:
+				case COL_ROAD_LORD:
+					App->renderer->Shadow(col->rect, 0, 0, 255, alpha);
+					break;
+				case COL_PLAYER:
+					App->renderer->Shadow(col->rect, 0, 255, 0, alpha);
+					break;
+				case COL_MAD_BOMBER:
+					App->renderer->Shadow(col->rect, 255, 0, 0, alpha);
+					break;
+				case COL_ROAD_OUT:
+					App->renderer->Shadow(col->rect, 255, 255, 0, alpha);
+					break;
+				case COL_ROAD_BORDER:
+					App->renderer->Shadow(col->rect, 0, 255, 255, alpha);
+					break;
+				case COL_PUDDLE:
+					App->renderer->Shadow(col->rect, 0, 0, 0, alpha);
+					break;
+				case COL_OIL:
+				case COL_SPRAY:
+				case COL_BULLET:
+				case COL_ROCKET:
+					App->renderer->Shadow(col->rect, 255, 255, 255, alpha);
+					break;
+				case COL_BULLET_ENEMY:
+				case COL_BOMB:
+					App->renderer->Shadow(col->rect, 255, 128, 255, alpha);
+					break;
+				}
 			}
 		}
 	}

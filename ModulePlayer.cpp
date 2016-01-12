@@ -130,16 +130,16 @@ update_status ModulePlayer::Update()
 			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
 				switch (weapon){
 					case GUN:
-						App->particles->addParticle(position.x + 21, position.y - STILE_SIZE, COL_BULLET);
+						App->particles->addParticle(position.x + 17, position.y - STILE_SIZE, COL_BULLET);
 						break;
 					case OIL:
-						App->particles->addParticle(position.x + 21, position.y + mask->rect.h, COL_OIL);
+						App->particles->addParticle(position.x + 17, position.y + mask->rect.h, COL_OIL);
 						break;
 					case SPRAY:
-						App->particles->addParticle(position.x + 21, position.y + mask->rect.h, COL_SPRAY);
+						App->particles->addParticle(position.x + 17, position.y + mask->rect.h, COL_SPRAY);
 						break;
 					case ROCKET:
-						App->particles->addParticle(position.x + 21, position.y - STILE_SIZE, COL_ROCKET);
+						App->particles->addParticle(position.x + 17, position.y - STILE_SIZE, COL_ROCKET);
 						break;
 				}
 				weapon = NONE;
