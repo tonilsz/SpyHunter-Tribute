@@ -49,6 +49,7 @@ class Animation
 public:
 	float speed = 1.0f;
 	bool loop = true;
+	bool expired = false;
 	bool repeat = false;
 	vector<SDL_Rect> frames;
 

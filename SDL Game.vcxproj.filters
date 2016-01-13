@@ -73,6 +73,9 @@
     <ClCompile Include="RoadSegmentDefinition.cpp">
       <Filter>GameModules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleCopter.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -148,6 +151,9 @@
       <Filter>GameModules</Filter>
     </ClInclude>
     <ClInclude Include="RoadSegment.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleCopter.h">
       <Filter>GameModules</Filter>
     </ClInclude>
   </ItemGroup>

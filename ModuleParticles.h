@@ -49,7 +49,7 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	bool CleanUp();
-	bool addParticle(float x, float y, COLLIDER_TYPE type);
+	bool addParticle(float x, float y, ANIMATION_TYPE type);
 	bool deleteParticle(int id);
 	bool OnColision(Collider* a, Collider *b, COLISION_STATE status);
 

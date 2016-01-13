@@ -34,6 +34,7 @@ public:
 	SDL_Rect turbo;
 	Timer state_timer;
 	Weapon weapon = NONE;
+	bool gun_turn;
 
 };
 

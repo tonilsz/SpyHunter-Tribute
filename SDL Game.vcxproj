@@ -17,6 +17,7 @@
     <ClCompile Include="ModuleAudio.cpp" />
     <ClCompile Include="ModuleCars.cpp" />
     <ClCompile Include="ModuleCollision.cpp" />
+    <ClCompile Include="ModuleCopter.cpp" />
     <ClCompile Include="ModuleDriver.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleParticles.cpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="ModuleAudio.h" />
     <ClInclude Include="ModuleCars.h" />
     <ClInclude Include="ModuleCollision.h" />
+    <ClInclude Include="ModuleCopter.h" />
     <ClInclude Include="ModuleDriver.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleParticles.h" />

@@ -9,6 +9,7 @@
 #include "ModuleParticles.h"
 #include "ModuleCollision.h"
 #include "ModuleCars.h"
+#include "ModuleCopter.h"
 #include "SDL/include/SDL.h"
 
 ModuleDriver::ModuleDriver(bool start_enabled) : Module(start_enabled)
@@ -42,7 +43,7 @@ bool ModuleDriver::Resume()
 	AddCar(ROAD_LORD, 4);
 	AddCar(SWITCH_BLADE, 5);
 	AddCar(ENFORCER, 6);
-	AddCar(MAD_BOMBER, 0);
+	AddCar(MAD_BOMBER, 1);
 
 	return true;
 }
@@ -95,5 +96,8 @@ update_status ModuleDriver::PostUpdate()
 }
 
 void ModuleDriver::AddCar(CARS car_type, int gear){
-	garage->push_back(new ModuleCars(car_type, gear, true));
+	if (car_type == MAD_BOMBER)
+		garage->push_back(new ModuleCopter(car_type, gear, true));
+	else
+		garage->push_back(new ModuleCars(car_type, gear, true));
 }

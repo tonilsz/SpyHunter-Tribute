@@ -40,31 +40,8 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 
 		for (int i = 0; i < 8; ++i)
 			crash.frames.push_back({ MTILE_SIZE * 9, MTILE_SIZE * i, MTILE_SIZE, MTILE_SIZE });
-		crash.speed = 0.2f;
 	}
-	else{
-		idle.frames.push_back({ LTILE_SIZE * 0, MTILE_SIZE * 10 + (LTILE_SIZE * 0), LTILE_SIZE, LTILE_SIZE });
-		idle.frames.push_back({ LTILE_SIZE * 0, MTILE_SIZE * 10 + (LTILE_SIZE * 1), LTILE_SIZE, LTILE_SIZE });
-		idle.frames.push_back({ LTILE_SIZE * 0 + (LTILE_SIZE * 4), MTILE_SIZE * 10 + (LTILE_SIZE * 2), LTILE_SIZE, LTILE_SIZE });
-		idle.frames.push_back({ LTILE_SIZE * 0, MTILE_SIZE * 10 + (LTILE_SIZE * 0), LTILE_SIZE, LTILE_SIZE });
-		idle.frames.push_back({ LTILE_SIZE * 0, MTILE_SIZE * 10 + (LTILE_SIZE * 1), LTILE_SIZE, LTILE_SIZE });
-		idle.frames.push_back({ LTILE_SIZE * 0 + (LTILE_SIZE * 5), MTILE_SIZE * 10 + (LTILE_SIZE * 2), LTILE_SIZE, LTILE_SIZE });
-		idle.speed = 0.4f;
-
-		right.x = LTILE_SIZE * 2;
-		right.y = LTILE_SIZE * car_type;
-		right.w = LTILE_SIZE;
-		right.h = LTILE_SIZE;
-
-		left.x = LTILE_SIZE * 3;
-		left.y = LTILE_SIZE * car_type;
-		left.w = LTILE_SIZE;
-		left.h = LTILE_SIZE;
-
-		for (int i = 0; i < 8; ++i)
-			crash.frames.push_back({ LTILE_SIZE * 9, LTILE_SIZE * i, LTILE_SIZE, LTILE_SIZE });
-		crash.speed = 0.2f;
-	}
+	crash.speed = 0.02f;
 
 	switch (car_type){
 	case RED_CAR:
@@ -87,9 +64,6 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 		break;
 	case ENFORCER:
 		mask = App->masks->AddCollider(SDL_Rect{ position.x + 17, position.y, 28, 58 }, COL_CAR, this);
-		break;
-	case MAD_BOMBER:
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 31, position.y + 26, 32, 64 }, COL_MAD_BOMBER, this);
 		break;
 	}
 
@@ -170,8 +144,8 @@ void ModuleCars::SetMovement(Movement new_state){
 	if (mask->rect.x < 0)
 		mask->rect.x = 0;
 
-	if (mask->rect.x >(App->window->screen_surface->w - MTILE_SIZE))
-		mask->rect.x = (App->window->screen_surface->w - MTILE_SIZE);
+	if (mask->rect.x >(App->window->screen_surface->w - STILE_SIZE))
+		mask->rect.x = (App->window->screen_surface->w - STILE_SIZE);
 
 	position.x = mask->rect.x + dif;
 }
@@ -180,14 +154,7 @@ update_status ModuleCars::Update()
 {
 	switch (moving){
 	case STRAIGHT:
-		if (car_type != MAD_BOMBER){
-			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
-		}
-		else{
-			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
-			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
-			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
-		}
+		App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER, dist);
 		break;
 	case RIGHT:
 		App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &right, 1.0f, RENDER_OTHER, dist);
@@ -213,4 +180,11 @@ void ModuleCars::UpGear(){
 void ModuleCars::DownGear(){
 	if (gear != 0)
 		gear -= 4;
+}
+
+fPoint ModuleCars::GetPivot(){
+	fPoint res;
+	res.x = mask->rect.x + mask->rect.w / 2;
+	res.y = mask->rect.y;
+	return res;
 }

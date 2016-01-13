@@ -80,10 +80,15 @@ update_status ModuleParticles::Update()
 		it->first->pos.y += App->player->gear;
 		it->second->rect.y = (int)it->first->pos.y - App->renderer->camera.y - (RTILE_HEIGHT * 1.5);
 
+
 		switch (it->second->type){
 		case COL_BULLET:
+			if (!it->first->anim.expired && it->first->live.GetTime() > 80){
+				App->player->SetWeapon(NONE);
+				it->first->anim.expired = true;
+			}
 			it->second->rect.y += (12 - App->player->gear);
-			if (it->first->live.GetTime() < 50){
+			if (it->first->live.GetTime() < 30){
 				it->first->pos.y -= App->player->gear + 4;
 				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
 			}
@@ -103,6 +108,10 @@ update_status ModuleParticles::Update()
 			}
 			break;
 		case COL_OIL:
+			if (!it->first->anim.expired && it->first->live.GetTime() > 20){
+				App->player->SetWeapon(NONE);
+				it->first->anim.expired = true;
+			}
 			if (it->first->live.GetTime() < 50)
 				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
 			else if (it->first->live.GetTime() < 100)
@@ -116,9 +125,13 @@ update_status ModuleParticles::Update()
 			}
 			break;
 		case COL_SPRAY:
+			if (!it->first->anim.expired && it->first->live.GetTime() > 30){
+				App->player->SetWeapon(NONE);
+				it->first->anim.expired = true;
+			}
+
 			it->second->rect.y += (12 - App->player->gear);
-			//if (App->player->gear != 0)
-				//--it->first->pos.y;
+
 			if (it->first->live.GetTime() < 50)
 				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
 			else if (it->first->live.GetTime() < 100){
@@ -187,7 +200,28 @@ update_status ModuleParticles::Update()
 			}
 			break;
 		case COL_BOMB:
-			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
+			it->first->pos.y -= App->player->gear + 4;
+			if (it->first->live.GetTime() < 10)
+				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
+			else if (it->first->live.GetTime() < 200)
+				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
+			else if (it->first->live.GetTime() < 300)
+				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(2)), 1.0f, RENDER_OTHER);
+			else if (it->first->live.GetTime() < 400)
+				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(3)), 1.0f, RENDER_OTHER);
+			else if (it->first->live.GetTime() < 2000){
+				it->second->SetEnabled(true);
+				if ((it->first->live.GetTime() % 100) < 50)
+					App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(4)), 1.0f, RENDER_OTHER);
+				else
+					App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(5)), 1.0f, RENDER_OTHER);
+			}
+			else if (it->first->live.GetTime() > 2000){
+				it->first->live.Stop();
+				App->masks->colliders.remove((*it).second);
+				delete((*it).second);
+			}
+			break;
 			break;
 		case COL_PUDDLE:
 			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
@@ -198,7 +232,7 @@ update_status ModuleParticles::Update()
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleParticles::addParticle(float x, float y, COLLIDER_TYPE type){
+bool ModuleParticles::addParticle(float x, float y, ANIMATION_TYPE type){
 	pair<Particle*, Collider*> element;
 	Particle *particle = new Particle();
 
@@ -212,57 +246,55 @@ bool ModuleParticles::addParticle(float x, float y, COLLIDER_TYPE type){
 
 	SDL_Rect col_area = SDL_Rect{ x, y, STILE_SIZE, STILE_SIZE };
 
+	int total_frames = 3;
+	COLLIDER_TYPE col_type = COL_NONE;
+
 	switch (type){
-	case COL_BULLET:
-		particle->anim.frames.push_back({ STILE_SIZE * 0, STILE_SIZE * GUN, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 1, STILE_SIZE * GUN, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 2, STILE_SIZE * GUN, STILE_SIZE, STILE_SIZE });
-		particle->anim.speed = 0.2f;
-		col_area = SDL_Rect{ x + 16, y+50, 2, 7 };
+	case ANIM_BULLET:
+		col_type = COL_BULLET;
+		col_area = SDL_Rect{ x + 16, y + 50, 2, 7 };
 		break;
-	case COL_OIL:
-		particle->anim.frames.push_back({ STILE_SIZE * 0, STILE_SIZE * OIL, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 1, STILE_SIZE * OIL, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 2, STILE_SIZE * OIL, STILE_SIZE, STILE_SIZE });
-		particle->anim.speed = 0.2f;
+	case ANIM_EXPLOTE:
+		total_frames = 5;
+		col_type = COL_ROAD_OUT;
 		break;
-	case COL_SPRAY:
-		particle->anim.frames.push_back({ STILE_SIZE * 0, STILE_SIZE * SPRAY, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 1, STILE_SIZE * SPRAY, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 2, STILE_SIZE * SPRAY, STILE_SIZE, STILE_SIZE });
-		particle->anim.speed = 0.2f; 
+	case ANIM_BULLET_ENEMY:
+		total_frames = 2;
+		col_type = COL_BULLET_ENEMY;
 		break;
-	case COL_BULLET_ENEMY:
-		//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
-		break;
-	case COL_ROCKET:
-		particle->anim.frames.push_back({ STILE_SIZE * 0, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 1, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 2, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 3, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 4, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 5, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
-		particle->anim.speed = 0.2f;
-		col_area = SDL_Rect{ x + 14, y + 50, 5, 18 };
-		break;
-	case COL_BOMB:
-		//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
+	case ANIM_RAZOR:
+		total_frames = 2;
+		col_type = COL_BULLET_ENEMY;
 		break;
 	case COL_PUDDLE:
-		particle->anim.frames.push_back({ STILE_SIZE * 0, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 1, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 2, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
-		particle->anim.frames.push_back({ STILE_SIZE * 3, STILE_SIZE * ROCKET, STILE_SIZE, STILE_SIZE });
-		particle->anim.speed = 0.2f; 
+		total_frames = 4;
+		col_type = COL_BULLET;
+		break;
+	case ANIM_ROAD_HOLE:
+		total_frames = 6;
+		col_type = COL_ROAD_OUT;
+		break;
+	case ANIM_ROCKET:
+		total_frames = 6;
+		col_type = COL_ROCKET;
+		col_area = SDL_Rect{ x + 14, y + 50, 5, 18 };
+		break;
+	case ANIM_BOMB:
+		total_frames = 4;
 		break;
 	}
+
+	for (int i = 0; i < total_frames; ++i)
+		particle->anim.frames.push_back({ STILE_SIZE * i, STILE_SIZE * type, STILE_SIZE, STILE_SIZE });
+	particle->anim.speed = 0.2f;
 
 
 	particle->speed = 1.0f;
 
-	particle->live.Start();
+	if (type == COL_PUDDLE)
+		particle->anim.loop = false;
 
-	Collider* mask = App->masks->AddCollider(col_area, type, this);
+	Collider* mask = App->masks->AddCollider(col_area, col_type, this);
 
 	if (type == COL_ROCKET)
 		mask->SetEnabled(false);

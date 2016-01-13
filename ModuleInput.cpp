@@ -88,15 +88,8 @@ update_status ModuleInput::PreUpdate()
 			else{
 				keyboard[i] = KEY_REPEAT;
 
-				if (keyboard[SDL_SCANCODE_D]) {
-					//Move foward
-					App->player->SetMovement(RIGHT);
-				}
-				else if (keyboard[SDL_SCANCODE_A]) {
-					//Move Backward
-					App->player->SetMovement(LEFT);
-				}
-				else if (keyboard[SDL_SCANCODE_H]) {
+
+				if (keyboard[SDL_SCANCODE_H]) {
 					App->player->SetWeapon(GUN);
 				}
 				else if (keyboard[SDL_SCANCODE_J]) {
@@ -104,6 +97,14 @@ update_status ModuleInput::PreUpdate()
 				}
 				else if (keyboard[SDL_SCANCODE_K]) {
 					App->player->SetWeapon(SPRAY);
+				}
+				if (keyboard[SDL_SCANCODE_D]) {
+					//Move foward
+					App->player->SetMovement(RIGHT);
+				}
+				else if (keyboard[SDL_SCANCODE_A]) {
+					//Move Backward
+					App->player->SetMovement(LEFT);
 				}
 			}
 		}

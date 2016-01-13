@@ -15,7 +15,8 @@
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled, CARS car)
 	: ModuleCars(PLAYER, 0, start_enabled),
-	pos(0)
+	pos(0),
+	gun_turn(false)
 {
 	gear = 0;
 	position.x = RTILE_WIDTH * 11.5;
@@ -117,7 +118,8 @@ void ModulePlayer::SetMovement(Movement new_state){
 }*/
 
 void ModulePlayer::SetWeapon(Weapon new_weapon){
-	weapon = new_weapon;
+	if (weapon != WORKING || weapon == ROCKET || new_weapon == NONE)
+		weapon = new_weapon;
 }
 
 update_status ModulePlayer::Update()
@@ -128,21 +130,6 @@ update_status ModulePlayer::Update()
 		switch (moving){
 		case STRAIGHT:
 			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
-				switch (weapon){
-					case GUN:
-						App->particles->addParticle(position.x + 17, position.y - STILE_SIZE, COL_BULLET);
-						break;
-					case OIL:
-						App->particles->addParticle(position.x + 17, position.y + mask->rect.h, COL_OIL);
-						break;
-					case SPRAY:
-						App->particles->addParticle(position.x + 17, position.y + mask->rect.h, COL_SPRAY);
-						break;
-					case ROCKET:
-						App->particles->addParticle(position.x + 17, position.y - STILE_SIZE, COL_ROCKET);
-						break;
-				}
-				weapon = NONE;
 			break;
 		case RIGHT:
 			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &right, 1.0f, RENDER_PLAYER);
@@ -156,6 +143,29 @@ update_status ModulePlayer::Update()
 		App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &turbo, 1.0f, RENDER_PLAYER);
 		if (state_timer.GetTime() > 100)
 			state = IDLE;
+		break;
+	}
+
+	switch (weapon){
+	case GUN:
+		if (gun_turn)
+			App->particles->addParticle(position.x + 13, position.y - STILE_SIZE, ANIM_BULLET);
+		else
+			App->particles->addParticle(position.x + 21, position.y - STILE_SIZE, ANIM_BULLET);
+		gun_turn = !gun_turn;
+		weapon = WORKING;
+		break;
+	case OIL:
+		App->particles->addParticle(position.x + 17, position.y + mask->rect.h, ANIM_OIL);
+		weapon = WORKING;
+		break;
+	case SPRAY:
+		App->particles->addParticle(position.x + 17, position.y + mask->rect.h, ANIM_SPRAY);
+		weapon = WORKING;
+		break;
+	case ROCKET:
+		App->particles->addParticle(position.x + 17, position.y - STILE_SIZE, ANIM_ROCKET);
+		weapon = NONE;
 		break;
 	}
 
