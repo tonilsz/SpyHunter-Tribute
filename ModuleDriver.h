@@ -26,6 +26,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 	void AddCar(CARS car_type = RED_CAR, int gear = 0);
+	void ClearWeapon();
 
 	vector<ModuleCars*>* garage;
 	int num_cars;

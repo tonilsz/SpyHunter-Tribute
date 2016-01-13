@@ -5,11 +5,13 @@
 #include "ModuleRender.h"
 #include "ModulePlayer.h"
 #include "ModuleTextures.h"
+#include "ModuleDriver.h"
 #include "ModuleCollision.h"
 
 ModuleParticles::ModuleParticles(bool start_enabled) : Module(start_enabled){
 
 	particles = std::vector < pair<Particle*, Collider*>>();
+	background = std::vector < pair<Particle*, Collider*>>();
 
 }
 
@@ -56,6 +58,14 @@ bool ModuleParticles::CleanUp()
 update_status ModuleParticles::PreUpdate()
 {
 	// Remove all colliders scheduled for deletion
+
+	for (vector<pair<Particle*, Collider*>>::iterator it = background.begin(); it != background.end();)
+	{
+		particles.push_back(*it);
+		it = background.erase(it);
+	}
+
+
 	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end();)
 	{
 		if (!(*it).first->live.running)
@@ -66,6 +76,8 @@ update_status ModuleParticles::PreUpdate()
 		else
 		++it;
 	}
+
+	background.clear();
 
 	return UPDATE_CONTINUE;
 }
@@ -81,8 +93,8 @@ update_status ModuleParticles::Update()
 		it->second->rect.y = (int)it->first->pos.y - App->renderer->camera.y - (RTILE_HEIGHT * 1.5);
 
 
-		switch (it->second->type){
-		case COL_BULLET:
+		switch (it->first->anim.type){
+		case ANIM_BULLET:
 			if (!it->first->anim.expired && it->first->live.GetTime() > 80){
 				App->player->SetWeapon(NONE);
 				it->first->anim.expired = true;
@@ -107,7 +119,7 @@ update_status ModuleParticles::Update()
 				}
 			}
 			break;
-		case COL_OIL:
+		case ANIM_OIL:
 			if (!it->first->anim.expired && it->first->live.GetTime() > 20){
 				App->player->SetWeapon(NONE);
 				it->first->anim.expired = true;
@@ -124,7 +136,7 @@ update_status ModuleParticles::Update()
 				delete((*it).second);
 			}
 			break;
-		case COL_SPRAY:
+		case ANIM_SPRAY:
 			if (!it->first->anim.expired && it->first->live.GetTime() > 30){
 				App->player->SetWeapon(NONE);
 				it->first->anim.expired = true;
@@ -150,7 +162,7 @@ update_status ModuleParticles::Update()
 				App->renderer->Blit(graphics, it->first->pos.x - (STILE_SIZE / 2), it->first->pos.y + (STILE_SIZE / 2), &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
 				App->renderer->Blit(graphics, it->first->pos.x + (STILE_SIZE / 2), it->first->pos.y + (STILE_SIZE / 2), &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
 				App->renderer->Blit(graphics, it->first->pos.x - (STILE_SIZE / 2), it->first->pos.y + (STILE_SIZE), &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
-				App->renderer->Blit(graphics, it->first->pos.x,					   it->first->pos.y + (STILE_SIZE), &((*it).first->anim.GetFrame(2)), 1.0f, RENDER_OTHER);
+				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y + (STILE_SIZE), &((*it).first->anim.GetFrame(2)), 1.0f, RENDER_OTHER);
 				App->renderer->Blit(graphics, it->first->pos.x + (STILE_SIZE), it->first->pos.y + (STILE_SIZE), &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
 			}
 			else if (it->first->live.GetTime() < 2000){
@@ -174,32 +186,10 @@ update_status ModuleParticles::Update()
 				delete((*it).second);
 			}
 			break;
-		case COL_BULLET_ENEMY:
+		case ANIM_BULLET_ENEMY:
 			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
 			break;
-		case COL_ROCKET:
-			it->first->pos.y -= App->player->gear + 4;
-			if (it->first->live.GetTime() < 10)
-				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
-			else if (it->first->live.GetTime() < 200)
-				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
-			else if (it->first->live.GetTime() < 300)
-				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(2)), 1.0f, RENDER_OTHER);
-			else if (it->first->live.GetTime() < 400)
-				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(3)), 1.0f, RENDER_OTHER);
-			else if (it->first->live.GetTime() < 2000){
-				it->second->SetEnabled(true);
-				if ((it->first->live.GetTime() % 100) < 50)
-					App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(4)), 1.0f, RENDER_OTHER);
-				else
-					App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(5)), 1.0f, RENDER_OTHER);
-			} else if (it->first->live.GetTime() > 2000){
-				it->first->live.Stop();
-				App->masks->colliders.remove((*it).second);
-				delete((*it).second);
-			}
-			break;
-		case COL_BOMB:
+		case ANIM_ROCKET:
 			it->first->pos.y -= App->player->gear + 4;
 			if (it->first->live.GetTime() < 10)
 				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
@@ -222,8 +212,37 @@ update_status ModuleParticles::Update()
 				delete((*it).second);
 			}
 			break;
+		case ANIM_BOMB:
+			--it->first->pos.y;
+			--it->second->rect.y;
+			if (!it->first->anim.expired && it->first->live.GetTime() > 1000){
+				App->driver->ClearWeapon();
+				it->first->anim.expired = true;
+			}
+
+			if (((int)it->first->anim.current_frame % 2) == 0){
+				App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
+				++it->first->anim.current_frame;
+			}
+			else{
+				App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
+			}
+
+			if (it->first->live.GetTime() > 500){
+				it->first->live.Stop();
+				App->masks->colliders.remove((*it).second);
+				delete((*it).second);
+				App->particles->addParticleBackground(it->first->pos.x, it->first->pos.y, ANIM_EXPLOTE);
+			}
+
 			break;
-		case COL_PUDDLE:
+		case ANIM_EXPLOTE:
+			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
+			break;
+		case ANIM_ROAD_HOLE:
+			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
+			break;
+		case ANIM_PUDDLE:
 			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
 			break;
 		}
@@ -233,7 +252,20 @@ update_status ModuleParticles::Update()
 }
 
 bool ModuleParticles::addParticle(float x, float y, ANIMATION_TYPE type){
-	pair<Particle*, Collider*> element;
+	pair<Particle*, Collider*>* element = add(x, y, type);
+	particles.push_back(*element);
+	return true;
+}
+
+bool ModuleParticles::addParticleBackground(float x, float y, ANIMATION_TYPE type){
+	pair<Particle*, Collider*>* element = add(x, y, type);
+	background.push_back(*element);
+	return true;
+}
+
+
+pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TYPE type){
+
 	Particle *particle = new Particle();
 
 	particle->pos = fPoint(x, y);
@@ -266,7 +298,7 @@ bool ModuleParticles::addParticle(float x, float y, ANIMATION_TYPE type){
 		total_frames = 2;
 		col_type = COL_BULLET_ENEMY;
 		break;
-	case COL_PUDDLE:
+	case ANIM_PUDDLE:
 		total_frames = 4;
 		col_type = COL_BULLET;
 		break;
@@ -277,10 +309,10 @@ bool ModuleParticles::addParticle(float x, float y, ANIMATION_TYPE type){
 	case ANIM_ROCKET:
 		total_frames = 6;
 		col_type = COL_ROCKET;
-		col_area = SDL_Rect{ x + 14, y + 50, 5, 18 };
 		break;
 	case ANIM_BOMB:
 		total_frames = 4;
+		col_area = SDL_Rect{ x, y + 50, 6, 22 };
 		break;
 	}
 
@@ -288,19 +320,23 @@ bool ModuleParticles::addParticle(float x, float y, ANIMATION_TYPE type){
 		particle->anim.frames.push_back({ STILE_SIZE * i, STILE_SIZE * type, STILE_SIZE, STILE_SIZE });
 	particle->anim.speed = 0.2f;
 
+	particle->anim.type = type;
 
 	particle->speed = 1.0f;
+
+	particle->live.Start();
 
 	if (type == COL_PUDDLE)
 		particle->anim.loop = false;
 
-	Collider* mask = App->masks->AddCollider(col_area, col_type, this);
+	Collider* mask = App->masks->AddCollider(col_area, col_type, App->particles);
 
 	if (type == COL_ROCKET)
 		mask->SetEnabled(false);
 
-	particles.push_back(make_pair(particle, mask));
-	return true;
+	pair<Particle*, Collider*> * res = new pair<Particle*, Collider*>(particle, mask);
+
+	return res;
 }
 
 bool ModuleParticles::OnColision(Collider* a, Collider *b, COLISION_STATE status)

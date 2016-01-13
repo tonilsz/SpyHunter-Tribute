@@ -51,10 +51,11 @@ public:
 	bool loop = true;
 	bool expired = false;
 	bool repeat = false;
+	ANIMATION_TYPE type;
 	vector<SDL_Rect> frames;
 
-private:
 	float current_frame = 0.0f;
+private:
 	int loops = 0;
 
 public:

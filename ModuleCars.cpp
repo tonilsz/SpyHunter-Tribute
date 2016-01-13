@@ -16,7 +16,8 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 	: Module(start_enabled),
 	gear(gear),
 	dist(0),
-	car_type(car_type)
+	car_type(car_type),
+	weapon(NONE)
 {
 	position.x = RTILE_WIDTH * 10;//RANDOM []
 	position.y = RTILE_HEIGHT * 6.5;
@@ -187,4 +188,9 @@ fPoint ModuleCars::GetPivot(){
 	res.x = mask->rect.x + mask->rect.w / 2;
 	res.y = mask->rect.y;
 	return res;
+}
+
+void ModuleCars::SetWeapon(Weapon new_weapon){
+	if (weapon != WORKING || new_weapon == NONE)
+		weapon = new_weapon;
 }

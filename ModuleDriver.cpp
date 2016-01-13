@@ -43,7 +43,7 @@ bool ModuleDriver::Resume()
 	AddCar(ROAD_LORD, 4);
 	AddCar(SWITCH_BLADE, 5);
 	AddCar(ENFORCER, 6);
-	AddCar(MAD_BOMBER, 1);
+	AddCar(MAD_BOMBER, 5);
 
 	return true;
 }
@@ -100,4 +100,16 @@ void ModuleDriver::AddCar(CARS car_type, int gear){
 		garage->push_back(new ModuleCopter(car_type, gear, true));
 	else
 		garage->push_back(new ModuleCars(car_type, gear, true));
+}
+
+void ModuleDriver::ClearWeapon(){
+	bool finded = false;
+
+	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && !finded; ++it){
+		if ((*it)->car_type == MAD_BOMBER){
+			finded = true;
+			(*it)->SetWeapon(NONE);
+		}
+
+	}
 }

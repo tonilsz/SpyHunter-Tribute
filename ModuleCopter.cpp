@@ -46,55 +46,63 @@ ModuleCopter::~ModuleCopter()
 
 update_status ModuleCopter::PreUpdate()
 {
-	//SetMovement(N);
-	++seeker;
-	if (seeker > 1){
-		seeker = 0;
-		Seek();
-	}
+	dist += (App->player->GetPivot().y - 100) > GetPivot().y;
 
-	return ModuleCars::PreUpdate();
+	if (App->player->gear != 0)
+		Seek();
+	else
+		SetMovement(N);
+	
+
+	last_position = position;
+
+	return UPDATE_CONTINUE;
 }
 
 void ModuleCopter::Seek(){
 
-	if ((App->player->GetPivot().x) < GetPivot().x){
-		if ((App->player->GetPivot().y - LTILE_SIZE) < GetPivot().y){
-			SetMovement(NW);
-
+	if ((App->player->GetPivot().x) > GetPivot().x - 5 && (App->player->GetPivot().x ) < GetPivot().x + 5){
+		if ((App->player->GetPivot().y) < GetPivot().y + 105 && (App->player->GetPivot().y) > GetPivot().y + 95){
+			//IDLE
+			SetMovement(S);
+			SetMovement(N);
+			ThrowBomb();
 		}
-		else if ((App->player->GetPivot().y - LTILE_SIZE) < GetPivot().y){
-			SetMovement(SW);
-
-		}
-		else{
-			SetMovement(E);
-		}
-	}
-	else if ((App->player->GetPivot().x) > GetPivot().x){
-		if ((App->player->GetPivot().y - LTILE_SIZE) < GetPivot().y){
-			SetMovement(NE);
-
-		}
-		else if ((App->player->GetPivot().y - LTILE_SIZE) < GetPivot().y){
-			SetMovement(SE);
-
-		}
-		else{
-			SetMovement(W);
-
-		}
-	}
-	else{
-		if ((App->player->GetPivot().y) < GetPivot().y){
+		else if ((App->player->GetPivot().y - 106) < GetPivot().y - 10){
 			SetMovement(N);
 
 		}
-		else{
+		else if ((App->player->GetPivot().y - 94) > GetPivot().y + 10){
 			SetMovement(S);
-
 		}
 	}
+	else if ((App->player->GetPivot().x) < GetPivot().x){
+		if ((App->player->GetPivot().y) < GetPivot().y + 105 && (App->player->GetPivot().y) > GetPivot().y + 95){
+			//IDLE
+			SetMovement(W);
+		}
+		else if ((App->player->GetPivot().y - 106) < GetPivot().y - 10){
+			SetMovement(NW);
+
+		}
+		else if ((App->player->GetPivot().y - 94) > GetPivot().y + 10){
+			SetMovement(SW);
+		}
+	}
+	else if ((App->player->GetPivot().x) > GetPivot().x){
+		if ((App->player->GetPivot().y) < GetPivot().y + 105 && (App->player->GetPivot().y) > GetPivot().y + 95){
+			//IDLE
+			SetMovement(E);
+		}
+		else if ((App->player->GetPivot().y - 106) < GetPivot().y - 10){
+			SetMovement(NE);
+
+		}
+		else if ((App->player->GetPivot().y - 94) > GetPivot().y + 10){
+			SetMovement(SE);
+		}
+	}
+
 }
 
 void ModuleCopter::SetMovement(ORIENTATION_TYPE new_dir){
@@ -134,18 +142,6 @@ void ModuleCopter::SetMovement(ORIENTATION_TYPE new_dir){
 		break;
 	}
 
-
-	if (moving == RIGHT)
-		mask->rect.x += 4;
-	else if (moving == LEFT)
-		mask->rect.x -= 4;
-
-	if (mask->rect.x < 0)
-		mask->rect.x = 0;
-
-	if (mask->rect.x >(App->window->screen_surface->w - MTILE_SIZE))
-		mask->rect.x = (App->window->screen_surface->w - MTILE_SIZE);
-
 	position.x = mask->rect.x + dif.x;
 	position.y = mask->rect.y + dif.y;
 }
@@ -153,9 +149,11 @@ void ModuleCopter::SetMovement(ORIENTATION_TYPE new_dir){
 update_status ModuleCopter::Update()
 {
 
-	App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetFrame(orientation*2)), 1.0f, RENDER_OTHER, dist);
-	App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetFrame((orientation * 2)+1)), 1.0f, RENDER_OTHER, dist);
-	App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(helix.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
+	fPoint dif(position.x - mask->rect.x, position.y - mask->rect.y);
+	App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame(orientation * 2)), 1.0f, RENDER_ROAD, dist);
+	App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame((orientation * 2) + 1)), 1.0f, RENDER_ROAD, dist);
+	App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(helix.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
+	
 	last_position = position;
 	return UPDATE_CONTINUE;
 }
@@ -164,4 +162,12 @@ bool ModuleCopter::OnCollision(Collider* a, Collider *b, COLISION_STATE status)
 {
 	LOG("Collision Copter");
 	return true;
+}
+
+void ModuleCopter::ThrowBomb()
+{
+	if (weapon != WORKING){
+		App->particles->addParticleBackground(mask->rect.x + (mask->rect.w / 2), mask->rect.y + (mask->rect.h / 2), ANIM_BOMB);
+		weapon = WORKING;
+	}
 }

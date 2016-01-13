@@ -50,11 +50,17 @@ public:
 	update_status Update();
 	bool CleanUp();
 	bool addParticle(float x, float y, ANIMATION_TYPE type);
+	bool addParticleBackground(float x, float y, ANIMATION_TYPE type);
 	bool deleteParticle(int id);
 	bool OnColision(Collider* a, Collider *b, COLISION_STATE status);
 
 	std::vector<pair<Particle*, Collider*>> particles;
+	std::vector<pair<Particle*, Collider*>> background;
 	SDL_Texture* graphics = nullptr;
+
+private:
+	pair<Particle*, Collider*> * add(float x, float y, ANIMATION_TYPE type);
+
 };
 
 #endif // __MODULEPARTICULES_H__

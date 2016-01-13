@@ -24,6 +24,7 @@ public:
 	bool OnCollision(Collider* a, Collider *b, COLISION_STATE status);
 	void SetMovement(ORIENTATION_TYPE new_dir);
 	void Seek();
+	void ThrowBomb();
 
 	int seeker;
 	bool seeking;

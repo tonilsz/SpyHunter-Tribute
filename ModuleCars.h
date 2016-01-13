@@ -13,7 +13,7 @@ struct SDL_Texture;
 
 enum Movement { STRAIGHT, RIGHT, LEFT };
 enum Status { IDLE, TURBO, BREAK};
-enum Weapon { NONE = -1, GUN, OIL, SPRAY, ROCKET, WORKING };
+enum Weapon { NONE = -1, GUN, OIL, SPRAY, ROCKET, BOMB, RAZOR, BULLET_ENEMY, WORKING };
 enum CARS { PLAYER = 0, RED_CAR = 1, BLUE_CAR = 2, MOTO = 3, TRUCK = 4, ROAD_LORD = 6, SWITCH_BLADE = 7, ENFORCER = 8 , MAD_BOMBER = 10 };
 
 class ModuleCars : public Module
@@ -33,7 +33,9 @@ public:
 	virtual void UpGear();
 	virtual void DownGear();
 	fPoint GetPivot();
+	virtual void SetWeapon(Weapon new_weapon);
 
+	Weapon weapon;
 	CARS car_type;
 	int dist;
 	Animation idle;
@@ -46,7 +48,7 @@ public:
 	Status state = IDLE;
 	Timer clock;
 	Collider* mask;
-	int gear;
+	float gear;
 
 private:
 };
