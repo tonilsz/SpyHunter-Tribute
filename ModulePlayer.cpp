@@ -10,13 +10,20 @@
 #include "ModuleCollision.h"
 #include "ModuleCars.h"
 #include "ModuleDriver.h"
+#include "ModuleAudio.h"
 #include "SDL/include/SDL.h"
 
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled, CARS car)
 	: ModuleCars(PLAYER, 0, start_enabled),
 	pos(0),
-	gun_turn(false)
+	lives(1), 
+	oil(0),
+	spray(0),
+	rocket(0),
+	truck(0),
+gun_turn(false),
+	god_mode(false)
 {
 	gear = 0;
 	position.x = RTILE_WIDTH * 11.5;
@@ -30,6 +37,7 @@ ModulePlayer::ModulePlayer(bool start_enabled, CARS car)
 	turbo.h = MTILE_SIZE;
 
 	state_timer = Timer();
+	first_mode = 0;
 
 }
 
@@ -51,6 +59,8 @@ bool ModulePlayer::Resume()
 {
 	LOG("Resume player");
 
+	score = 0;
+
 	mask = App->masks->AddCollider(SDL_Rect{ position.x + 21, position.y, 24, 41 }, COL_PLAYER, this);
 
 	return true;
@@ -67,6 +77,9 @@ bool ModulePlayer::CleanUp()
 
 update_status ModulePlayer::PreUpdate()
 {
+	score += gear;
+	if (first_mode<1000)
+		++first_mode;
 	if (last_position.x == position.x)
 		moving = STRAIGHT;
 	else if (last_position.x < position.x)
@@ -99,23 +112,29 @@ void ModulePlayer::SetState(int new_state){
 	}*/
 
 }
-/*
+
 void ModulePlayer::SetMovement(Movement new_state){
-		moving = new_state;
-		if (moving == RIGHT){
-			position.x += 4;
-			if (position.x > (App->window->screen_surface->w - MTILE_SIZE))
-				position.x = (App->window->screen_surface->w - MTILE_SIZE);
-		}
-		else{
-			position.x -= 4;
-			if (position.x < 0)
-				position.x = 0;
 
-		//mask->SetPos(position);
-		}
+	moving = new_state;
 
-}*/
+	int dif = position.x - mask->rect.x;
+
+	if (moving == RIGHT){
+		mask->rect.x += gear;
+		App->audio->PlayFx(AUD_TURN);
+	}
+	else if (moving == LEFT){
+		mask->rect.x -= gear;
+		App->audio->PlayFx(AUD_TURN);
+	}
+	if (mask->rect.x < 0)
+		mask->rect.x = 0;
+
+	if (mask->rect.x >(App->window->screen_surface->w - STILE_SIZE))
+		mask->rect.x = (App->window->screen_surface->w - STILE_SIZE);
+
+	position.x = mask->rect.x + dif;
+}
 
 void ModulePlayer::SetWeapon(Weapon new_weapon){
 	if (weapon != WORKING || weapon == ROCKET || new_weapon == NONE)
@@ -124,6 +143,10 @@ void ModulePlayer::SetWeapon(Weapon new_weapon){
 
 update_status ModulePlayer::Update()
 {
+
+	if ((score > 29999 && score < 30004) || (score > 59999 && score < 60004) || (score > 89999 && score < 90004) || (score > 119999 && score < 120004))
+		if ( lives < 3) 
+			++lives;
 
 	switch (state){
 	case IDLE:
@@ -189,4 +212,28 @@ void ModulePlayer::UpGear(){
 void ModulePlayer::DownGear(){
 	if (gear > 0)
 		gear -= 4;
+}
+
+void ModulePlayer::GodMode(){
+	if (god_mode){
+		idle.frames.clear();
+		idle.frames.push_back({ MTILE_SIZE * 0, MTILE_SIZE * car_type, MTILE_SIZE, MTILE_SIZE });
+
+		right.y = MTILE_SIZE * car_type;
+
+		left.y = MTILE_SIZE * car_type;
+		mask->SetEnabled(true);
+	}
+	else{
+		idle.frames.clear();
+		idle.frames.push_back({ MTILE_SIZE * 0, MTILE_SIZE * 14.5, MTILE_SIZE, MTILE_SIZE });
+		idle.frames.push_back({ MTILE_SIZE * 1, MTILE_SIZE * 14.5, MTILE_SIZE, MTILE_SIZE });
+
+		right.y = MTILE_SIZE * 14.5;
+
+		left.y = MTILE_SIZE * 14.5;
+		mask->SetEnabled(false);
+	}
+
+	god_mode = !god_mode;
 }

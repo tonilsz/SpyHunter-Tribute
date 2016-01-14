@@ -76,6 +76,9 @@
     <ClCompile Include="ModuleCopter.cpp">
       <Filter>GameModules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleUI.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -154,6 +157,9 @@
       <Filter>GameModules</Filter>
     </ClInclude>
     <ClInclude Include="ModuleCopter.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleUI.h">
       <Filter>GameModules</Filter>
     </ClInclude>
   </ItemGroup>

@@ -38,7 +38,7 @@ int main(int argc, char ** argv)
 			LOG("Application Init --------------");
 			if (App->Start() == false)
 			{
-				LOG("Application Init exits with error -----");
+				LOG("Application Start exits with error -----");
 				state = MAIN_EXIT;
 			}
 			else

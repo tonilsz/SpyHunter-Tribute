@@ -7,6 +7,7 @@
 #include "ModuleParticles.h"
 #include "ModuleRender.h"
 #include "ModuleCars.h"
+#include "ModuleAudio.h"
 #include "SDL/include/SDL.h"
 
 #define MAX_KEYS 300
@@ -81,8 +82,43 @@ update_status ModuleInput::PreUpdate()
 					App->masks->debug_mode = !App->masks->debug_mode;
 				}
 				else if (keyboard[SDL_SCANCODE_F2]) {
-					//DEBUG
+					//NO_RENDER
 					App->renderer->printer_mode = !App->renderer->printer_mode;
+				}
+				else if (keyboard[SDL_SCANCODE_F3]) {
+					//GOD MODE
+					App->player->GodMode();
+				}
+				else if (keyboard[SDL_SCANCODE_F4]) {
+					//FULL WEAPON MODE
+					App->player->oil = 999;
+					App->player->spray = 999;
+					App->player->rocket = 999;
+				}
+				else if (keyboard[SDL_SCANCODE_F5]) {
+					//SET AMBIEN FOREST
+					App->road->AmbientChange(A_FOREST);
+				}
+				else if (keyboard[SDL_SCANCODE_F6]) {
+					//SET AMBIEN DESERT
+					App->road->AmbientChange(A_DESERT);
+				}
+				else if (keyboard[SDL_SCANCODE_F7]) {
+					//SET AMBIEN GREEN
+					App->road->AmbientChange(A_GREEN);
+				}
+				else if (keyboard[SDL_SCANCODE_F8]) {
+					//SET AMBIEN GREY
+					App->road->AmbientChange(A_GREY);
+				}
+				else if (keyboard[SDL_SCANCODE_F9]) {
+					//SET AMBIEN SNOW
+					App->road->AmbientChange(A_SNOW);
+				}
+				else if (keyboard[SDL_SCANCODE_F10]) {
+					//SET AMBIEN SNOW
+					++App->player->lives;
+					App->audio->PlayFx(AUD_LIVE_UP);
 				}
 			}
 			else{
@@ -99,11 +135,9 @@ update_status ModuleInput::PreUpdate()
 					App->player->SetWeapon(SPRAY);
 				}
 				if (keyboard[SDL_SCANCODE_D]) {
-					//Move foward
 					App->player->SetMovement(RIGHT);
 				}
 				else if (keyboard[SDL_SCANCODE_A]) {
-					//Move Backward
 					App->player->SetMovement(LEFT);
 				}
 			}

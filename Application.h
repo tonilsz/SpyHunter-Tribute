@@ -15,6 +15,7 @@ class ModuleRoad;
 class ModuleDriver;
 class ModuleCollision;
 class ModuleParticles;
+class ModuleUI;
 
 class Application
 {
@@ -38,6 +39,7 @@ public:
 	ModuleDriver* driver;
 	ModuleCollision* masks;
 	ModuleParticles* particles;
+	ModuleUI* ui;
 
 private:
 

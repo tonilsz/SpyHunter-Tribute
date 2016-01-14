@@ -19,8 +19,37 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 	car_type(car_type),
 	weapon(NONE)
 {
-	position.x = RTILE_WIDTH * 10;//RANDOM []
+
+
+	position.x = RTILE_WIDTH * 7;
 	position.y = RTILE_HEIGHT * 6.5;
+
+	if (car_type != PLAYER){
+		RoadLine * startLine = *App->road->screen.begin();
+		if (App->player->gear < 5){
+			position.y = RTILE_HEIGHT * 9;
+
+		}
+		else{
+			startLine = --*App->road->screen.end();
+			position.y = RTILE_HEIGHT * -1;
+		}
+		int left=SCREEN_WIDTH, right=0;
+		for (vector<Collider*>::iterator it = startLine->mask->begin(); it != startLine->mask->end(); ++it){
+			if ((*it)->type == COL_ROAD_BORDER){
+				if ((*it)->rect.x < left)
+					left = (*it)->rect.x;
+				if ((*it)->rect.x > right)
+					right = (*it)->rect.x;
+			}
+		}
+
+		left += RTILE_WIDTH;
+		right -= RTILE_WIDTH;
+
+
+		position.x = rand() % (right - left) + left;
+	}
 
 	last_position = position;
 
@@ -111,6 +140,11 @@ update_status ModuleCars::PreUpdate()
 	else if (last_position.x > position.x)
 		moving = LEFT;
 
+	if (SDL_GetTicks() % 2000 > 0 && SDL_GetTicks() % 2000 < 20)
+		TurnRandom();
+	else
+		moving = STRAIGHT;
+
 	dist += (gear - App->player->gear);
 	mask->rect.y -= gear;
 
@@ -138,9 +172,9 @@ void ModuleCars::SetMovement(Movement new_state){
 	int dif = position.x - mask->rect.x;
 
 	if (moving == RIGHT)
-		mask->rect.x += 4;
+		mask->rect.x += gear * 2;
 	else if (moving == LEFT)
-		mask->rect.x -= 4;
+		mask->rect.x -= gear * 2;
 
 	if (mask->rect.x < 0)
 		mask->rect.x = 0;
@@ -193,4 +227,13 @@ fPoint ModuleCars::GetPivot(){
 void ModuleCars::SetWeapon(Weapon new_weapon){
 	if (weapon != WORKING || new_weapon == NONE)
 		weapon = new_weapon;
+}
+
+void ModuleCars::TurnRandom(){
+	int random = rand() % 10 + 1;
+	if (random < 5)
+		SetMovement(RIGHT);
+	else
+		SetMovement(LEFT);
+
 }

@@ -43,6 +43,7 @@ enum update_status
 #define SCREEN_HEIGHT 15 * RTILE_WIDTH
 #define SCREEN_WIDTH 7.5 * RTILE_HEIGHT
 #define SCREEN_SIZE 1
+#define SCREEN_BPP 1
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Spy Hunter"

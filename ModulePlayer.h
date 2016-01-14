@@ -25,16 +25,25 @@ public:
 	bool CleanUp();
 	bool OnCollision(Collider* a, Collider *b, COLISION_STATE status);
 	void SetState(int new_state);
-	//void SetMovement(Movement new_state);
+	void SetMovement(Movement new_state);
 	void SetWeapon(Weapon new_state);
 	void UpGear();
 	void DownGear();
+	void GodMode();
 
+	int oil;
+	int spray;
+	int rocket;
+	int truck;
+	int lives;
 	int pos;
+	int score;
+	int first_mode;
 	SDL_Rect turbo;
 	Timer state_timer;
 	Weapon weapon = NONE;
 	bool gun_turn;
+	bool god_mode;
 
 };
 

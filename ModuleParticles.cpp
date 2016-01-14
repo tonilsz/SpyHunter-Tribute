@@ -6,6 +6,7 @@
 #include "ModulePlayer.h"
 #include "ModuleTextures.h"
 #include "ModuleDriver.h"
+#include "ModuleAudio.h"
 #include "ModuleCollision.h"
 
 ModuleParticles::ModuleParticles(bool start_enabled) : Module(start_enabled){
@@ -61,6 +62,7 @@ update_status ModuleParticles::PreUpdate()
 
 	for (vector<pair<Particle*, Collider*>>::iterator it = background.begin(); it != background.end();)
 	{
+		it->first->live.Start();
 		particles.push_back(*it);
 		it = background.erase(it);
 	}
@@ -213,12 +215,8 @@ update_status ModuleParticles::Update()
 			}
 			break;
 		case ANIM_BOMB:
-			--it->first->pos.y;
-			--it->second->rect.y;
-			if (!it->first->anim.expired && it->first->live.GetTime() > 1000){
-				App->driver->ClearWeapon();
-				it->first->anim.expired = true;
-			}
+			------it->first->pos.y;
+			------it->second->rect.y;
 
 			if (((int)it->first->anim.current_frame % 2) == 0){
 				App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
@@ -232,17 +230,40 @@ update_status ModuleParticles::Update()
 				it->first->live.Stop();
 				App->masks->colliders.remove((*it).second);
 				delete((*it).second);
-				App->particles->addParticleBackground(it->first->pos.x, it->first->pos.y, ANIM_EXPLOTE);
+				App->driver->ClearWeapon();
+				App->particles->addParticleBackground(it->first->pos.x, it->first->pos.y, ANIM_ROAD_HOLE);
 			}
 
 			break;
 		case ANIM_EXPLOTE:
-			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
+			App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
+			if (it->first->anim.Finished()){
+				it->first->live.Stop();
+				App->masks->colliders.remove((*it).second);
+				delete((*it).second);
+			}
 			break;
 		case ANIM_ROAD_HOLE:
-			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
+			if (it->first->anim.Finished())
+				App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetFrame(it->first->anim.frames.size() - 1)), 1.0f, RENDER_OTHER);
+			else
+				App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
 			break;
 		case ANIM_PUDDLE:
+				it->first->live.Start();
+				if (it->first->live.running){
+					App->renderer->Blit(graphics, it->first->pos.x - 32, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
+					App->renderer->Blit(graphics, it->first->pos.x + 32, it->first->pos.y, &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
+					if (it->first->live.GetTime() < 200){
+						it->first->live.Stop();
+						App->masks->colliders.remove((*it).second);
+						delete((*it).second);
+					}
+				}
+				else {
+					App->renderer->Blit(graphics, it->first->pos.x - 32, it->first->pos.y, &((*it).first->anim.GetFrame(2)), 1.0f, RENDER_OTHER);
+					App->renderer->Blit(graphics, it->first->pos.x + 32, it->first->pos.y, &((*it).first->anim.GetFrame(3)), 1.0f, RENDER_OTHER);
+				}
 			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
 			break;
 		}
@@ -253,6 +274,8 @@ update_status ModuleParticles::Update()
 
 bool ModuleParticles::addParticle(float x, float y, ANIMATION_TYPE type){
 	pair<Particle*, Collider*>* element = add(x, y, type);
+	if (type != COL_PUDDLE)
+		element->first->live.Start();
 	particles.push_back(*element);
 	return true;
 }
@@ -283,10 +306,15 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 
 	switch (type){
 	case ANIM_BULLET:
+		App->audio->PlayFx(AUD_BULLET);
 		col_type = COL_BULLET;
 		col_area = SDL_Rect{ x + 16, y + 50, 2, 7 };
 		break;
+	case ANIM_SPRAY:
+		App->audio->PlayFx(AUD_SPRAY);
+		break;
 	case ANIM_EXPLOTE:
+		App->audio->PlayFx(AUD_EXPLOSION);
 		total_frames = 5;
 		col_type = COL_ROAD_OUT;
 		break;
@@ -303,14 +331,17 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 		col_type = COL_BULLET;
 		break;
 	case ANIM_ROAD_HOLE:
+		App->audio->PlayFx(AUD_EXPLOSION);
 		total_frames = 6;
 		col_type = COL_ROAD_OUT;
 		break;
 	case ANIM_ROCKET:
+		App->audio->PlayFx(AUD_ROCKET);
 		total_frames = 6;
 		col_type = COL_ROCKET;
 		break;
 	case ANIM_BOMB:
+		App->audio->PlayFx(AUD_COPTER_BOMB);
 		total_frames = 4;
 		col_area = SDL_Rect{ x, y + 50, 6, 22 };
 		break;
@@ -323,8 +354,6 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 	particle->anim.type = type;
 
 	particle->speed = 1.0f;
-
-	particle->live.Start();
 
 	if (type == COL_PUDDLE)
 		particle->anim.loop = false;

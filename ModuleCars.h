@@ -34,6 +34,7 @@ public:
 	virtual void DownGear();
 	fPoint GetPivot();
 	virtual void SetWeapon(Weapon new_weapon);
+	void TurnRandom();
 
 	Weapon weapon;
 	CARS car_type;

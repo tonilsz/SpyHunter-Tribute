@@ -7,6 +7,7 @@
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "ModuleDriver.h"
+#include "ModuleUI.h"
 #include "RoadLoop.h"
 #include "RoadSegment.h"
 #include "RoadLine.h"
@@ -58,6 +59,8 @@ bool ModuleRoad::Start()
 bool ModuleRoad::Resume()
 {
 	LOG("Resume Road scene");
+
+	App->audio->PlayMusic("title-song.mid", 1);
 
 	int i = 0;
 
@@ -111,6 +114,8 @@ void ModuleRoad::GenerateLine(){
 	if (pos_line == road.begin()[pos_loop]->loop.begin()[pos_segment]->segment.size()){
 		pos_line = 0;
 		++pos_segment;
+		if (pos_segment == 2)
+			AmbientChange();
 		if (pos_segment == road.begin()[pos_loop]->loop.size()){
 			pos_segment = 0;
 			++pos_loop;
@@ -118,5 +123,31 @@ void ModuleRoad::GenerateLine(){
 				pos_loop = 0;
 			}
 		}
+	}
+}
+
+void ModuleRoad::AmbientChange(SEGMENT_AMBIENT ambient){
+
+	if (ambient == A_NONE)
+		road.begin()[pos_loop]->ambient;
+
+	App->ui->textColor = WHITE;
+	switch (ambient){
+		case A_FOREST:
+			graphics = App->textures->Load("amb_forest.png");
+			break;
+		case A_DESERT:
+			graphics = App->textures->Load("amb_desert.png");
+			break;
+		case A_GREY:
+			graphics = App->textures->Load("amb_green.png");
+			break;
+		case A_GREEN:
+			graphics = App->textures->Load("amb_grey.png");
+			break;
+		case A_SNOW:
+			graphics = App->textures->Load("amb_snow.png");
+			App->ui->textColor = BLUE;
+			break;
 	}
 }

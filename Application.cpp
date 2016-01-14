@@ -9,6 +9,7 @@
 #include "ModuleRoad.h"
 #include "ModuleDriver.h"
 #include "ModuleCars.h"
+#include "ModuleUI.h"
 
 using namespace std;
 
@@ -28,6 +29,7 @@ Application::Application()
 	modules.push_back(driver = new ModuleDriver());
 	modules.push_back(player = new ModulePlayer(false));
 	modules.push_back(particles = new ModuleParticles());
+	modules.push_back(ui = new ModuleUI());
 }
 
 Application::~Application()
@@ -41,7 +43,7 @@ bool Application::Start()
 	bool ret = true;
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
-		ret = (*it)->Start(); // we init everything, even if not anabled
+		ret = (*it)->Start(); // we init everything, even if not enabled
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 	{

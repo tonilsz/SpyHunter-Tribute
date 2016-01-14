@@ -4,6 +4,18 @@
 #include <vector>
 #include "Module.h"
 
+enum AUDIO_TYPE {
+	AUD_BULLET,
+	AUD_COPTER,
+	AUD_COPTER_BOMB,
+	AUD_EXPLOSION,
+	AUD_LIVE_UP,
+	AUD_PINCHAZO,
+	AUD_ROCKET,
+	AUD_SPRAY,
+	AUD_TURN
+};
+
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 
 struct _Mix_Music;
@@ -18,6 +30,7 @@ public:
 	~ModuleAudio();
 
 	bool Start();
+	bool Resume();
 	bool CleanUp();
 
 	// Play a music file
@@ -27,7 +40,17 @@ public:
 	unsigned int LoadFx(const char* path);
 
 	// Play a previously loaded WAV
-	bool PlayFx(unsigned int fx, int repeat = 0);
+	bool PlayFx(AUDIO_TYPE audio, int repeat = 0);
+
+	unsigned int bullet;
+	unsigned int copter;
+	unsigned int copter_bomb;
+	unsigned int explosion;
+	unsigned int live_up;
+	unsigned int pinchazo;
+	unsigned int rocket;
+	unsigned int spray;
+	unsigned int turn;
 
 private:
 

@@ -48,10 +48,12 @@ update_status ModuleCopter::PreUpdate()
 {
 	dist += (App->player->GetPivot().y - 100) > GetPivot().y;
 
-	if (App->player->gear != 0)
+	if (App->player->gear != 0 && seeker < 5)
 		Seek();
-	else
+	else{
 		SetMovement(N);
+		gear = 9;
+	}
 	
 
 	last_position = position;
@@ -64,8 +66,12 @@ void ModuleCopter::Seek(){
 	if ((App->player->GetPivot().x) > GetPivot().x - 5 && (App->player->GetPivot().x ) < GetPivot().x + 5){
 		if ((App->player->GetPivot().y) < GetPivot().y + 105 && (App->player->GetPivot().y) > GetPivot().y + 95){
 			//IDLE
-			SetMovement(S);
-			SetMovement(N);
+			if (App->player->gear > gear)
+				++gear;
+
+			if (App->player->gear < gear)
+				--gear;
+
 			ThrowBomb();
 		}
 		else if ((App->player->GetPivot().y - 106) < GetPivot().y - 10){
@@ -102,6 +108,12 @@ void ModuleCopter::Seek(){
 			SetMovement(SE);
 		}
 	}
+
+	if ((App->player->GetPivot().y - 106) < GetPivot().y - 250)
+		++gear;
+	if ((App->player->GetPivot().y - 106) > GetPivot().y + 150)
+		if ( gear > 1)
+			--gear;
 
 }
 
@@ -168,6 +180,7 @@ void ModuleCopter::ThrowBomb()
 {
 	if (weapon != WORKING){
 		App->particles->addParticleBackground(mask->rect.x + (mask->rect.w / 2), mask->rect.y + (mask->rect.h / 2), ANIM_BOMB);
+		++seeker;
 		weapon = WORKING;
 	}
 }

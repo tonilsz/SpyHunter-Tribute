@@ -10,6 +10,7 @@ using namespace std;
 
 enum SEGMENT_AMBIENT
 {
+	A_NONE = -1,
 	A_FOREST,
 	A_DESERT,
 	A_GREY,

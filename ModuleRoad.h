@@ -34,6 +34,7 @@ public:
 	update_status Update();
 	bool Stop();
 	void AddLine();
+	void AmbientChange(SEGMENT_AMBIENT ambient = A_NONE);
 
 	SDL_Texture* graphics = nullptr;
 	int pos_loop;

@@ -10,6 +10,7 @@
 #include "ModuleCollision.h"
 #include "ModuleCars.h"
 #include "ModuleCopter.h"
+#include "ModuleAudio.h"
 #include "SDL/include/SDL.h"
 
 ModuleDriver::ModuleDriver(bool start_enabled) : Module(start_enabled)
@@ -36,14 +37,14 @@ bool ModuleDriver::Resume()
 
 	graphics = App->textures->Load("cars.png"); // arcade version
 
-	AddCar(MOTO, 7);
-	AddCar(RED_CAR, 1);
-	AddCar(BLUE_CAR, 2);
-	AddCar(TRUCK, 3);
-	AddCar(ROAD_LORD, 4);
-	AddCar(SWITCH_BLADE, 5);
-	AddCar(ENFORCER, 6);
-	AddCar(MAD_BOMBER, 5);
+	AddCar(MOTO, rand() % 3 + 5);
+	AddCar(RED_CAR, rand() % 3 + 5);
+	AddCar(BLUE_CAR, rand() % 3 + 5);
+	AddCar(TRUCK, rand() % 3 + 5);
+	AddCar(ROAD_LORD, rand() % 3 + 5);
+	AddCar(SWITCH_BLADE, rand() % 3 + 5);
+	AddCar(ENFORCER, rand() % 3 + 5);
+	AddCar(MAD_BOMBER, rand() % 3 + 5);
 
 	return true;
 }
@@ -96,8 +97,10 @@ update_status ModuleDriver::PostUpdate()
 }
 
 void ModuleDriver::AddCar(CARS car_type, int gear){
-	if (car_type == MAD_BOMBER)
+	if (car_type == MAD_BOMBER){
 		garage->push_back(new ModuleCopter(car_type, gear, true));
+		App->audio->PlayFx(AUD_COPTER, -1);
+	}
 	else
 		garage->push_back(new ModuleCars(car_type, gear, true));
 }
