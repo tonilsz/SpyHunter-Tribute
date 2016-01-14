@@ -27,7 +27,7 @@ public:
 	virtual update_status PreUpdate();
 	virtual update_status Update();
 	virtual bool CleanUp();
-	virtual bool OnCollision(Collider* a, Collider *b, COLISION_STATE status);
+	virtual bool OnColision(Collider* a, Collider *b, COLISION_STATE status);
 	virtual void SetState(int new_state);
 	virtual void SetMovement(Movement new_state);
 	virtual void UpGear();
@@ -50,6 +50,7 @@ public:
 	Timer clock;
 	Collider* mask;
 	float gear;
+	bool to_delete;
 
 private:
 };

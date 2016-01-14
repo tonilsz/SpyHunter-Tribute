@@ -22,11 +22,11 @@ ModulePlayer::ModulePlayer(bool start_enabled, CARS car)
 	spray(0),
 	rocket(0),
 	truck(0),
-gun_turn(false),
+	gun_turn(false),
 	god_mode(false)
 {
 	gear = 0;
-	position.x = RTILE_WIDTH * 11.5;
+	position.x = RTILE_WIDTH * 9;
 	position.y = RTILE_HEIGHT * 6;
 
 	last_position = position;
@@ -144,9 +144,13 @@ void ModulePlayer::SetWeapon(Weapon new_weapon){
 update_status ModulePlayer::Update()
 {
 
-	if ((score > 29999 && score < 30004) || (score > 59999 && score < 60004) || (score > 89999 && score < 90004) || (score > 119999 && score < 120004))
-		if ( lives < 3) 
+	if ((score > 29999 && score < 30004) || (score > 59999 && score < 60004) || (score > 89999 && score < 90004) || (score > 119999 && score < 120004)){
+		if (lives < 3)
 			++lives;
+		if (truck < 3)
+			++truck;
+
+	}
 
 	switch (state){
 	case IDLE:
@@ -193,12 +197,41 @@ update_status ModulePlayer::Update()
 	}
 
 	last_position = position;
+
+	if (lives == 0)
+		App->road->SetGameState(G_OVER);
+
 	return UPDATE_CONTINUE;
 }
 
-bool ModulePlayer::OnCollision(Collider* a, Collider *b, COLISION_STATE status)
+bool ModulePlayer::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 {
 	LOG("Collision Player");
+
+	if (a->type == COL_PLAYER && b->type == COL_ROAD_OUT){
+		App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
+		if ((first_mode >= 1000))
+			--App->player->lives;
+		App->player->position.x = RTILE_WIDTH * 9;
+		App->player->mask->rect.x = RTILE_WIDTH * 9 + 21;
+		App->player->gear = 0;
+	}
+	if (a->type == COL_PLAYER && b->type == COL_BOMB){
+		App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
+		gear = 0;
+		if ((first_mode>=1000))
+			--App->player->lives;
+		App->player->position.x = RTILE_WIDTH * 9;
+		App->player->mask->rect.x = RTILE_WIDTH * 9 + 21;
+		App->player->gear = 0;
+	}
+	/*if (a->type == COL_PLAYER && b->type == COL_CAR){
+		if (a->rect.x > b->rect.x)
+			SetMovement(LEFT);
+		else
+			SetMovement(RIGHT);
+	}*/
+
 	return true;
 }
 void ModulePlayer::UpGear(){
@@ -237,3 +270,45 @@ void ModulePlayer::GodMode(){
 
 	god_mode = !god_mode;
 }
+
+
+void ModulePlayer::GetRandWeapon(){
+	int new_weapon = rand() % 3 + 1;
+	switch (new_weapon){
+	case 0:
+		App->player->oil = 999;
+
+	}
+	switch (new_weapon){
+	case 1:
+		App->player->spray = 999;
+
+	}
+	switch (new_weapon){
+	case 2:
+		App->player->rocket = 9;
+
+	}
+	if (god_mode){
+		idle.frames.clear();
+		idle.frames.push_back({ MTILE_SIZE * 0, MTILE_SIZE * car_type, MTILE_SIZE, MTILE_SIZE });
+
+		right.y = MTILE_SIZE * car_type;
+
+		left.y = MTILE_SIZE * car_type;
+		mask->SetEnabled(true);
+	}
+	else{
+		idle.frames.clear();
+		idle.frames.push_back({ MTILE_SIZE * 0, MTILE_SIZE * 14.5, MTILE_SIZE, MTILE_SIZE });
+		idle.frames.push_back({ MTILE_SIZE * 1, MTILE_SIZE * 14.5, MTILE_SIZE, MTILE_SIZE });
+
+		right.y = MTILE_SIZE * 14.5;
+
+		left.y = MTILE_SIZE * 14.5;
+		mask->SetEnabled(false);
+	}
+
+	god_mode = !god_mode;
+}
+

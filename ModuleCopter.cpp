@@ -170,7 +170,7 @@ update_status ModuleCopter::Update()
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleCopter::OnCollision(Collider* a, Collider *b, COLISION_STATE status)
+bool ModuleCopter::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 {
 	LOG("Collision Copter");
 	return true;

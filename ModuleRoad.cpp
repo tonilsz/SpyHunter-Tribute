@@ -17,7 +17,8 @@ ModuleRoad::ModuleRoad(bool start_enabled) :
 Module(start_enabled), 
 pos_loop(0),
 pos_segment(0),
-pos_line(0)
+pos_line(0),
+road_state(G_START)
 {
 }
 
@@ -29,7 +30,7 @@ bool ModuleRoad::Start()
 {
 	LOG("Loading Road scene");
 	//Test Road
-	road.push_back(new RoadLoop(new LOOP0, (SEGMENT_AMBIENT)A_FOREST));
+	//road.push_back(new RoadLoop(new LOOP0, (SEGMENT_AMBIENT)A_GREY));
 
 	//True Loop
 	road.push_back(new RoadLoop(new LOOP1, (SEGMENT_AMBIENT)A_FOREST));
@@ -129,7 +130,7 @@ void ModuleRoad::GenerateLine(){
 void ModuleRoad::AmbientChange(SEGMENT_AMBIENT ambient){
 
 	if (ambient == A_NONE)
-		road.begin()[pos_loop]->ambient;
+		ambient = road.begin()[pos_loop]->ambient;
 
 	App->ui->textColor = WHITE;
 	switch (ambient){
@@ -149,5 +150,40 @@ void ModuleRoad::AmbientChange(SEGMENT_AMBIENT ambient){
 			graphics = App->textures->Load("amb_snow.png");
 			App->ui->textColor = BLUE;
 			break;
+	}
+}
+
+void ModuleRoad::SetGameState(GAME_STATE state){
+	if (road_state == G_START){
+		if (state == G_PLAY)
+			road_state = state;
+	}
+	else if (road_state == G_PLAY){
+		if (state == G_OVER){
+			road_state = state;
+			App->player->position.x = RTILE_WIDTH * 9;
+			App->player->gear = 0;
+		}
+	}
+	else if (road_state == G_OVER){
+		if (state == G_PLAY){
+			road_state = state;
+			App->player->oil = 0;
+			App->player->spray = 0;
+			App->player->rocket = 0;
+			App->player->truck = 0;
+			App->player->score = 0;
+			App->player->lives = 1;
+			App->player->pos = 0;
+			App->player->first_mode = 0;
+
+			App->driver->AddCar(App->driver->GetRandomCar(), rand() % 3 + 4);
+			App->driver->AddCar(App->driver->GetRandomCar(), rand() % 3 + 4);
+			App->driver->AddCar(App->driver->GetRandomCar(), rand() % 3 + 4);
+			App->driver->AddCar(App->driver->GetRandomCar(), rand() % 3 + 4);
+			App->driver->AddCar(App->driver->GetRandomCar(), rand() % 3 + 4);
+
+			App->player->position.x = RTILE_WIDTH * 9;
+		}
 	}
 }

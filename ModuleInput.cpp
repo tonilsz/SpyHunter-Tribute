@@ -63,82 +63,94 @@ update_status ModuleInput::PreUpdate()
 		{
 			if (keyboard[i] == KEY_IDLE){
 				keyboard[i] = KEY_DOWN;
+				if (App->road->road_state == G_PLAY){
+					if (keyboard[SDL_SCANCODE_W]) {
+						//up gear
+						App->player->UpGear();
+					}
+					else if (keyboard[SDL_SCANCODE_S]) {
+						//down gear
+						App->player->DownGear();
+					}
+					else if (keyboard[SDL_SCANCODE_L] && App->player->gear != 0) {
+						App->player->SetWeapon(ROCKET);
+					}
+					else if (keyboard[SDL_SCANCODE_Y]) {
+						App->player->GetRandWeapon();
+					}
+					else if (keyboard[SDL_SCANCODE_F1]) {
+						//DEBUG
+						App->masks->debug_mode = !App->masks->debug_mode;
+					}
+					else if (keyboard[SDL_SCANCODE_F2]) {
+						//NO_RENDER
+						App->renderer->printer_mode = !App->renderer->printer_mode;
+					}
+					else if (keyboard[SDL_SCANCODE_F3]) {
+						//GOD MODE
+						App->player->GodMode();
+					}
+					else if (keyboard[SDL_SCANCODE_F4]) {
+						//FULL WEAPON MODE
+						App->player->oil = 999;
+						App->player->spray = 999;
+						App->player->rocket = 999;
+					}
+					else if (keyboard[SDL_SCANCODE_F5]) {
+						//SET AMBIEN FOREST
+						App->road->AmbientChange(A_FOREST);
+					}
+					else if (keyboard[SDL_SCANCODE_F6]) {
+						//SET AMBIEN DESERT
+						App->road->AmbientChange(A_DESERT);
+					}
+					else if (keyboard[SDL_SCANCODE_F7]) {
+						//SET AMBIEN GREEN
+						App->road->AmbientChange(A_GREEN);
+					}
+					else if (keyboard[SDL_SCANCODE_F8]) {
+						//SET AMBIEN GREY
+						App->road->AmbientChange(A_GREY);
+					}
+					else if (keyboard[SDL_SCANCODE_F9]) {
+						//SET AMBIEN SNOW
+						App->road->AmbientChange(A_SNOW);
+					}
+					else if (keyboard[SDL_SCANCODE_F10]) {
+						//LIVES ++
+						if (++App->player->lives < 4)
+							App->audio->PlayFx(AUD_LIVE_UP);
+					}
+					else if (keyboard[SDL_SCANCODE_F11]) {
+						//LIVES --
+						if (App->player->lives > 0)
+							--App->player->lives;
+					}
+				}
 				if (keyboard[SDL_SCANCODE_SPACE]) {
-					//GUN
-				}
-				else if (keyboard[SDL_SCANCODE_W]) {
-					//up gear
-					App->player->UpGear();
-				}
-				else if (keyboard[SDL_SCANCODE_S]) {
-					//down gear
-					App->player->DownGear();
-				}
-				else if (keyboard[SDL_SCANCODE_L]) {
-					App->player->SetWeapon(ROCKET);
-				}
-				else if (keyboard[SDL_SCANCODE_F1]) {
-					//DEBUG
-					App->masks->debug_mode = !App->masks->debug_mode;
-				}
-				else if (keyboard[SDL_SCANCODE_F2]) {
-					//NO_RENDER
-					App->renderer->printer_mode = !App->renderer->printer_mode;
-				}
-				else if (keyboard[SDL_SCANCODE_F3]) {
-					//GOD MODE
-					App->player->GodMode();
-				}
-				else if (keyboard[SDL_SCANCODE_F4]) {
-					//FULL WEAPON MODE
-					App->player->oil = 999;
-					App->player->spray = 999;
-					App->player->rocket = 999;
-				}
-				else if (keyboard[SDL_SCANCODE_F5]) {
-					//SET AMBIEN FOREST
-					App->road->AmbientChange(A_FOREST);
-				}
-				else if (keyboard[SDL_SCANCODE_F6]) {
-					//SET AMBIEN DESERT
-					App->road->AmbientChange(A_DESERT);
-				}
-				else if (keyboard[SDL_SCANCODE_F7]) {
-					//SET AMBIEN GREEN
-					App->road->AmbientChange(A_GREEN);
-				}
-				else if (keyboard[SDL_SCANCODE_F8]) {
-					//SET AMBIEN GREY
-					App->road->AmbientChange(A_GREY);
-				}
-				else if (keyboard[SDL_SCANCODE_F9]) {
-					//SET AMBIEN SNOW
-					App->road->AmbientChange(A_SNOW);
-				}
-				else if (keyboard[SDL_SCANCODE_F10]) {
-					//SET AMBIEN SNOW
-					++App->player->lives;
-					App->audio->PlayFx(AUD_LIVE_UP);
+					//START
+					App->road->SetGameState(G_PLAY);
 				}
 			}
 			else{
 				keyboard[i] = KEY_REPEAT;
 
-
-				if (keyboard[SDL_SCANCODE_H]) {
-					App->player->SetWeapon(GUN);
-				}
-				else if (keyboard[SDL_SCANCODE_J]) {
-					App->player->SetWeapon(OIL);
-				}
-				else if (keyboard[SDL_SCANCODE_K]) {
-					App->player->SetWeapon(SPRAY);
-				}
-				if (keyboard[SDL_SCANCODE_D]) {
-					App->player->SetMovement(RIGHT);
-				}
-				else if (keyboard[SDL_SCANCODE_A]) {
-					App->player->SetMovement(LEFT);
+				if (App->road->road_state == G_PLAY){
+					if (keyboard[SDL_SCANCODE_H] && App->player->gear != 0) {
+						App->player->SetWeapon(GUN);
+					}
+					else if (keyboard[SDL_SCANCODE_J] && App->player->gear != 0) {
+						App->player->SetWeapon(OIL);
+					}
+					else if (keyboard[SDL_SCANCODE_K] && App->player->gear != 0) {
+						App->player->SetWeapon(SPRAY);
+					}
+					if (keyboard[SDL_SCANCODE_D]) {
+						App->player->SetMovement(RIGHT);
+					}
+					else if (keyboard[SDL_SCANCODE_A]) {
+						App->player->SetMovement(LEFT);
+					}
 				}
 			}
 		}

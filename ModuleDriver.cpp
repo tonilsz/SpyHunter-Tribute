@@ -11,6 +11,7 @@
 #include "ModuleCars.h"
 #include "ModuleCopter.h"
 #include "ModuleAudio.h"
+#include "ModulePlayer.h"
 #include "SDL/include/SDL.h"
 
 ModuleDriver::ModuleDriver(bool start_enabled) : Module(start_enabled)
@@ -37,21 +38,20 @@ bool ModuleDriver::Resume()
 
 	graphics = App->textures->Load("cars.png"); // arcade version
 
-	AddCar(MOTO, rand() % 3 + 5);
-	AddCar(RED_CAR, rand() % 3 + 5);
-	AddCar(BLUE_CAR, rand() % 3 + 5);
-	AddCar(TRUCK, rand() % 3 + 5);
-	AddCar(ROAD_LORD, rand() % 3 + 5);
-	AddCar(SWITCH_BLADE, rand() % 3 + 5);
-	AddCar(ENFORCER, rand() % 3 + 5);
-	AddCar(MAD_BOMBER, rand() % 3 + 5);
+	GetRandomCar();
+
+	AddCar(GetRandomCar(), rand() % 3 + 4);
+	AddCar(GetRandomCar(), rand() % 3 + 4);
+	AddCar(GetRandomCar(), rand() % 3 + 4);
+	AddCar(GetRandomCar(), rand() % 3 + 4);
+	AddCar(GetRandomCar(), rand() % 3 + 4);
 
 	return true;
 }
 
 // Unload assets
 bool ModuleDriver::CleanUp()
-{ 
+{
 	bool ret = true;
 	LOG("Unloading Cars");
 
@@ -68,10 +68,21 @@ update_status ModuleDriver::PreUpdate()
 {
 	update_status ret = UPDATE_CONTINUE;
 
-	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && ret == UPDATE_CONTINUE; ++it)
-		ret = (*it)->PreUpdate();
+	// Remove all colliders scheduled for deletion
+	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && ret == UPDATE_CONTINUE;)
+	{
+		(*it)->PreUpdate();
+		if ((*it)->to_delete == true)
+		{
+			App->masks->colliders.remove((*it)->mask);
+			RELEASE(*it);
+			it = garage->erase(it);
+		}
+		else
+			++it;
+	}
 
-	return ret;
+	return UPDATE_CONTINUE;
 }
 
 
@@ -90,8 +101,28 @@ update_status ModuleDriver::PostUpdate()
 {
 	update_status ret = UPDATE_CONTINUE;
 
-	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && ret == UPDATE_CONTINUE; ++it)
-		ret = (*it)->PostUpdate();
+	bool insert = false;
+
+	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && ret == UPDATE_CONTINUE; ++it){
+		if ((*it)->mask->rect.y > SCREEN_HEIGHT + 200)
+			(*it)->to_delete = true;
+		if ((*it)->mask->rect.y < -200)
+			(*it)->to_delete = true;
+	}
+
+
+	if (App->player->gear == 4){
+		if (App->player->score % 3000 == 0 || App->player->score % 3001 == 0 || App->player->score % 3002 == 0 || App->player->score % 3003 == 0)
+			insert = true;
+	}
+	else
+		if (App->player->score % 3000 == 0 || App->player->score % 3001 == 0 || App->player->score % 3002 == 0 || App->player->score % 3003 == 0 ||
+			App->player->score % 3004 == 0 || App->player->score % 3005 == 0 || App->player->score % 3006 == 0 || App->player->score % 3007 == 0)
+			insert = true;
+
+	if (insert && App->driver->garage->size() < 6){
+		AddCar(GetRandomCar(), rand() % 3 + 4);
+	}
 
 	return ret;
 }
@@ -115,4 +146,27 @@ void ModuleDriver::ClearWeapon(){
 		}
 
 	}
+}
+
+CARS ModuleDriver::GetRandomCar(){
+	bool find = false;
+	unsigned int res = MOTO;
+
+	srand(SDL_GetTicks() % (rand() % 50 + 1) + 1);
+
+	res = rand() % 7 + 1;
+
+	if (res == 7)
+		++++++res;
+	if (res == 4 || res == 5)
+		++++res;
+
+	if (res == 10)
+		for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && !find; ++it)
+			find = ((*it)->car_type == MAD_BOMBER);
+
+	if (find)
+		res = 1;
+
+	return (CARS)res;
 }

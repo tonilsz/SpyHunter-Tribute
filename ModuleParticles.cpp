@@ -264,7 +264,6 @@ update_status ModuleParticles::Update()
 					App->renderer->Blit(graphics, it->first->pos.x - 32, it->first->pos.y, &((*it).first->anim.GetFrame(2)), 1.0f, RENDER_OTHER);
 					App->renderer->Blit(graphics, it->first->pos.x + 32, it->first->pos.y, &((*it).first->anim.GetFrame(3)), 1.0f, RENDER_OTHER);
 				}
-			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
 			break;
 		}
 	}

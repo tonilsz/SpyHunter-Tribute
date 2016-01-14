@@ -8,7 +8,7 @@
 struct SDL_Texture;
 
 
-ModuleCollision::ModuleCollision(bool start_enabled) : Module(start_enabled), debug_mode(true)
+ModuleCollision::ModuleCollision(bool start_enabled) : Module(start_enabled), debug_mode(false)
 {
 	for (int i = 0; i < COL_MAX; i++)
 		for (int j = 0; j < COL_MAX; j++)
@@ -203,17 +203,19 @@ void ModuleCollision::AddColliderGroup(vector<Collider*>* mask)
 }
 
 void ModuleCollision::CollisionTratement(Collider* c1, Collider* c2){
-	if (matrix[c1->type][c2->type] && c1->callback){
-		if (!c1->isCollising){
-			c1->isCollising = true;
-			c1->callback->OnColision(c1, c2, COL_START);
+	if (c1->enabled && c2->enabled){
+		if (matrix[c1->type][c2->type] && c1->callback){
+			if (!c1->isCollising){
+				c1->isCollising = true;
+				c1->callback->OnColision(c1, c2, COL_START);
+			}
+			else
+				c1->callback->OnColision(c1, c2, COL_DURING);
 		}
-		else 
-			c1->callback->OnColision(c1, c2, COL_DURING);
-	}
-	else if (c1->isCollising){
-		c1->isCollising = false;
-		c1->callback->OnColision(c1, c2, COL_END);
+		else if (c1->isCollising){
+			c1->isCollising = false;
+			c1->callback->OnColision(c1, c2, COL_END);
+		}
 	}
 }
 

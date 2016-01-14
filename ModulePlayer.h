@@ -23,13 +23,14 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	bool CleanUp();
-	bool OnCollision(Collider* a, Collider *b, COLISION_STATE status);
+	bool OnColision(Collider* a, Collider *b, COLISION_STATE status);
 	void SetState(int new_state);
 	void SetMovement(Movement new_state);
 	void SetWeapon(Weapon new_state);
 	void UpGear();
 	void DownGear();
 	void GodMode();
+	void GetRandWeapon();
 
 	int oil;
 	int spray;
