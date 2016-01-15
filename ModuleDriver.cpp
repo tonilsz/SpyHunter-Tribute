@@ -69,17 +69,22 @@ update_status ModuleDriver::PreUpdate()
 	update_status ret = UPDATE_CONTINUE;
 
 	// Remove all colliders scheduled for deletion
+	int i = 0;
 	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && ret == UPDATE_CONTINUE;)
 	{
 		(*it)->PreUpdate();
 		if ((*it)->to_delete == true)
 		{
-			App->masks->colliders.remove((*it)->mask);
+			//(*it)->CleanUp();
+			if ( (*it)->car_type == MAD_BOMBER)
+				App->audio->StopFx();
+ 			App->masks->colliders.remove((*it)->mask);
 			RELEASE(*it);
 			it = garage->erase(it);
 		}
 		else
 			++it;
+		++i;
 	}
 
 	return UPDATE_CONTINUE;
@@ -110,15 +115,8 @@ update_status ModuleDriver::PostUpdate()
 			(*it)->to_delete = true;
 	}
 
-
-	if (App->player->gear == 4){
-		if (App->player->score % 3000 == 0 || App->player->score % 3001 == 0 || App->player->score % 3002 == 0 || App->player->score % 3003 == 0)
-			insert = true;
-	}
-	else
-		if (App->player->score % 3000 == 0 || App->player->score % 3001 == 0 || App->player->score % 3002 == 0 || App->player->score % 3003 == 0 ||
-			App->player->score % 3004 == 0 || App->player->score % 3005 == 0 || App->player->score % 3006 == 0 || App->player->score % 3007 == 0)
-			insert = true;
+	if (App->player->score % 3000 > 0 && App->player->score % 3000 < App->player->gear + 20)
+		insert = true;
 
 	if (insert && App->driver->garage->size() < 6){
 		AddCar(GetRandomCar(), rand() % 3 + 4);
@@ -128,10 +126,8 @@ update_status ModuleDriver::PostUpdate()
 }
 
 void ModuleDriver::AddCar(CARS car_type, int gear){
-	if (car_type == MAD_BOMBER){
+	if (car_type == MAD_BOMBER)
 		garage->push_back(new ModuleCopter(car_type, gear, true));
-		App->audio->PlayFx(AUD_COPTER, -1);
-	}
 	else
 		garage->push_back(new ModuleCars(car_type, gear, true));
 }

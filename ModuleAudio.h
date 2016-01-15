@@ -42,6 +42,9 @@ public:
 	// Play a previously loaded WAV
 	bool PlayFx(AUDIO_TYPE audio, int repeat = 0);
 
+	// Play a previously loaded WAV
+	void StopFx();
+
 	unsigned int bullet;
 	unsigned int copter;
 	unsigned int copter_bomb;

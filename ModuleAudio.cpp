@@ -232,3 +232,12 @@ bool ModuleAudio::PlayFx(AUDIO_TYPE audio, int repeat)
 
 	return ret;
 }
+
+
+
+// Stop WAV
+void ModuleAudio::StopFx()
+{
+	Mix_HaltChannel(-1);
+}
+

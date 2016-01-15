@@ -12,6 +12,7 @@
 #include "ModulePlayer.h"
 #include "ModuleCars.h""
 #include "ModuleCopter.h"
+#include "ModuleAudio.h"
 #include "SDL/include/SDL.h"
 
 ModuleCopter::ModuleCopter(CARS car_type, int gear, bool start_enabled)
@@ -35,6 +36,8 @@ ModuleCopter::ModuleCopter(CARS car_type, int gear, bool start_enabled)
 	crash.speed = 0.02f;
 	
 	mask = App->masks->AddCollider(SDL_Rect{ position.x + 31, position.y + 26, 32, 64 }, COL_MAD_BOMBER, this);
+
+	App->audio->PlayFx(AUD_COPTER, -1);
 
 }
 
@@ -168,6 +171,12 @@ update_status ModuleCopter::Update()
 	
 	last_position = position;
 	return UPDATE_CONTINUE;
+}
+
+bool ModuleCopter::CleanUp(){
+	App->audio->StopFx();
+
+	return ModuleCars::CleanUp();
 }
 
 bool ModuleCopter::OnColision(Collider* a, Collider *b, COLISION_STATE status)

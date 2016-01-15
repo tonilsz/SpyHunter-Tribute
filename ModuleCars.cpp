@@ -109,6 +109,7 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 		break;
 	}
 
+	crash.speed = 0.02f;
 
 }
 
@@ -137,6 +138,7 @@ bool ModuleCars::CleanUp()
 {
 	LOG("Unloading Cars");
 
+	delete(mask);
 	App->masks->colliders.remove(mask);
 
 	return true;
@@ -145,6 +147,8 @@ bool ModuleCars::CleanUp()
 
 update_status ModuleCars::PreUpdate()
 {
+
+	dist = 0;
 	if (last_position.x == position.x)
 		moving = STRAIGHT;
 	else if (last_position.x < position.x)
@@ -157,8 +161,8 @@ update_status ModuleCars::PreUpdate()
 	else
 		moving = STRAIGHT;
 
-	dist += (gear - App->player->gear);
-	mask->rect.y -= gear;/// +App->player->pos;
+	mask->rect.y -= gear;
+	position.y = mask->rect.y + App->player->pos + App->player->gear;
 
 	last_position = position;
 
@@ -167,15 +171,16 @@ update_status ModuleCars::PreUpdate()
 
 update_status ModuleCars::Update()
 {
+
 	switch (moving){
 	case STRAIGHT:
-		App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER, dist);
+		App->renderer->Blit(App->driver->graphics, position.x, position.y, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER, dist);
 		break;
 	case RIGHT:
-		App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &right, 1.0f, RENDER_OTHER, dist);
+		App->renderer->Blit(App->driver->graphics, position.x, position.y, &right, 1.0f, RENDER_OTHER, dist);
 		break;
 	case LEFT:
-		App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &left, 1.0f, RENDER_OTHER, dist);
+		App->renderer->Blit(App->driver->graphics, position.x, position.y, &left, 1.0f, RENDER_OTHER, dist);
 		break;
 	}
 	last_position = position;

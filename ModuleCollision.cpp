@@ -8,7 +8,7 @@
 struct SDL_Texture;
 
 
-ModuleCollision::ModuleCollision(bool start_enabled) : Module(start_enabled), debug_mode(false)
+ModuleCollision::ModuleCollision(bool start_enabled) : Module(start_enabled), debug_mode(true)
 {
 	for (int i = 0; i < COL_MAX; i++)
 		for (int j = 0; j < COL_MAX; j++)

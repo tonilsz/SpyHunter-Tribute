@@ -139,7 +139,7 @@ update_status ModuleParticles::Update()
 			}
 			break;
 		case ANIM_SPRAY:
-			if (!it->first->anim.expired && it->first->live.GetTime() > 30){
+			if (!it->first->anim.expired && it->first->live.GetTime() > 80){
 				App->player->SetWeapon(NONE);
 				it->first->anim.expired = true;
 			}
@@ -167,7 +167,7 @@ update_status ModuleParticles::Update()
 				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y + (STILE_SIZE), &((*it).first->anim.GetFrame(2)), 1.0f, RENDER_OTHER);
 				App->renderer->Blit(graphics, it->first->pos.x + (STILE_SIZE), it->first->pos.y + (STILE_SIZE), &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
 			}
-			else if (it->first->live.GetTime() < 2000){
+			else if (it->first->live.GetTime() < 500){
 				it->second->rect.y = it->first->pos.y + (STILE_SIZE * 1.5) - App->renderer->camera.y - (RTILE_HEIGHT * 1.5);
 				it->second->rect.x = it->first->pos.x - (STILE_SIZE * 1.5);
 				it->second->rect.w = STILE_SIZE * 4;

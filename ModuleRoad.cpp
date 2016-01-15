@@ -30,7 +30,7 @@ bool ModuleRoad::Start()
 {
 	LOG("Loading Road scene");
 	//Test Road
-	//road.push_back(new RoadLoop(new LOOP0, (SEGMENT_AMBIENT)A_GREY));
+	road.push_back(new RoadLoop(new LOOP0, (SEGMENT_AMBIENT)A_GREY));
 
 	//True Loop
 	road.push_back(new RoadLoop(new LOOP1, (SEGMENT_AMBIENT)A_FOREST));
