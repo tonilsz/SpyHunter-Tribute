@@ -67,10 +67,9 @@ update_status ModuleParticles::PreUpdate()
 		it = background.erase(it);
 	}
 
-
 	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end();)
 	{
-		if (!(*it).first->live.running)
+		if (!(*it).first->live.running || (*it).second->to_delete)
 		{
 			RELEASE((*it).first);
 			it = particles.erase(it);
@@ -374,22 +373,14 @@ bool ModuleParticles::OnColision(Collider* a, Collider *b, COLISION_STATE status
 {
 	LOG("Collision Particules");
 
-	bool found = false;
+	bool res = false;
 
-	/*
-	if (status == COLISION_START){
-		unsigned i = 0;
-		for (i = 0; !found && i < particles.size(); ++i)
-		if ((particles.begin() + i)->second->id == a->id)
-			found = true;
-
-		if (found){
-			pair<Particle*, Collider*>* aux = &particles[--i];
-			int res = 2840 - aux->first->live.GetTime();
-			(particles[i]).first->killing = res;
-		}
-		App->masks->eraseCollider(a->id);
+	if (a->type == COL_BULLET && b->type == COL_CAR){
+		res = a->to_delete = true;
 	}
-	*/
-	return found;
+	if (a->type == COL_ROCKET && b->type == COL_MAD_BOMBER){
+		res = a->to_delete = true;
+	}
+	
+	return res;
 }

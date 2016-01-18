@@ -228,8 +228,8 @@ void ModuleCars::SetMovement(Movement new_state){
 	if (mask->rect.x < 0)
 		mask->rect.x = 0;
 
-	if (mask->rect.x >(App->window->screen_surface->w - STILE_SIZE))
-		mask->rect.x = (App->window->screen_surface->w - STILE_SIZE);
+	if (mask->rect.x >(App->window->screen_surface->w - mask->rect.w - 2))
+		mask->rect.x = (App->window->screen_surface->w - mask->rect.w);
 
 	position.x = mask->rect.x + dif;
 }
@@ -269,7 +269,8 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 				SetMovement(RIGHT);
 		}
 	}
-	if (a->type == COL_CAR && b->type == COL_ROAD_BORDER && !a->HasCollision()){
+	//if (a->type == COL_CAR && b->type == COL_ROAD_BORDER && !a->HasCollision()){
+	if (a->type == COL_CAR && b->type == COL_ROAD_BORDER ){
 		if (state != TO_BORDER)
 			if (a->rect.x >= b->rect.x)
 				SetMovement(LEFT);

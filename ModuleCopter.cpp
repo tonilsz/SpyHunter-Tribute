@@ -20,25 +20,25 @@ ModuleCopter::ModuleCopter(CARS car_type, int gear, bool start_enabled)
 	seeker(0)
 {
 
-	for (int i = 0; i < 8; ++i){
-		idle.frames.push_back({ LTILE_SIZE * i, MTILE_SIZE * 10 , LTILE_SIZE, LTILE_SIZE });
-		idle.frames.push_back({ LTILE_SIZE * i, MTILE_SIZE * 10 + LTILE_SIZE, LTILE_SIZE, LTILE_SIZE });
-	}
-	idle.speed = 0.4f;
+		for (int i = 0; i < 8; ++i){
+			idle.frames.push_back({ LTILE_SIZE * i, MTILE_SIZE * 10, LTILE_SIZE, LTILE_SIZE });
+			idle.frames.push_back({ LTILE_SIZE * i, MTILE_SIZE * 10 + LTILE_SIZE, LTILE_SIZE, LTILE_SIZE });
+		}
+		crash.speed = 0.1f;
 
-	helix.frames.push_back({ LTILE_SIZE * 4, MTILE_SIZE * 10 + (LTILE_SIZE * 2), LTILE_SIZE, LTILE_SIZE });
-	helix.frames.push_back({ LTILE_SIZE * 5, MTILE_SIZE * 10 + (LTILE_SIZE * 2), LTILE_SIZE, LTILE_SIZE });
-	helix.speed = 0.4f;
+		helix.frames.push_back({ LTILE_SIZE * 4, MTILE_SIZE * 10 + (LTILE_SIZE * 2), LTILE_SIZE, LTILE_SIZE });
+		helix.frames.push_back({ LTILE_SIZE * 5, MTILE_SIZE * 10 + (LTILE_SIZE * 2), LTILE_SIZE, LTILE_SIZE });
+		helix.speed = 0.4f;
 
-	for (int i = 0; i < 4; ++i)
-		crash.frames.push_back({ LTILE_SIZE * i, MTILE_SIZE * 10 + (LTILE_SIZE * 2), LTILE_SIZE, LTILE_SIZE });
+		for (int i = 0; i < 4; ++i)
+			crash.frames.push_back({ LTILE_SIZE * i, MTILE_SIZE * 10 + (LTILE_SIZE * 2), LTILE_SIZE, LTILE_SIZE });
 
-	crash.speed = 0.02f;
+		crash.speed = 0.02f;
+
+		mask = App->masks->AddCollider(SDL_Rect{ position.x + 31, position.y + 26, 32, 64 }, COL_MAD_BOMBER, this);
+
+		App->audio->PlayFx(AUD_COPTER, -1);
 	
-	mask = App->masks->AddCollider(SDL_Rect{ position.x + 31, position.y + 26, 32, 64 }, COL_MAD_BOMBER, this);
-
-	App->audio->PlayFx(AUD_COPTER, -1);
-
 }
 
 ModuleCopter::~ModuleCopter()
@@ -163,12 +163,21 @@ void ModuleCopter::SetMovement(ORIENTATION_TYPE new_dir){
 
 update_status ModuleCopter::Update()
 {
-
-	fPoint dif(position.x - mask->rect.x, position.y - mask->rect.y);
-	App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame(orientation * 2)), 1.0f, RENDER_ROAD, dist);
-	App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame((orientation * 2) + 1)), 1.0f, RENDER_ROAD, dist);
-	App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(helix.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
-	
+	if (state == EXPLOTE){
+		if (crash.current_frame < 8)
+			App->renderer->Blit(App->driver->graphics, position.x, position.y, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER, dist);
+		App->renderer->Blit(App->driver->graphics, position.x, position.y, &(crash.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
+		if (crash.current_frame > 8 && crash.current_frame < 9)
+			gear = 0;
+		if (crash.Finished())
+			to_delete = true;
+	}
+	else{
+		fPoint dif(position.x - mask->rect.x, position.y - mask->rect.y);
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame(orientation * 2)), 1.0f, RENDER_ROAD, dist);
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame((orientation * 2) + 1)), 1.0f, RENDER_ROAD, dist);
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(helix.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
+	}
 	last_position = position;
 	return UPDATE_CONTINUE;
 }
@@ -182,6 +191,10 @@ bool ModuleCopter::CleanUp(){
 bool ModuleCopter::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 {
 	LOG("Collision Copter");
+
+	if (a->type == COL_MAD_BOMBER && b->type == COL_ROCKET){
+		state = EXPLOTE;
+	}
 	return true;
 }
 
