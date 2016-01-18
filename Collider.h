@@ -79,6 +79,10 @@ public:
 		return res;
 	}
 
+	bool HasCollision(){
+		return (bool)collisions.size();
+	}
+
 	void AddCollision(Collider * crash){
 		collisions.push_back(crash);
 	}

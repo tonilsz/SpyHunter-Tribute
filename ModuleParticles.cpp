@@ -311,6 +311,10 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 		break;
 	case ANIM_SPRAY:
 		App->audio->PlayFx(AUD_SPRAY);
+		col_type = COL_SPRAY;
+		break;
+	case ANIM_OIL:
+		col_type = COL_OIL;
 		break;
 	case ANIM_EXPLOTE:
 		App->audio->PlayFx(AUD_EXPLOSION);
