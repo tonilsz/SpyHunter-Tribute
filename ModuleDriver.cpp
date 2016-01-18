@@ -14,7 +14,7 @@
 #include "ModulePlayer.h"
 #include "SDL/include/SDL.h"
 
-ModuleDriver::ModuleDriver(bool start_enabled) : Module(start_enabled)
+ModuleDriver::ModuleDriver(bool start_enabled) : Module(start_enabled), collision_side(true)
 {
 	garage = new vector<ModuleCars*>;
 }
@@ -40,11 +40,9 @@ bool ModuleDriver::Resume()
 
 	GetRandomCar();
 
-	AddCar(GetRandomCar(), rand() % 3 + 4);
-	AddCar(GetRandomCar(), rand() % 3 + 4);
-	AddCar(GetRandomCar(), rand() % 3 + 4);
-	AddCar(GetRandomCar(), rand() % 3 + 4);
-	AddCar(GetRandomCar(), rand() % 3 + 4);
+	for(int i = 0; i < 6; ++i){
+		AddCar(GetRandomCar(), App->GetRand(5,4));
+	}
 
 	return true;
 }
@@ -69,7 +67,6 @@ update_status ModuleDriver::PreUpdate()
 	update_status ret = UPDATE_CONTINUE;
 
 	// Remove all colliders scheduled for deletion
-	int i = 0;
 	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && ret == UPDATE_CONTINUE;)
 	{
 		(*it)->PreUpdate();
@@ -84,7 +81,6 @@ update_status ModuleDriver::PreUpdate()
 		}
 		else
 			++it;
-		++i;
 	}
 
 	return UPDATE_CONTINUE;
@@ -115,11 +111,11 @@ update_status ModuleDriver::PostUpdate()
 			(*it)->to_delete = true;
 	}
 
-	if (App->player->score % 3000 > 0 && App->player->score % 3000 < App->player->gear + 20)
+	if (App->GetTicks() % 300 == 0)
 		insert = true;
 
 	if (insert && App->driver->garage->size() < 6){
-		AddCar(GetRandomCar(), rand() % 3 + 4);
+		AddCar(GetRandomCar(), App->GetRand(3,4));
 	}
 
 	return ret;
@@ -148,9 +144,7 @@ CARS ModuleDriver::GetRandomCar(){
 	bool find = false;
 	unsigned int res = MOTO;
 
-	srand(SDL_GetTicks() % (rand() % 50 + 1) + 1);
-
-	res = rand() % 7 + 1;
+	res = App->GetRand(7,1);
 
 	if (res == 7)
 		++++++res;

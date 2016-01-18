@@ -13,7 +13,7 @@
 
 using namespace std;
 
-Application::Application()
+Application::Application() : ticks(0), r_first(1), r_second(1)
 {
 
 	// Core Modules
@@ -26,13 +26,13 @@ Application::Application()
 
 	// Game Modules
 	modules.push_back(road = new ModuleRoad());
-	modules.push_back(driver = new ModuleDriver());
 	modules.push_back(player = new ModulePlayer(false));
+	modules.push_back(driver = new ModuleDriver());
 	modules.push_back(particles = new ModuleParticles());
 	modules.push_back(ui = new ModuleUI());
 }
 
-Application::~Application()
+Application::~Application() 
 {
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
 		RELEASE(*it);
@@ -83,3 +83,19 @@ bool Application::Stop()
 	return ret;
 }
 
+int Application::GetTicks(){
+	return ticks;
+}
+
+int Application::GetRand(int range, int start){
+	srand(Randomize());
+	int res = ((rand()*SDL_GetTicks()) % range) + start;
+	return res;
+}
+
+int Application::Randomize(){
+	int next = r_first + r_second;
+	r_first = r_second;
+	r_second = next;
+	return next;
+}

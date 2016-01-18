@@ -53,6 +53,7 @@ enum LINE_TYPE
 	public:
 		vector<RoadLine*> segment;
 		int pos;
+		SEGMENT_TYPE type;
 
 		RoadSegment(const SEGMENT_TYPE &type);
 

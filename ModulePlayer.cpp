@@ -207,7 +207,7 @@ update_status ModulePlayer::Update()
 bool ModulePlayer::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 {
 	LOG("Collision Player");
-
+	/*
 	if (a->type == COL_PLAYER && b->type == COL_ROAD_OUT){
 		App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
 		if ((first_mode >= 1000))
@@ -224,7 +224,7 @@ bool ModulePlayer::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 		App->player->position.x = RTILE_WIDTH * 9;
 		App->player->mask->rect.x = RTILE_WIDTH * 9 + 21;
 		App->player->gear = 0;
-	}
+	}*/
 	/*if (a->type == COL_PLAYER && b->type == COL_CAR){
 		if (a->rect.x > b->rect.x)
 			SetMovement(LEFT);
@@ -273,7 +273,7 @@ void ModulePlayer::GodMode(){
 
 
 void ModulePlayer::GetRandWeapon(){
-	int new_weapon = rand() % 3 + 1;
+	int new_weapon = App->GetRand(3,1);
 	switch (new_weapon){
 	case 0:
 		App->player->oil = 999;

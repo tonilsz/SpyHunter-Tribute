@@ -79,6 +79,7 @@ int main(int argc, char ** argv)
 			break;
 
 		}
+		++App->ticks;
 	}
 
 	RELEASE( App);

@@ -315,7 +315,6 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 	case ANIM_EXPLOTE:
 		App->audio->PlayFx(AUD_EXPLOSION);
 		total_frames = 5;
-		col_type = COL_ROAD_OUT;
 		break;
 	case ANIM_BULLET_ENEMY:
 		total_frames = 2;

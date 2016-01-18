@@ -27,6 +27,7 @@ public:
 	bool Start();
 	update_status Update();
 	bool Stop();
+	int ticks;
 
 public:
 	ModuleRender* renderer;
@@ -41,8 +42,13 @@ public:
 	ModuleParticles* particles;
 	ModuleUI* ui;
 
+	int GetTicks();
+	int GetRand(int range, int start = 0);
+
 private:
 
+	int Randomize();
+	int r_first, r_second;
 	std::list<Module*> modules;
 
 };

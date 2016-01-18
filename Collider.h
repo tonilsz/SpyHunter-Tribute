@@ -18,7 +18,7 @@ enum COLLIDER_TYPE
 	COL_BULLET_ENEMY = 8,
 	COL_ROCKET = 9,
 	COL_BOMB = 10,
-	COL_ROAD_OUT =  11,
+	COL_ROAD_OUT = 11,
 	COL_ROAD_BORDER = 12,
 	COL_PUDDLE = 13,
 	COL_MAX = 14
@@ -31,6 +31,9 @@ enum COLISION_STATE
 	COL_END
 };
 
+using namespace std;
+#include<list>
+
 class Collider
 {
 public:
@@ -39,16 +42,15 @@ public:
 	bool to_erase;
 	COLLIDER_TYPE type;
 	Module* callback;
-	bool isCollising;
 	bool enabled;
+	list<Collider *> collisions;
 
 	Collider::Collider(SDL_Rect rectangle, COLLIDER_TYPE type, Module* callback = NULL) :
 		rect(rectangle),
 		type(type),
 		callback(callback),
 		to_delete(false),
-		to_erase(false),
-		isCollising(false)
+		to_erase(false)
 	{}
 
 	void Collider::SetPos(fPoint pos)
@@ -66,6 +68,26 @@ public:
 	{
 		return SDL_HasIntersection(&rect, &r);
 	}
+
+	bool IsCollising(Collider * crash){
+		bool res = false;
+
+		for (list<Collider *>::iterator it = collisions.begin(); it != collisions.end(); ++it)
+			if (*it == crash)
+				res = true;
+
+		return res;
+	}
+
+	void AddCollision(Collider * crash){
+		collisions.push_back(crash);
+	}
+
+	void RemoveCollision(Collider * crash){
+		collisions.remove(crash);
+	}
+
+
 };
 
 #endif // __COLLIDER_H__

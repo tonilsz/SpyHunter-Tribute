@@ -12,7 +12,7 @@
 struct SDL_Texture;
 
 enum Movement { STRAIGHT, RIGHT, LEFT };
-enum Status { IDLE, TURBO, BREAK};
+enum Status { IDLE, TURBO, BREAK, TO_BORDER};
 enum Weapon { NONE = -1, GUN, OIL, SPRAY, ROCKET, BOMB, RAZOR, BULLET_ENEMY, WORKING };
 enum CARS { PLAYER = 0, RED_CAR = 1, BLUE_CAR = 2, MOTO = 3, TRUCK = 4, ROAD_LORD = 6, SWITCH_BLADE = 7, ENFORCER = 8 , MAD_BOMBER = 10 };
 
@@ -28,8 +28,8 @@ public:
 	virtual update_status Update();
 	virtual bool CleanUp();
 	virtual bool OnColision(Collider* a, Collider *b, COLISION_STATE status);
-	virtual void SetState(int new_state);
 	virtual void SetMovement(Movement new_state);
+	virtual void SetState(Status new_state);
 	virtual void UpGear();
 	virtual void DownGear();
 	fPoint GetPivot();

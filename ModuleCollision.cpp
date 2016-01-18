@@ -8,7 +8,9 @@
 struct SDL_Texture;
 
 
-ModuleCollision::ModuleCollision(bool start_enabled) : Module(start_enabled), debug_mode(true)
+ModuleCollision::ModuleCollision(bool start_enabled) : 
+Module(start_enabled), 
+debug_mode(true)
 {
 	for (int i = 0; i < COL_MAX; i++)
 		for (int j = 0; j < COL_MAX; j++)
@@ -21,7 +23,7 @@ ModuleCollision::ModuleCollision(bool start_enabled) : Module(start_enabled), de
 	matrix[COL_CAR][COL_OIL] = true;
 	matrix[COL_CAR][COL_SPRAY] = true;
 	matrix[COL_CAR][COL_BULLET] = true;
-	matrix[COL_CAR][COL_ROAD_BORDER] = true;
+	matrix[COL_CAR][COL_ROAD_BORDER] = false;
 	matrix[COL_CAR][COL_BOMB] = true;
 	matrix[COL_CAR][COL_PUDDLE] = true;
 	matrix[COL_CAR][COL_BULLET_ENEMY] = true;
@@ -205,15 +207,15 @@ void ModuleCollision::AddColliderGroup(vector<Collider*>* mask)
 void ModuleCollision::CollisionTratement(Collider* c1, Collider* c2){
 	if (c1->enabled && c2->enabled){
 		if (matrix[c1->type][c2->type] && c1->callback){
-			if (!c1->isCollising){
-				c1->isCollising = true;
+			if (!c1->IsCollising(c2)){
+				c1->AddCollision(c2);
 				c1->callback->OnColision(c1, c2, COL_START);
 			}
 			else
 				c1->callback->OnColision(c1, c2, COL_DURING);
 		}
-		else if (c1->isCollising){
-			c1->isCollising = false;
+		else {
+			c1->RemoveCollision(c2);
 			c1->callback->OnColision(c1, c2, COL_END);
 		}
 	}

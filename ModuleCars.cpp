@@ -26,23 +26,23 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 	position.y = RTILE_HEIGHT * 6.5;
 
 	if (car_type != PLAYER){
+
+		int left=SCREEN_WIDTH, right=0;
+
 		RoadLine * startLine = *App->road->screen.begin();
 		if (App->player->gear < 5){
 			position.y = RTILE_HEIGHT * 9;
-
 		}
 		else{
-			startLine = *App->road->screen.begin()+6;
+			startLine = App->road->screen.back();
 			position.y = RTILE_HEIGHT * 0;
 		}
-		int left=SCREEN_WIDTH, right=0;
 		
-		position.y -= App->player->pos;
 
 		left = 4 * RTILE_WIDTH;
 		right = 11 * RTILE_WIDTH;
 
-		/*
+		//
 		// Random 
 		for (vector<Collider*>::iterator it = startLine->mask->begin(); it != startLine->mask->end(); ){
 			if ((*it)->type == COL_ROAD_BORDER){
@@ -52,15 +52,26 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 					right = (*it)->rect.x;
 			}
 			++it;
-		}*/
+		}
 
-		left += RTILE_WIDTH;
+		left += RTILE_WIDTH*2;
 		right -= RTILE_WIDTH;
 
 		if (left == right)
 			right += RTILE_WIDTH;
 
-		position.x = rand() % (right - left) + left;
+		if (App->road->GetCurrentSegmentType() == S_2_BR || App->road->GetCurrentSegmentType() == S_2_ROADS)
+			if (App->GetRand(2)){
+				left = 2 * RTILE_WIDTH;
+				right = 4 * RTILE_WIDTH;
+			}
+			else{
+				left = 10 * RTILE_WIDTH;
+				right = 12 * RTILE_WIDTH;
+			}
+
+		position.x = App->GetRand((right - left) , left);
+		position.y -= App->player->pos;
 	}
 
 	last_position = position;
@@ -96,10 +107,12 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 		mask = App->masks->AddCollider(SDL_Rect{ position.x + 23, position.y, 19, 32 }, COL_CAR, this);
 		break;
 	case TRUCK:
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 17, position.y, 32, 64 }, COL_TRUCK, this);
+		mask = App->masks->AddCollider(SDL_Rect{ position.x + 17, position.y, 32, 64 }, COL_CAR, this);
+		//mask = App->masks->AddCollider(SDL_Rect{ position.x + 17, position.y, 32, 64 }, COL_TRUCK, this);
 		break;
 	case ROAD_LORD:
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 18, position.y, 28, 41 }, COL_ROAD_LORD, this);
+		mask = App->masks->AddCollider(SDL_Rect{ position.x + 18, position.y, 28, 41 }, COL_CAR, this);
+		//mask = App->masks->AddCollider(SDL_Rect{ position.x + 18, position.y, 28, 41 }, COL_ROAD_LORD, this);
 		break;
 	case SWITCH_BLADE:
 		mask = App->masks->AddCollider(SDL_Rect{ position.x + 19, position.y, 24, 41 }, COL_CAR, this);
@@ -156,13 +169,13 @@ update_status ModuleCars::PreUpdate()
 	else if (last_position.x > position.x)
 		moving = LEFT;
 
-	if (SDL_GetTicks() % 2000 > 0 && SDL_GetTicks() % 2000 < 20)
+	if (App->GetTicks() % 200 == 0 )
 		TurnRandom();
 	else
 		moving = STRAIGHT;
 
 	mask->rect.y -= gear;
-	position.y = mask->rect.y + App->player->pos + App->player->gear;
+	position.y = mask->rect.y + App->player->pos;
 
 	last_position = position;
 
@@ -187,28 +200,14 @@ update_status ModuleCars::Update()
 	return UPDATE_CONTINUE;
 }
 
-
-void ModuleCars::SetState(int new_state){
-	/*if (state != HADOUKEN && state != JUMP && state != WON){
-	state = new_state;
-	if (state == JUMP)
-	jump_live.Start();
-	if (state == HADOUKEN)
-	hado_live.Start();
-	if (state == WON)
-	won_live.Start();
-	}*/
-
-}
-
 void ModuleCars::SetMovement(Movement new_state){
 	moving = new_state;
 
 	int dif = position.x - mask->rect.x;
 
-	if (moving == RIGHT)
+	if (moving == LEFT)
 		mask->rect.x += gear * 2;
-	else if (moving == LEFT)
+	else if (moving == RIGHT)
 		mask->rect.x -= gear * 2;
 
 	if (mask->rect.x < 0)
@@ -220,24 +219,47 @@ void ModuleCars::SetMovement(Movement new_state){
 	position.x = mask->rect.x + dif;
 }
 
+void ModuleCars::SetState(Status new_state){
+	if (state != TO_BORDER ){
+		state = new_state;
+	}
+
+}
 bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 {
 	LOG("Collision Car");
-	if (status == COL_START){
-		if (a->type == COL_CAR && b->type == COL_CAR){
-			if (a->rect.x > b->rect.x)
+
+	if (a->type == COL_CAR && b->type == COL_CAR){
+		if (a->rect.x > b->rect.x)
+			SetMovement(LEFT);
+		else if (a->rect.x < b->rect.x)
+			SetMovement(RIGHT);
+		else{
+			if (App->GetRand(2) == 0)
 				SetMovement(LEFT);
 			else
 				SetMovement(RIGHT);
 		}
+
+	}/*
+	if (a->type == COL_CAR && b->type == COL_ROAD_BORDER){
+		if (a->rect.x >= b->rect.x)
+			SetMovement(LEFT);
+		else
+			SetMovement(RIGHT);
+	}*/
+	if (status == COL_START){
+
 		if (a->type == COL_CAR && b->type == COL_ROAD_OUT){
 			App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
+			to_delete = true;
 			gear = 0;
 		}
 		if (a->type == COL_CAR && b->type == COL_SPRAY){
 			App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
 			gear = 0;
 		}
+		/*
 		if (a->type == COL_CAR && b->type == COL_OIL){
 			App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
 			gear = 0;
@@ -249,22 +271,16 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 		if (a->type == COL_CAR && b->type == COL_BULLET){
 			App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
 			gear = 0;
-		}
+		}*/
 
 	}
 	if (status == COL_DURING){
-		if (a->type == COL_CAR && b->type == COL_PLAYER){
+		/*if (a->type == COL_CAR && b->type == COL_PLAYER){
 			if (a->rect.x > b->rect.x)
 				SetMovement(LEFT);
 			else
 				SetMovement(RIGHT);
-		}
-		if (a->type == COL_CAR && b->type == COL_ROAD_BORDER){
-			if (a->rect.x > b->rect.x)
-				SetMovement(LEFT);
-			else
-				SetMovement(RIGHT);
-		}
+		}*/
 	}
 	return true;
 }
@@ -291,7 +307,7 @@ void ModuleCars::SetWeapon(Weapon new_weapon){
 }
 
 void ModuleCars::TurnRandom(){
-	int random = rand() % 10 + 1;
+	int random = App->GetRand(10);
 	if (random < 5)
 		SetMovement(RIGHT);
 	else

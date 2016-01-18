@@ -32,6 +32,7 @@ public:
 	vector<ModuleCars*>* garage;
 	int num_cars;
 	SDL_Texture* graphics = nullptr;
+	bool collision_side;
 };
 
 #endif // __MODULEDRIVER_H__

@@ -30,7 +30,7 @@ bool ModuleRoad::Start()
 {
 	LOG("Loading Road scene");
 	//Test Road
-	road.push_back(new RoadLoop(new LOOP0, (SEGMENT_AMBIENT)A_GREY));
+	road.push_back(new RoadLoop(new LOOP0, (SEGMENT_AMBIENT)A_SNOW));
 
 	//True Loop
 	road.push_back(new RoadLoop(new LOOP1, (SEGMENT_AMBIENT)A_FOREST));
@@ -177,13 +177,14 @@ void ModuleRoad::SetGameState(GAME_STATE state){
 			App->player->pos = 0;
 			App->player->first_mode = 0;
 
-			App->driver->AddCar(App->driver->GetRandomCar(), rand() % 3 + 4);
-			App->driver->AddCar(App->driver->GetRandomCar(), rand() % 3 + 4);
-			App->driver->AddCar(App->driver->GetRandomCar(), rand() % 3 + 4);
-			App->driver->AddCar(App->driver->GetRandomCar(), rand() % 3 + 4);
-			App->driver->AddCar(App->driver->GetRandomCar(), rand() % 3 + 4);
+			for (int i = 0; i < 6; ++i)
+				App->driver->AddCar(App->driver->GetRandomCar(), App->GetRand(5, 4));
 
 			App->player->position.x = RTILE_WIDTH * 9;
 		}
 	}
+}
+
+SEGMENT_TYPE ModuleRoad::GetCurrentSegmentType(){
+	return road.begin()[pos_loop]->loop.begin()[pos_segment]->type;
 }

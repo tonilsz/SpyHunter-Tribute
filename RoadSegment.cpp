@@ -4,8 +4,9 @@
 #include "ModuleCollision.h"
 #include "ModuleRoad.h"
 
-RoadSegment::RoadSegment(const SEGMENT_TYPE &type):
-pos(0)
+RoadSegment::RoadSegment(const SEGMENT_TYPE &type) :
+pos(0),
+type(type)
 {
 	GenerateSegment(type);
 }
