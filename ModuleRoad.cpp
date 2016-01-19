@@ -8,6 +8,7 @@
 #include "ModuleAudio.h"
 #include "ModuleDriver.h"
 #include "ModuleUI.h"
+#include "ModuleParticles.h"
 #include "RoadLoop.h"
 #include "RoadSegment.h"
 #include "RoadLine.h"
@@ -18,7 +19,8 @@ Module(start_enabled),
 pos_loop(0),
 pos_segment(0),
 pos_line(0),
-road_state(G_START)
+road_state(G_START),
+next_puddle(0)
 {
 }
 
@@ -52,6 +54,8 @@ bool ModuleRoad::Start()
 	graphics = App->textures->Load("scene.png");
 
 	App->player->Enable();
+
+	next_puddle += App->GetRand(500, 100);
 
 	return graphics != NULL;
 }
@@ -87,6 +91,13 @@ bool ModuleRoad::Stop()
 // Update: draw Road
 update_status ModuleRoad::Update()
 {	
+	if (next_puddle == App->GetTicks()){
+		next_puddle += App->GetRand(500, 100);
+		int x = ModuleCars::SetLeftRight();
+		App->particles->addParticle(x, 0, ANIM_PUDDLE);
+		//App->particles->addParticle(ModuleCars::SetLeftRight(), 0, ANIM_PUDDLE);
+	}
+
 	int i = 0, j = 0;
 	for (list<RoadLine*>::reverse_iterator it_line = screen.rbegin(); it_line != screen.rend(); ++it_line, ++i)
 		for (j = 0; j < 15; j++)

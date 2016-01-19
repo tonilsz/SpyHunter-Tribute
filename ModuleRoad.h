@@ -49,6 +49,7 @@ public:
 	int pos_loop;
 	int pos_segment;
 	int pos_line;
+	int next_puddle;
 	vector<RoadLoop*> road;
 	list<RoadLine*> screen;
 

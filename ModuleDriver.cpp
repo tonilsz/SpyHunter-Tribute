@@ -70,9 +70,11 @@ update_status ModuleDriver::PreUpdate()
 	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && ret == UPDATE_CONTINUE;)
 	{
 		(*it)->PreUpdate();
+
 		if ((*it)->to_delete == true)
 		{
-			//(*it)->CleanUp();
+			if ((*it)->state == DEAD)
+				App->player->SetWeapon(NONE);
 			if ( (*it)->car_type == MAD_BOMBER)
 				App->audio->StopFx();
  			App->masks->colliders.remove((*it)->mask);
@@ -105,10 +107,11 @@ update_status ModuleDriver::PostUpdate()
 	bool insert = false;
 
 	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && ret == UPDATE_CONTINUE; ++it){
-		if ((*it)->mask->rect.y > SCREEN_HEIGHT + 200)
+		if ((*it)->mask->rect.y > SCREEN_HEIGHT + 200 || (*it)->mask->rect.y < -200){
+			(*it)->state = DEAD;
 			(*it)->to_delete = true;
-		if ((*it)->mask->rect.y < -200)
-			(*it)->to_delete = true;
+			App->player->SetWeapon(NONE);
+		}
 	}
 
 	if (App->GetTicks() % 300 == 0)
@@ -144,7 +147,7 @@ CARS ModuleDriver::GetRandomCar(){
 	bool find = false;
 	unsigned int res = MOTO;
 
-	res = App->GetRand(7,1);
+	res = App->GetRand(8,1);
 
 	if (res == 7)
 		++++++res;

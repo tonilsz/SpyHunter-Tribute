@@ -10,6 +10,7 @@
 #include "ModuleCollision.h"
 #include "ModuleDriver.h"
 #include "ModulePlayer.h"
+#include "ModuleAudio.h"
 #include "SDL/include/SDL.h"
 
 ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
@@ -27,50 +28,14 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 
 	if (car_type != PLAYER){
 
-		int left=SCREEN_WIDTH, right=0;
-
-		RoadLine * startLine = *App->road->screen.begin();
 		if (App->player->gear < 5){
 			position.y = RTILE_HEIGHT * 9;
 		}
 		else{
-			startLine = App->road->screen.back();
 			position.y = RTILE_HEIGHT * 0;
 		}
-		
 
-		left = 4 * RTILE_WIDTH;
-		right = 11 * RTILE_WIDTH;
-
-		//
-		// Random 
-		for (vector<Collider*>::iterator it = startLine->mask->begin(); it != startLine->mask->end(); ){
-			if ((*it)->type == COL_ROAD_BORDER){
-				if ((*it)->rect.x < left)
-					left = (*it)->rect.x;
-				if ((*it)->rect.x > right)
-					right = (*it)->rect.x;
-			}
-			++it;
-		}
-
-		left += RTILE_WIDTH*2;
-		right -= RTILE_WIDTH;
-
-		if (left == right)
-			right += RTILE_WIDTH;
-
-		if (App->road->GetCurrentSegmentType() == S_2_BR || App->road->GetCurrentSegmentType() == S_2_ROADS)
-			if (App->GetRand(2)){
-				left = 2 * RTILE_WIDTH;
-				right = 4 * RTILE_WIDTH;
-			}
-			else{
-				left = 10 * RTILE_WIDTH;
-				right = 12 * RTILE_WIDTH;
-			}
-
-		position.x = App->GetRand((right - left) , left);
+		position.x = SetLeftRight(); 
 		position.y -= App->player->pos;
 	}
 
@@ -192,10 +157,14 @@ update_status ModuleCars::Update()
 		if (crash.current_frame < 8)
 			App->renderer->Blit(App->driver->graphics, position.x, position.y, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER, dist);
 		App->renderer->Blit(App->driver->graphics, position.x, position.y, &(crash.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
-		if (crash.current_frame > 8 && crash.current_frame < 9)
+		if (crash.current_frame > 8 && crash.current_frame < 9){
 			gear = 0;
-		if (crash.Finished())
+			App->audio->PlayFx(AUD_EXPLOSION);
+		}
+		if (crash.Finished()){
+			state = DEAD;
 			to_delete = true;
+		}
 	}
 	else
 	{
@@ -244,7 +213,7 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 {
 	LOG("Collision Car");
 
-	if (a->type == COL_CAR && (b->type == COL_CAR || b->type == COL_PLAYER)){
+	if (b->type == COL_CAR || b->type == COL_PLAYER){
 		if (a->rect.x > b->rect.x)
 			SetMovement(LEFT);
 		else if (a->rect.x < b->rect.x)
@@ -257,20 +226,9 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 		}
 
 	}
-	if (a->type == COL_CAR && b->type == COL_PLAYER){
-		if (a->rect.x > b->rect.x)
-			SetMovement(LEFT);
-		else if (a->rect.x < b->rect.x)
-			SetMovement(RIGHT);
-		else{
-			if (App->GetRand(2) == 0)
-				SetMovement(LEFT);
-			else
-				SetMovement(RIGHT);
-		}
-	}
+
 	//if (a->type == COL_CAR && b->type == COL_ROAD_BORDER && !a->HasCollision()){
-	if (a->type == COL_CAR && b->type == COL_ROAD_BORDER ){
+	if (b->type == COL_ROAD_BORDER ){
 		if (state != TO_BORDER)
 			if (a->rect.x >= b->rect.x)
 				SetMovement(LEFT);
@@ -279,21 +237,22 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 	}
 
 	if (status == COL_START){
-		if (a->type == COL_CAR && b->type == COL_ROAD_OUT){
+		if (b->type == COL_ROAD_OUT){
 			App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
+			state = DEAD;
 			to_delete = true;
 			gear = 0;
 		}
-		if (a->type == COL_CAR && b->type == COL_SPRAY){
+		if (b->type == COL_SPRAY){
 			state = TO_BORDER;
 		}
-		if (a->type == COL_CAR && b->type == COL_OIL){
+		if (b->type == COL_OIL){
 			state = TO_BORDER;
 		}
-		if (a->type == COL_CAR && b->type == COL_BULLET){
+		if (b->type == COL_BULLET){
 			state = EXPLOTE;
 		}
-		if (a->type == COL_CAR && b->type == COL_BOMB){
+		if (b->type == COL_BOMB){
 			state = EXPLOTE;
 		}
 	}
@@ -336,4 +295,43 @@ void ModuleCars::TurnRandom(){
 		SetMovement(RIGHT);
 	else
 		SetMovement(LEFT);
+}
+
+int ModuleCars::SetCarStartPosition(bool top){
+
+	int left = SCREEN_WIDTH;
+	int right = 0;
+
+	RoadLine * startLine = App->road->screen.back();
+	if (App->player->gear < 5){
+		startLine = *App->road->screen.begin();
+	}
+
+	for (vector<Collider*>::iterator it = startLine->mask->begin(); it != startLine->mask->end();){
+		if ((*it)->type == COL_ROAD_BORDER){
+			if ((*it)->rect.x < left)
+				left = (*it)->rect.x;
+			if ((*it)->rect.x > right)
+				right = (*it)->rect.x;
+		}
+		++it;
+	}
+
+	left += RTILE_WIDTH * 1;
+	right -= RTILE_WIDTH;
+
+	if (left == right)
+		right += RTILE_WIDTH;
+
+	if (App->road->GetCurrentSegmentType() == S_2_BR || App->road->GetCurrentSegmentType() == S_2_ROADS)
+		if (App->GetRand(2)){
+			left = 2 * RTILE_WIDTH;
+			right = 4 * RTILE_WIDTH;
+		}
+		else{
+			left = 10 * RTILE_WIDTH;
+			right = 12 * RTILE_WIDTH;
+		}
+
+	return App->GetRand((right - left), left);
 }

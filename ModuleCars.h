@@ -12,7 +12,7 @@
 struct SDL_Texture;
 
 enum Movement { STRAIGHT, RIGHT, LEFT };
-enum Status { IDLE, TURBO, BREAK, TO_BORDER, EXPLOTE};
+enum Status { IDLE, TURBO, BREAK, TO_BORDER, EXPLOTE, DEAD};
 enum Weapon { NONE = -1, GUN, OIL, SPRAY, ROCKET, BOMB, RAZOR, BULLET_ENEMY, WORKING };
 enum CARS { PLAYER = 0, RED_CAR = 1, BLUE_CAR = 2, MOTO = 3, TRUCK = 4, ROAD_LORD = 6, SWITCH_BLADE = 7, ENFORCER = 8 , MAD_BOMBER = 10 };
 
@@ -35,6 +35,7 @@ public:
 	fPoint GetPivot();
 	virtual void SetWeapon(Weapon new_weapon);
 	void TurnRandom();
+	static int SetCarStartPosition(bool top = false);
 
 	Weapon weapon;
 	CARS car_type;
