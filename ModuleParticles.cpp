@@ -62,20 +62,24 @@ update_status ModuleParticles::PreUpdate()
 
 	for (vector<pair<Particle*, Collider*>>::iterator it = background.begin(); it != background.end();)
 	{
-		it->first->live.Start();
+		if (it->first->anim.type != ANIM_PUDDLE)
+			it->first->live.Start();
 		particles.push_back(*it);
 		it = background.erase(it);
 	}
 
 	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end();)
 	{
-		if (!(*it).first->live.running || (*it).second->to_delete)
+		if ((*it).second->to_delete)
 		{
+			Collider *aux = (*it).second;
+			App->masks->colliders.remove((*it).second);
+			//RELEASE((*it).second);
 			RELEASE((*it).first);
 			it = particles.erase(it);
 		}
 		else
-		++it;
+			++it;
 	}
 
 	background.clear();
@@ -107,9 +111,7 @@ update_status ModuleParticles::Update()
 			}
 			else{
 				if (it->first->live.GetTime() > 800){
-					(*it).first->live.Stop();
-					App->masks->colliders.remove((*it).second);
-					delete((*it).second);
+					it->second->to_delete = true;
 				}
 				else{
 					it->first->pos.y -= App->player->gear + 4;
@@ -132,9 +134,7 @@ update_status ModuleParticles::Update()
 			else if (it->first->live.GetTime() < 2000)
 				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(2)), 1.0f, RENDER_OTHER);
 			else if (it->first->live.GetTime() > 2000){
-				(*it).first->live.Stop();
-				App->masks->colliders.remove((*it).second);
-				delete((*it).second);
+				it->second->to_delete = true;
 			}
 			break;
 		case ANIM_SPRAY:
@@ -182,9 +182,7 @@ update_status ModuleParticles::Update()
 				App->renderer->Blit(graphics, it->first->pos.x + (STILE_SIZE * 1.5), it->first->pos.y + (STILE_SIZE * 1.5), &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
 			}
 			else {
-				(*it).first->live.Stop();
-				App->masks->colliders.remove((*it).second);
-				delete((*it).second);
+				it->second->to_delete = true;
 			}
 			break;
 		case ANIM_BULLET_ENEMY:
@@ -208,61 +206,51 @@ update_status ModuleParticles::Update()
 					App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(5)), 1.0f, RENDER_OTHER);
 			}
 			else if (it->first->live.GetTime() > 2000){
-				it->first->live.Stop();
-				App->masks->colliders.remove((*it).second);
-				delete((*it).second);
+				it->second->to_delete = true;
 			}
 			break;
 		case ANIM_BOMB:
-			------it->first->pos.y;
-			------it->second->rect.y;
+			it->first->pos.y -= App->player->gear;
+			it->second->rect.y -= App->player->gear;
 
 			if (((int)it->first->anim.current_frame % 2) == 0){
-				App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
+				App->renderer->Blit(graphics, it->second->rect.x , it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
 				++it->first->anim.current_frame;
 			}
 			else{
-				App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
+				App->renderer->Blit(graphics, it->second->rect.x , it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
 			}
 
 			if (it->first->live.GetTime() > 500){
-				it->first->live.Stop();
-				App->masks->colliders.remove((*it).second);
-				delete((*it).second);
+				it->second->to_delete = true;
 				App->driver->ClearWeapon();
-				App->particles->addParticleBackground(it->first->pos.x, it->first->pos.y, ANIM_ROAD_HOLE);
+				App->particles->addParticleBackground(it->second->rect.x, it->second->rect.y, ANIM_ROAD_HOLE);
 			}
-
 			break;
 		case ANIM_EXPLOTE:
 			App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
 			if (it->first->anim.Finished()){
-				it->first->live.Stop();
-				App->masks->colliders.remove((*it).second);
-				delete((*it).second);
+				it->second->to_delete = true;
 			}
 			break;
 		case ANIM_ROAD_HOLE:
 			if (it->first->anim.Finished())
-				App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetFrame(it->first->anim.frames.size() - 1)), 1.0f, RENDER_OTHER);
+				App->renderer->Blit(graphics, it->second->rect.x, it->first->pos.y, &(it->first->anim.GetFrame(it->first->anim.frames.size() - 1)), 1.0f, RENDER_OTHER);
 			else
-				App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
+				App->renderer->Blit(graphics, it->second->rect.x, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
 			break;
 		case ANIM_PUDDLE:
-				it->first->live.Start();
-				if (it->first->live.running){
-					App->renderer->Blit(graphics, it->first->pos.x - 32, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
-					App->renderer->Blit(graphics, it->first->pos.x + 32, it->first->pos.y, &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
-					if (it->first->live.GetTime() < 200){
-						it->first->live.Stop();
-						App->masks->colliders.remove((*it).second);
-						delete((*it).second);
-					}
+			if (!it->first->live.running){
+				App->renderer->Blit(graphics, it->first->pos.x - 8, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
+				App->renderer->Blit(graphics, it->first->pos.x + 8, it->first->pos.y, &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
+			}
+			else {
+				App->renderer->Blit(graphics, it->first->pos.x - 16, it->first->pos.y, &((*it).first->anim.GetFrame(2)), 1.0f, RENDER_OTHER);
+				App->renderer->Blit(graphics, it->first->pos.x + 16, it->first->pos.y, &((*it).first->anim.GetFrame(3)), 1.0f, RENDER_OTHER);
+				if (it->first->live.GetTime() > 50){
+					it->second->to_delete = true;
 				}
-				else {
-					App->renderer->Blit(graphics, it->first->pos.x - 32, it->first->pos.y, &((*it).first->anim.GetFrame(2)), 1.0f, RENDER_OTHER);
-					App->renderer->Blit(graphics, it->first->pos.x + 32, it->first->pos.y, &((*it).first->anim.GetFrame(3)), 1.0f, RENDER_OTHER);
-				}
+			}
 			break;
 		}
 	}
@@ -272,7 +260,7 @@ update_status ModuleParticles::Update()
 
 bool ModuleParticles::addParticle(float x, float y, ANIMATION_TYPE type){
 	pair<Particle*, Collider*>* element = add(x, y, type);
-	if (type != COL_PUDDLE)
+	if (element->first->anim.type != ANIM_PUDDLE)
 		element->first->live.Start();
 	particles.push_back(*element);
 	return true;
@@ -329,7 +317,7 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 		break;
 	case ANIM_PUDDLE:
 		total_frames = 4;
-		col_type = COL_BULLET;
+		col_type = COL_PUDDLE;
 		break;
 	case ANIM_ROAD_HOLE:
 		App->audio->PlayFx(AUD_EXPLOSION);
@@ -344,7 +332,9 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 	case ANIM_BOMB:
 		App->audio->PlayFx(AUD_COPTER_BOMB);
 		total_frames = 4;
-		col_area = SDL_Rect{ x, y + 50, 6, 22 };
+		//col_area = SDL_Rect{ x, y + 50, 6, 22 };
+		//2//
+		col_area = SDL_Rect{ x, y + 50, 2, 7 };
 		break;
 	}
 
@@ -356,12 +346,12 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 
 	particle->speed = 1.0f;
 
-	if (type == COL_PUDDLE)
+	if (type == ANIM_PUDDLE)
 		particle->anim.loop = false;
 
 	Collider* mask = App->masks->AddCollider(col_area, col_type, App->particles);
 
-	if (type == COL_ROCKET)
+	if (type == ANIM_ROCKET)
 		mask->SetEnabled(false);
 
 	pair<Particle*, Collider*> * res = new pair<Particle*, Collider*>(particle, mask);
@@ -381,6 +371,19 @@ bool ModuleParticles::OnColision(Collider* a, Collider *b, COLISION_STATE status
 	if (a->type == COL_ROCKET && b->type == COL_MAD_BOMBER){
 		res = a->to_delete = true;
 	}
+	if (a->type == COL_PUDDLE && (b->type == COL_CAR || b->type == COL_PLAYER)){
+		App->particles->runParticle(ANIM_PUDDLE);
+	}
 	
 	return res;
+}
+
+void ModuleParticles::runParticle(ANIMATION_TYPE animation){
+	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end();++it)
+	{
+		if ((*it).first->anim.type == animation)
+		{
+			it->first->live.Start();
+		}
+	}
 }

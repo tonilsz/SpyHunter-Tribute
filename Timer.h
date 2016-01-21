@@ -13,7 +13,7 @@ class Timer
 public:
 	bool quit = false;
 	Uint32 start = 0;
-	bool running = true;
+	bool running = false;
 
 private:
 	float current_time;

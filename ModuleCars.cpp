@@ -23,19 +23,19 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 {
 
 
-	position.x = RTILE_WIDTH * 7;
-	position.y = RTILE_HEIGHT * 6.5;
+	position.x = (RTILE_HEIGHT ) * 7;
+	position.y = (RTILE_HEIGHT ) * 6.5;
 
 	if (car_type != PLAYER){
 
 		if (App->player->gear < 5){
-			position.y = RTILE_HEIGHT * 9;
+			position.y = (RTILE_HEIGHT ) * 9;
 		}
 		else{
-			position.y = RTILE_HEIGHT * 0;
+			position.y = (RTILE_HEIGHT ) * 0;
 		}
 
-		position.x = SetLeftRight(); 
+		position.x = SetCarStartPosition();
 		position.y -= App->player->pos;
 	}
 
@@ -143,8 +143,8 @@ update_status ModuleCars::PreUpdate()
 	else
 		moving = STRAIGHT;
 
-	mask->rect.y -= gear;
-	position.y = mask->rect.y + App->player->pos;
+	mask->rect.y -= (gear );
+	position.y = (mask->rect.y) + (App->player->pos);
 
 	last_position = position;
 

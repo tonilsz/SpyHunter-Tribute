@@ -42,10 +42,10 @@ enum update_status
 #define LTILE_SIZE 96
 #define SCREEN_HEIGHT 15 * RTILE_WIDTH
 #define SCREEN_WIDTH 7.5 * RTILE_HEIGHT
-#define SCREEN_SIZE 1
+#define SCREEN_SIZE 2
 #define SCREEN_BPP 1
 #define FULLSCREEN false
 #define VSYNC true
-#define TITLE "Spy Hunter"
+#define TITLE "Spy Hunter SDL Tribute by Toni López (UPC Tech Talent)"
 
 #endif //__GLOBALS_H__

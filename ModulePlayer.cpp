@@ -77,7 +77,7 @@ bool ModulePlayer::CleanUp()
 
 update_status ModulePlayer::PreUpdate()
 {
-	score += gear;
+	score += gear / 2;
 	if (first_mode<1000)
 		++first_mode;
 	if (last_position.x == position.x)
@@ -88,15 +88,15 @@ update_status ModulePlayer::PreUpdate()
 		moving = LEFT;
 
 	App->renderer->camera.y += gear;
-	pos += gear;
-	if (pos > 63){
+	pos += (gear );
+	if (pos > (RTILE_HEIGHT -1 )){
 		pos = 0;
 		App->renderer->camera.y = -1.5 * RTILE_HEIGHT;
 		App->road->AddLine();
 	}
 
 	last_position = position;
-	mask->rect.y = position.y - pos - ( gear);
+	mask->rect.y = position.y - pos - gear;
 	return UPDATE_CONTINUE;
 }
 

@@ -231,7 +231,7 @@ void ModuleCollision::DisplaceRoad(){
 void ModuleCollision::DeleteBottomRoad(){
 
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
-		if ((*it)->rect.y >= RTILE_HEIGHT * 9 && ((*it)->type == COL_ROAD_OUT || (*it)->type == COL_ROAD_BORDER))
+		if ((*it)->rect.y >= (RTILE_HEIGHT) * 9 && ((*it)->type == COL_ROAD_OUT || (*it)->type == COL_ROAD_BORDER))
 			(*it)->to_erase = true;
 
 }
