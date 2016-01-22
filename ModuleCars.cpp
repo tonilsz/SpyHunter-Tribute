@@ -76,8 +76,8 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 		//mask = App->masks->AddCollider(SDL_Rect{ position.x + 17, position.y, 32, 64 }, COL_TRUCK, this);
 		break;
 	case ROAD_LORD:
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 18, position.y, 28, 41 }, COL_CAR, this);
-		//mask = App->masks->AddCollider(SDL_Rect{ position.x + 18, position.y, 28, 41 }, COL_ROAD_LORD, this);
+		//mask = App->masks->AddCollider(SDL_Rect{ position.x + 18, position.y, 28, 41 }, COL_CAR, this);
+		mask = App->masks->AddCollider(SDL_Rect{ position.x + 18, position.y, 28, 41 }, COL_ROAD_LORD, this);
 		break;
 	case SWITCH_BLADE:
 		mask = App->masks->AddCollider(SDL_Rect{ position.x + 19, position.y, 24, 41 }, COL_CAR, this);
@@ -213,7 +213,7 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 {
 	LOG("Collision Car");
 
-	if (b->type == COL_CAR || b->type == COL_PLAYER){
+	if (b->type == COL_CAR || b->type == COL_PLAYER || b->type == COL_ROAD_LORD){
 		if (a->rect.x > b->rect.x)
 			SetMovement(LEFT);
 		else if (a->rect.x < b->rect.x)
@@ -235,6 +235,17 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 			else
 				SetMovement(RIGHT);
 	}
+	int i;
+	if (a->type == COL_ROAD_LORD){
+		if (b->type == COL_ROAD_OUT){
+			App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
+			state = DEAD;
+			to_delete = true;
+			gear = 0;
+		}
+		i = 0;
+
+	}
 
 	if (status == COL_START){
 		if (b->type == COL_ROAD_OUT){
@@ -249,7 +260,8 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 		if (b->type == COL_OIL){
 			state = TO_BORDER;
 		}
-		if (b->type == COL_BULLET){
+		if (b->type == COL_BULLET && a->type != COL_ROAD_LORD){
+			
 			state = EXPLOTE;
 		}
 		if (b->type == COL_BOMB){

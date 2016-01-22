@@ -365,7 +365,7 @@ bool ModuleParticles::OnColision(Collider* a, Collider *b, COLISION_STATE status
 
 	bool res = false;
 
-	if (a->type == COL_BULLET && b->type == COL_CAR){
+	if (a->type == COL_BULLET && (b->type == COL_CAR || b->type == COL_ROAD_LORD)){
 		res = a->to_delete = true;
 	}
 	if (a->type == COL_ROCKET && b->type == COL_MAD_BOMBER){
