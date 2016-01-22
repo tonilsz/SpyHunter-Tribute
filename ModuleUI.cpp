@@ -139,9 +139,9 @@ update_status ModuleUI::Update()
 		}
 
 		//Apply the images to the screen
-		SDL_Rect test = { 0, 0, 100, 8 };
+		SDL_Rect test = { 0, 0, 100, 16 };
 		App->renderer->Blit(score, 20, 100, &test, 1.0f, RENDER_OTHER);
-		test = { 0, 0, 50, 8 };
+		test = { 0, 0, 50, 16 };
 		App->renderer->Blit(lives, SCREEN_WIDTH / 2 - 25, 100, &test, 1.0f, RENDER_OTHER);
 		App->renderer->Blit(weapons, SCREEN_WIDTH - 120, 100, &test, 1.0f, RENDER_OTHER);
 	}
