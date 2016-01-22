@@ -137,8 +137,32 @@ void ModulePlayer::SetMovement(Movement new_state){
 }
 
 void ModulePlayer::SetWeapon(Weapon new_weapon){
-	if (weapon != WORKING || weapon == ROCKET || new_weapon == NONE)
-		weapon = new_weapon;
+	if (weapon != WORKING || weapon == ROCKET || new_weapon == NONE){
+		switch (new_weapon){
+		case OIL:
+			if (oil > 0){
+				--oil;
+				weapon = new_weapon;
+			}
+			break;
+		case SPRAY:
+			if (spray > 0){
+				--spray;
+				weapon = new_weapon;
+			}
+			break;
+		case ROCKET:
+			if (rocket > 0){
+				--rocket;
+				weapon = new_weapon;
+			}
+			break;
+		case GUN:
+		case NONE:
+			weapon = new_weapon;
+			break;
+		}
+	}
 }
 
 update_status ModulePlayer::Update()
@@ -276,12 +300,12 @@ void ModulePlayer::GetRandWeapon(){
 	int new_weapon = App->GetRand(3,1);
 	switch (new_weapon){
 	case 0:
-		App->player->oil = 999;
+		App->player->oil = 99;
 
 	}
 	switch (new_weapon){
 	case 1:
-		App->player->spray = 999;
+		App->player->spray = 49;
 
 	}
 	switch (new_weapon){

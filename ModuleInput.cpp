@@ -92,9 +92,9 @@ update_status ModuleInput::PreUpdate()
 					}
 					else if (keyboard[SDL_SCANCODE_F4]) {
 						//FULL WEAPON MODE
-						App->player->oil = 999;
-						App->player->spray = 999;
-						App->player->rocket = 999;
+						App->player->oil = 99;
+						App->player->spray = 49;
+						App->player->rocket = 9;
 					}
 					else if (keyboard[SDL_SCANCODE_F5]) {
 						//SET AMBIEN FOREST
