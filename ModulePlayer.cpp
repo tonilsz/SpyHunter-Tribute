@@ -77,7 +77,7 @@ bool ModulePlayer::CleanUp()
 
 update_status ModulePlayer::PreUpdate()
 {
-	score += gear / 2;
+	score += gear/2;
 	if (first_mode<1000)
 		++first_mode;
 	if (last_position.x == position.x)
@@ -87,16 +87,16 @@ update_status ModulePlayer::PreUpdate()
 	else if (last_position.x > position.x)
 		moving = LEFT;
 
-	App->renderer->camera.y += gear;
-	pos += (gear );
-	if (pos > (RTILE_HEIGHT -1 )){
+	App->renderer->camera.y += gear* SCREEN_SIZE;
+	pos += gear* SCREEN_SIZE;
+	if (pos > (RTILE_HEIGHT*SCREEN_SIZE)-1){
 		pos = 0;
-		App->renderer->camera.y = -1.5 * RTILE_HEIGHT;
+		App->renderer->camera.y = -1.5 * RTILE_HEIGHT * SCREEN_SIZE;
 		App->road->AddLine();
 	}
 
 	last_position = position;
-	mask->rect.y = position.y - pos - gear;
+	mask->rect.y = position.y - ((pos) / SCREEN_SIZE) - gear;
 	return UPDATE_CONTINUE;
 }
 
@@ -200,7 +200,7 @@ update_status ModulePlayer::Update()
 	switch (weapon){
 	case GUN:
 		if (gun_turn)
-			App->particles->addParticle(position.x + 13, position.y - STILE_SIZE, ANIM_BULLET);
+			App->particles->addParticle(position.x + 13, position.y - STILE_SIZE/SCREEN_SIZE, ANIM_BULLET);
 		else
 			App->particles->addParticle(position.x + 21, position.y - STILE_SIZE, ANIM_BULLET);
 		gun_turn = !gun_turn;
@@ -313,26 +313,5 @@ void ModulePlayer::GetRandWeapon(){
 		App->player->rocket = 9;
 
 	}
-	if (god_mode){
-		idle.frames.clear();
-		idle.frames.push_back({ MTILE_SIZE * 0, MTILE_SIZE * car_type, MTILE_SIZE, MTILE_SIZE });
-
-		right.y = MTILE_SIZE * car_type;
-
-		left.y = MTILE_SIZE * car_type;
-		mask->SetEnabled(true);
-	}
-	else{
-		idle.frames.clear();
-		idle.frames.push_back({ MTILE_SIZE * 0, MTILE_SIZE * 14.5, MTILE_SIZE, MTILE_SIZE });
-		idle.frames.push_back({ MTILE_SIZE * 1, MTILE_SIZE * 14.5, MTILE_SIZE, MTILE_SIZE });
-
-		right.y = MTILE_SIZE * 14.5;
-
-		left.y = MTILE_SIZE * 14.5;
-		mask->SetEnabled(false);
-	}
-
-	god_mode = !god_mode;
 }
 

@@ -97,11 +97,11 @@ bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, f
 	bool ret = true;
 	if (printer_mode){
 		SDL_Rect rect;
-		rect.x = (int)(camera.x * speed) + (x);
-		rect.y = (int)(camera.y * speed) + (y);
+		rect.x = (int)(camera.x * speed) + x * SCREEN_SIZE;
+		rect.y = (int)(camera.y * speed) + y * SCREEN_SIZE;
 
 		if (type != RENDER_ROAD)
-			rect.y -= App->player->pos ;
+			rect.y -= App->player->pos;
 		//if (type == RENDER_OTHER)
 			//rect.y -= dist;
 
@@ -117,8 +117,6 @@ bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, f
 
 		rect.w *= SCREEN_SIZE;
 		rect.h *= SCREEN_SIZE;
-		rect.x *= SCREEN_SIZE;
-		rect.y *= SCREEN_SIZE;
 
 		if (SDL_RenderCopy(renderer, texture, section, &rect) != 0)
 		{
@@ -139,8 +137,8 @@ bool ModuleRender::Shadow(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8
 	SDL_Rect rec(rect);
 	if (use_camera)
 	{
-		rec.x = (int)(camera.x + (rect.x * SCREEN_SIZE));
-		rec.y = (int)(camera.y + (rect.y * SCREEN_SIZE));
+		rec.x = (int)(camera.x + rect.x * SCREEN_SIZE);
+		rec.y = (int)(camera.y + rect.y * SCREEN_SIZE);
 		rec.w *= SCREEN_SIZE;
 		rec.h *= SCREEN_SIZE;
 	}

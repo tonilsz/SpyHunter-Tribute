@@ -208,7 +208,7 @@ bool ModuleCopter::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 void ModuleCopter::ThrowBomb()
 {
 	if (weapon != WORKING){
-		App->particles->addParticleBackground(mask->rect.x , mask->rect.y + (mask->rect.h / 2), ANIM_BOMB);
+		App->particles->addParticleBackground(mask->rect.x, mask->rect.y + (mask->rect.h / 2), ANIM_BOMB);
 		++seeker;
 		weapon = WORKING;
 	}

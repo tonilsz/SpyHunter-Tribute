@@ -23,16 +23,16 @@ ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
 {
 
 
-	position.x = (RTILE_HEIGHT ) * 7;
-	position.y = (RTILE_HEIGHT ) * 6.5;
+	position.x = RTILE_WIDTH * 7;
+	position.y = RTILE_HEIGHT * 6.5;
 
 	if (car_type != PLAYER){
 
 		if (App->player->gear < 5){
-			position.y = (RTILE_HEIGHT ) * 9;
+			position.y = RTILE_HEIGHT * 9;
 		}
 		else{
-			position.y = (RTILE_HEIGHT ) * 0;
+			position.y = RTILE_HEIGHT * 0;
 		}
 
 		position.x = SetCarStartPosition();
@@ -143,8 +143,9 @@ update_status ModuleCars::PreUpdate()
 	else
 		moving = STRAIGHT;
 
-	mask->rect.y -= (gear );
-	position.y = (mask->rect.y) + (App->player->pos);
+	mask->rect.y -= gear;
+	position.y = mask->rect.y + (App->player->pos / SCREEN_SIZE);
+	//mask->rect.y = position.y - ((pos) / SCREEN_SIZE) - gear;
 
 	last_position = position;
 
@@ -227,7 +228,6 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 
 	}
 
-	//if (a->type == COL_CAR && b->type == COL_ROAD_BORDER && !a->HasCollision()){
 	if (b->type == COL_ROAD_BORDER || b->type == COL_PUDDLE){
 		if (state != TO_BORDER)
 			if (a->rect.x >= b->rect.x)
@@ -235,6 +235,7 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 			else
 				SetMovement(RIGHT);
 	}
+
 	int i;
 	if (a->type == COL_ROAD_LORD){
 		if (b->type == COL_ROAD_OUT){
@@ -261,7 +262,6 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 			state = TO_BORDER;
 		}
 		if (b->type == COL_BULLET && a->type != COL_ROAD_LORD){
-			
 			state = EXPLOTE;
 		}
 		if (b->type == COL_BOMB){

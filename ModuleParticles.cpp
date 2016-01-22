@@ -72,9 +72,6 @@ update_status ModuleParticles::PreUpdate()
 	{
 		if ((*it).second->to_delete)
 		{
-			Collider *aux = (*it).second;
-			App->masks->colliders.remove((*it).second);
-			//RELEASE((*it).second);
 			RELEASE((*it).first);
 			it = particles.erase(it);
 		}
@@ -95,7 +92,7 @@ update_status ModuleParticles::Update()
 	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end(); ++it)
 	{
 		it->first->pos.y += App->player->gear;
-		it->second->rect.y = (int)it->first->pos.y - App->renderer->camera.y - (RTILE_HEIGHT * 1.5);
+		it->second->rect.y = ((int)it->first->pos.y) - (App->renderer->camera.y/SCREEN_SIZE) - (RTILE_HEIGHT * 1.5);
 
 
 		switch (it->first->anim.type){
@@ -104,9 +101,9 @@ update_status ModuleParticles::Update()
 				App->player->SetWeapon(NONE);
 				it->first->anim.expired = true;
 			}
-			it->second->rect.y += (12 - App->player->gear);
+			it->second->rect.y += (12 - (App->player->gear));
+			it->first->pos.y -= (App->player->gear + 4);
 			if (it->first->live.GetTime() < 30){
-				it->first->pos.y -= App->player->gear + 4;
 				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
 			}
 			else{
@@ -114,7 +111,6 @@ update_status ModuleParticles::Update()
 					it->second->to_delete = true;
 				}
 				else{
-					it->first->pos.y -= App->player->gear + 4;
 					if ((it->first->live.GetTime() % 100) < 50)
 						App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(1)), 1.0f, RENDER_OTHER);
 					else
@@ -214,11 +210,11 @@ update_status ModuleParticles::Update()
 			it->second->rect.y -= App->player->gear;
 
 			if (((int)it->first->anim.current_frame % 2) == 0){
-				App->renderer->Blit(graphics, it->second->rect.x , it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
+				App->renderer->Blit(graphics, it->second->rect.x, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
 				++it->first->anim.current_frame;
 			}
 			else{
-				App->renderer->Blit(graphics, it->second->rect.x , it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
+				App->renderer->Blit(graphics, it->second->rect.x, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
 			}
 
 			if (it->first->live.GetTime() > 500){
@@ -226,6 +222,7 @@ update_status ModuleParticles::Update()
 				App->driver->ClearWeapon();
 				App->particles->addParticleBackground(it->second->rect.x, it->second->rect.y, ANIM_ROAD_HOLE);
 			}
+
 			break;
 		case ANIM_EXPLOTE:
 			App->renderer->Blit(graphics, it->second->rect.x - 13, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
@@ -374,12 +371,11 @@ bool ModuleParticles::OnColision(Collider* a, Collider *b, COLISION_STATE status
 	if (a->type == COL_PUDDLE && (b->type == COL_CAR || b->type == COL_PLAYER)){
 		App->particles->runParticle(ANIM_PUDDLE);
 	}
-	
 	return res;
 }
 
 void ModuleParticles::runParticle(ANIMATION_TYPE animation){
-	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end();++it)
+	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end(); ++it)
 	{
 		if ((*it).first->anim.type == animation)
 		{

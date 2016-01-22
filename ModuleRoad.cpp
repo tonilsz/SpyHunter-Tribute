@@ -93,9 +93,7 @@ update_status ModuleRoad::Update()
 {	
 	if (next_puddle == App->GetTicks()){
 		next_puddle += App->GetRand(500, 100);
-		int x = ModuleCars::SetCarStartPosition();
-		App->particles->addParticle(x, 0, ANIM_PUDDLE);
-		//App->particles->addParticle(ModuleCars::SetCarStartPosition(), 0, ANIM_PUDDLE);
+		App->particles->addParticle(ModuleCars::SetCarStartPosition(), 0, ANIM_PUDDLE);
 	}
 
 	int i = 0, j = 0;
