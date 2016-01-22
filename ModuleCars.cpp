@@ -228,7 +228,7 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 	}
 
 	//if (a->type == COL_CAR && b->type == COL_ROAD_BORDER && !a->HasCollision()){
-	if (b->type == COL_ROAD_BORDER ){
+	if (b->type == COL_ROAD_BORDER || b->type == COL_PUDDLE){
 		if (state != TO_BORDER)
 			if (a->rect.x >= b->rect.x)
 				SetMovement(LEFT);
