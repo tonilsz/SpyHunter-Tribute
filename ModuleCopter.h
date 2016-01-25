@@ -16,7 +16,7 @@ enum ORIENTATION_TYPE {
 class ModuleCopter : public ModuleCars
 {
 public:
-	ModuleCopter(CARS car, int gear = 0, bool start_enabled = true);
+	ModuleCopter(CARS car, int velocity = 0, bool start_enabled = true);
 	~ModuleCopter();
 
 	update_status PreUpdate();

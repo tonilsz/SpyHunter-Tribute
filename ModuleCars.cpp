@@ -21,21 +21,21 @@ ModuleCars::ModuleCars(CARS car_type, bool start_enabled)
 	to_delete(false)
 {
 	if (car_type!= PLAYER)
-		gear = App->GetRand(7, 1);
+		velocity = App->GetRand(7, 1);
 
 	position.x = RTILE_WIDTH * 7;
 	position.y = RTILE_HEIGHT * 6.5;
 
 	if (car_type != PLAYER){
 
-		if (App->player->gear < gear){
+		if (App->player->velocity < velocity){
 			position.y = RTILE_HEIGHT * 9;
 		}
 		else{
 			position.y = RTILE_HEIGHT * 0;
 		}
 
-		position.x = SetCarStartPosition(gear);
+		position.x = SetCarStartPosition(velocity);
 		position.y -= App->player->pos;
 	}
 
@@ -143,9 +143,9 @@ update_status ModuleCars::PreUpdate()
 	else
 		moving = STRAIGHT;
 
-	mask->rect.y -= gear;
+	mask->rect.y -= velocity;
 	position.y = mask->rect.y + (App->player->pos / SCREEN_SIZE);
-	//mask->rect.y = position.y - ((pos) / SCREEN_SIZE) - gear;
+	//mask->rect.y = position.y - ((pos) / SCREEN_SIZE) - velocity;
 
 	last_position = position;
 
@@ -159,7 +159,7 @@ update_status ModuleCars::Update()
 			App->renderer->Blit(App->driver->graphics, position.x, position.y, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER, dist);
 		App->renderer->Blit(App->driver->graphics, position.x, position.y, &(crash.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
 		if (crash.current_frame > 8 && crash.current_frame < 9){
-			gear = 0;
+			velocity = 0;
 			App->audio->PlayFx(AUD_EXPLOSION);
 			AddCarPoints();
 		}
@@ -192,9 +192,9 @@ void ModuleCars::SetMovement(Movement new_state){
 	int dif = position.x - mask->rect.x;
 
 	if (moving == LEFT)
-		mask->rect.x += gear * 2;
+		mask->rect.x += velocity * 2;
 	else if (moving == RIGHT)
-		mask->rect.x -= gear * 2;
+		mask->rect.x -= velocity * 2;
 
 	if (mask->rect.x < 0)
 		mask->rect.x = 0;
@@ -254,7 +254,7 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 			App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
 			state = DEAD;
 			to_delete = true;
-			gear = 0;
+			velocity = 0;
 		}
 		i = 0;
 
@@ -265,7 +265,7 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 			App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
 			state = DEAD;
 			to_delete = true;
-			gear = 0;
+			velocity = 0;
 			AddCarPoints();
 		}
 		if (b->type == COL_SPRAY){
@@ -292,14 +292,14 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 	}
 	return true;
 }
-void ModuleCars::UpGear(){
-	if (gear != 8)
-		gear += 4;
+void ModuleCars::UpVelocity(){
+	if (velocity != 8)
+		velocity += 4;
 }
 
-void ModuleCars::DownGear(){
-	if (gear != 0)
-		gear -= 4;
+void ModuleCars::DownVelocity(){
+	if (velocity != 0)
+		velocity -= 4;
 }
 
 fPoint ModuleCars::GetPivot(){
@@ -322,13 +322,13 @@ void ModuleCars::TurnRandom(){
 		SetMovement(LEFT);
 }
 
-int ModuleCars::SetCarStartPosition(int gear, bool top ){
+int ModuleCars::SetCarStartPosition(int velocity, bool top){
 
 	int left = SCREEN_WIDTH;
 	int right = 0;
 
 	RoadLine * startLine = App->road->screen.back();
-	if (!top && App->player->gear < gear){
+	if (!top && App->player->velocity < velocity){
 		startLine = *App->road->screen.begin();
 	}
 

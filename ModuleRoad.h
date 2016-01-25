@@ -11,6 +11,7 @@ using namespace std;
 
 enum GAME_STATE{
 	G_START,
+	G_PAUSE,
 	G_PLAY,
 	G_OVER
 };

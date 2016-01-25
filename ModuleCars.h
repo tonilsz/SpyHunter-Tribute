@@ -30,12 +30,12 @@ public:
 	virtual bool OnColision(Collider* a, Collider *b, COLISION_STATE status);
 	virtual void SetMovement(Movement new_state);
 	virtual void SetState(Status new_state);
-	virtual void UpGear();
-	virtual void DownGear();
+	virtual void UpVelocity();
+	virtual void DownVelocity();
 	fPoint GetPivot();
 	virtual void SetWeapon(Weapon new_weapon);
 	void TurnRandom();
-	static int SetCarStartPosition( int gear = 0, bool top = false);
+	static int SetCarStartPosition(int velocity = 0, bool top = false);
 	void AddCarPoints();
 
 	Weapon weapon;
@@ -51,7 +51,7 @@ public:
 	Status state = IDLE;
 	Timer clock;
 	Collider* mask;
-	float gear;
+	float velocity;
 	bool to_delete;
 
 private:

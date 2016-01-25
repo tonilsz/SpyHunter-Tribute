@@ -29,9 +29,12 @@ public:
 	void SetWeapon(Weapon new_state);
 	void UpGear();
 	void DownGear();
+	void UpTurboGear();
+	void DownTurboGear();
 	void GodMode();
 	void GetRandWeapon();
 	void Dead();
+	void Alive();
 	int GetStartPosition();
 
 	int oil;
@@ -43,6 +46,9 @@ public:
 	int score;
 	int first_mode;
 	int block_points;
+	int rumble;
+	int turbo_gear;
+	int gear;
 	SDL_Rect turbo;
 	Timer state_timer;
 	Weapon weapon = NONE;

@@ -153,9 +153,18 @@ update_status ModuleUI::Update()
 		App->renderer->Blit(weapons, SCREEN_WIDTH - 120, 100, &test, 1.0f, RENDER_OTHER);
 	}
 	else if (App->road->road_state == G_START){
-		SDL_Texture * text = 
+		SDL_Texture * text =
 			SDL_CreateTextureFromSurface(App->renderer->renderer,
 			TTF_RenderText_Solid(font, "PRESS SPACE TO START", textColor));
+
+		SDL_Rect test = { 0, 0, SCREEN_WIDTH - 40, 20 };
+		App->renderer->Blit(text, 20, (SCREEN_HEIGHT / 2) - 10, &test, 1.0f, RENDER_OTHER);
+
+	}
+	else if (App->road->road_state == G_PAUSE){
+		SDL_Texture * text =
+			SDL_CreateTextureFromSurface(App->renderer->renderer,
+			TTF_RenderText_Solid(font, "PRESS SPACE TO CONTINUE", textColor));
 
 		SDL_Rect test = { 0, 0, SCREEN_WIDTH - 40, 20 };
 		App->renderer->Blit(text, 20, (SCREEN_HEIGHT / 2) - 10, &test, 1.0f, RENDER_OTHER);

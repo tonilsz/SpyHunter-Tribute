@@ -23,10 +23,13 @@ ModulePlayer::ModulePlayer(bool start_enabled, CARS car)
 	rocket(0),
 	truck(0),
 	block_points(0),
+	rumble(0),
+	gear(0),
+	turbo_gear(1),
 	gun_turn(false),
 	god_mode(false)
 {
-	gear = 0;
+	velocity = 0;
 	position.x = RTILE_WIDTH * 11;
 	position.y = RTILE_HEIGHT * 6;
 
@@ -78,8 +81,9 @@ bool ModulePlayer::CleanUp()
 
 update_status ModulePlayer::PreUpdate()
 {
+
 	if (!block_points){
-		score += gear / 2;
+		score += velocity / 2;
 	}
 	else{
 		++block_points;
@@ -95,16 +99,19 @@ update_status ModulePlayer::PreUpdate()
 	else if (last_position.x > position.x)
 		moving = LEFT;
 
-	App->renderer->camera.y += gear* SCREEN_SIZE;
-	pos += gear* SCREEN_SIZE;
-	if (pos > (RTILE_HEIGHT*SCREEN_SIZE)-1){
-		pos = 0;
+	App->renderer->camera.y += velocity * SCREEN_SIZE;
+	pos += velocity;
+	if (pos > (RTILE_HEIGHT)-1){
+		pos -= ((RTILE_HEIGHT) );
 		App->renderer->camera.y = -1.5 * RTILE_HEIGHT * SCREEN_SIZE;
 		App->road->AddLine();
 	}
 
 	last_position = position;
-	mask->rect.y = position.y - ((pos) / SCREEN_SIZE) - gear;
+	mask->rect.y = position.y - ((pos)) - velocity;
+
+	rumble = 0;
+
 	return UPDATE_CONTINUE;
 }
 
@@ -128,10 +135,10 @@ void ModulePlayer::SetMovement(Movement new_state){
 	int dif = position.x - mask->rect.x;
 
 	if (moving == RIGHT){
-		mask->rect.x += gear;
+		mask->rect.x += velocity;
 	}
 	else if (moving == LEFT){
-		mask->rect.x -= gear;
+		mask->rect.x -= velocity;
 	}
 	if (mask->rect.x < 0)
 		mask->rect.x = 0;
@@ -188,18 +195,18 @@ update_status ModulePlayer::Update()
 	case IDLE:
 		switch (moving){
 		case STRAIGHT:
-			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &(idle.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
+			App->renderer->Blit(App->driver->graphics, position.x + rumble, position.y - velocity, &(idle.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
 			break;
 		case RIGHT:
-			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &right, 1.0f, RENDER_PLAYER);
+			App->renderer->Blit(App->driver->graphics, position.x + rumble, position.y - velocity, &right, 1.0f, RENDER_PLAYER);
 			break;
 		case LEFT:
-			App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &left, 1.0f, RENDER_PLAYER);
+			App->renderer->Blit(App->driver->graphics, position.x + rumble, position.y - velocity, &left, 1.0f, RENDER_PLAYER);
 			break;
 		}
 		break;
 	case TURBO:
-		App->renderer->Blit(App->driver->graphics, position.x, position.y - gear, &turbo, 1.0f, RENDER_PLAYER);
+		App->renderer->Blit(App->driver->graphics, position.x, position.y - velocity, &turbo, 1.0f, RENDER_PLAYER);
 		if (state_timer.GetTime() > 100)
 			state = IDLE;
 		break;
@@ -257,19 +264,39 @@ bool ModulePlayer::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 		state = TO_BORDER;
 	}*/
 
+	if (b->type == COL_ROAD_BORDER && App->player->velocity > 2){
+		rumble = App->GetRand(30, -15);
+	}
+
 	return true;
 }
 void ModulePlayer::UpGear(){
-	if (gear < 8){
-		gear += 4;
+
+	if (App->GetTicks() % 10 == 0 && gear < 6 && !(gear == 0 && turbo_gear == 2)){
+	//if ( gear < 6 && !(gear == 0 && turbo_gear == 2)){
+		gear += 1;
 		state = TURBO;
 		state_timer.Start();
 	}
+	velocity = gear * turbo_gear;
 }
 
 void ModulePlayer::DownGear(){
-	if (gear > 0)
-		gear -= 4;
+
+	if (App->GetTicks() % 10 == 0 && gear > 0){
+		gear -= 1;
+	}
+	velocity = gear * turbo_gear;
+}
+
+void ModulePlayer::UpTurboGear(){
+	turbo_gear = 2;
+	velocity = gear * turbo_gear;
+}
+
+void ModulePlayer::DownTurboGear(){
+	turbo_gear = 1;
+	velocity = gear * turbo_gear;
 }
 
 void ModulePlayer::GodMode(){
@@ -329,10 +356,19 @@ void ModulePlayer::Dead(){
 	if ((first_mode >= 1000))
 		--App->player->lives;
 
-	gear = 0;
+	velocity = 0;
+
+	if (lives == 0)
+		App->road->road_state = G_OVER;
+	else
+		App->road->road_state = G_PAUSE;
+}
+
+void ModulePlayer::Alive(){
 
 	position.x = GetStartPosition();
 	mask->rect.x = position.x + 21;
+	App->road->road_state = G_PLAY;
 }
 
 

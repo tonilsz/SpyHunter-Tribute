@@ -15,7 +15,7 @@
 #include "ModuleAudio.h"
 #include "SDL/include/SDL.h"
 
-ModuleCopter::ModuleCopter(CARS car_type, int gear, bool start_enabled)
+ModuleCopter::ModuleCopter(CARS car_type, int velocity, bool start_enabled)
 	: ModuleCars(car_type, start_enabled),
 	seeker(0)
 {
@@ -50,12 +50,12 @@ update_status ModuleCopter::PreUpdate()
 {
 	dist += (App->player->GetPivot().y - 100) > GetPivot().y;
 
-	if (App->player->gear != 0 && seeker < 5){
+	if (App->player->velocity != 0 && seeker < 5){
 		if (state != EXPLOTE)
 			Seek();
 	}else{
 		SetMovement(N);
-		gear = 9;
+		velocity = 9;
 	}
 
 	last_position = position;
@@ -68,11 +68,11 @@ void ModuleCopter::Seek(){
 	if ((App->player->GetPivot().x) > GetPivot().x - 5 && (App->player->GetPivot().x ) < GetPivot().x + 5){
 		if ((App->player->GetPivot().y) < GetPivot().y + 105 && (App->player->GetPivot().y) > GetPivot().y + 95){
 			//IDLE
-			if (App->player->gear > gear)
-				++gear;
+			if (App->player->velocity > velocity)
+				++velocity;
 
-			if (App->player->gear < gear)
-				--gear;
+			if (App->player->velocity < velocity)
+				--velocity;
 
 			ThrowBomb();
 		}
@@ -112,10 +112,10 @@ void ModuleCopter::Seek(){
 	}
 
 	if ((App->player->GetPivot().y - 106) < GetPivot().y - 250)
-		++gear;
+		++velocity;
 	if ((App->player->GetPivot().y - 106) > GetPivot().y + 150)
-		if ( gear > 1)
-			--gear;
+		if (velocity > 1)
+			--velocity;
 
 }
 
@@ -127,32 +127,32 @@ void ModuleCopter::SetMovement(ORIENTATION_TYPE new_dir){
 
 	switch (orientation){
 	case N:
-		mask->rect.y -= gear;
+		mask->rect.y -= velocity;
 		break;
 	case NE:
-		mask->rect.y -= gear;
-		mask->rect.x += gear;
+		mask->rect.y -= velocity;
+		mask->rect.x += velocity;
 		break;
 	case E:
-		mask->rect.x += gear;
+		mask->rect.x += velocity;
 		break;
 	case SE:
-		mask->rect.x += gear;
-		mask->rect.y += gear;
+		mask->rect.x += velocity;
+		mask->rect.y += velocity;
 		break;
 	case S:
-		mask->rect.y += gear;
+		mask->rect.y += velocity;
 		break;
 	case SW:
-		mask->rect.y += gear;
-		mask->rect.x -= gear;
+		mask->rect.y += velocity;
+		mask->rect.x -= velocity;
 		break;
 	case W:
-		mask->rect.x -= gear;
+		mask->rect.x -= velocity;
 		break;
 	case NW:
-		mask->rect.x -= gear;
-		mask->rect.y -= gear;
+		mask->rect.x -= velocity;
+		mask->rect.y -= velocity;
 		break;
 	}
 
@@ -172,7 +172,7 @@ update_status ModuleCopter::Update()
 		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(crash.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
 		
 		if (crash.current_frame == 0){
-			gear = 0;
+			velocity = 0;
 			App->audio->StopFx();
 			App->audio->PlayFx(AUD_EXPLOSION);
 			App->player->score += 750;

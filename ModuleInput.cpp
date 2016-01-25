@@ -57,6 +57,8 @@ update_status ModuleInput::PreUpdate()
 	
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
+	bool w_pulsed = false;
+
 	for(int i = 0; i < MAX_KEYS; ++i)
 	{
 		if(keys[i] == 1)
@@ -64,15 +66,15 @@ update_status ModuleInput::PreUpdate()
 			if (keyboard[i] == KEY_IDLE){
 				keyboard[i] = KEY_DOWN;
 				if (App->road->road_state == G_PLAY){
-					if (keyboard[SDL_SCANCODE_W]) {
-						//up gear
-						App->player->UpGear();
+					if (keyboard[SDL_SCANCODE_Q]) {
+						//up velocity
+						App->player->DownTurboGear();
 					}
-					else if (keyboard[SDL_SCANCODE_S]) {
-						//down gear
-						App->player->DownGear();
+					if (keyboard[SDL_SCANCODE_E]) {
+						//up velocity
+						App->player->UpTurboGear();
 					}
-					else if (keyboard[SDL_SCANCODE_L] && App->player->gear != 0) {
+					else if (keyboard[SDL_SCANCODE_L] && App->player->velocity != 0) {
 						App->player->SetWeapon(ROCKET);
 					}
 					else if (keyboard[SDL_SCANCODE_Y]) {
@@ -131,6 +133,8 @@ update_status ModuleInput::PreUpdate()
 				}
 				if (keyboard[SDL_SCANCODE_SPACE]) {
 					//START
+					if (App->road->road_state == G_PAUSE)
+						App->player->Alive();
 					App->road->SetGameState(G_PLAY);
 				}
 			}
@@ -138,13 +142,18 @@ update_status ModuleInput::PreUpdate()
 				keyboard[i] = KEY_REPEAT;
 
 				if (App->road->road_state == G_PLAY){
-					if (keyboard[SDL_SCANCODE_H] && App->player->gear != 0) {
+					if (keyboard[SDL_SCANCODE_W]) {
+						//up velocity
+						App->player->UpGear();
+						w_pulsed = true;
+					}
+					if (keyboard[SDL_SCANCODE_H] && App->player->velocity != 0) {
 						App->player->SetWeapon(GUN);
 					}
-					else if (keyboard[SDL_SCANCODE_J] && App->player->gear != 0) {
+					else if (keyboard[SDL_SCANCODE_J] && App->player->velocity != 0) {
 						App->player->SetWeapon(OIL);
 					}
-					else if (keyboard[SDL_SCANCODE_K] && App->player->gear != 0) {
+					else if (keyboard[SDL_SCANCODE_K] && App->player->velocity != 0) {
 						App->player->SetWeapon(SPRAY);
 					}
 					if (keyboard[SDL_SCANCODE_D]) {
@@ -160,7 +169,7 @@ update_status ModuleInput::PreUpdate()
 		{
 			if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN){
 				keyboard[i] = KEY_UP;
-				if (App->player->gear != 0 && (keyboard[SDL_SCANCODE_A] || keyboard[SDL_SCANCODE_D])) {
+				if (App->player->velocity != 0 && (keyboard[SDL_SCANCODE_A] || keyboard[SDL_SCANCODE_D])) {
 					App->audio->PlayFx(AUD_TURN);
 				}
 			}
@@ -168,6 +177,12 @@ update_status ModuleInput::PreUpdate()
 				keyboard[i] = KEY_IDLE;
 		}
 	}
+
+
+	if (!w_pulsed) {
+		App->player->DownGear();
+	}
+
 
 	for(int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
 	{

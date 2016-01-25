@@ -91,7 +91,7 @@ update_status ModuleParticles::Update()
 
 	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end(); ++it)
 	{
-		it->first->pos.y += App->player->gear;
+		it->first->pos.y += App->player->velocity;
 		it->second->rect.y = ((int)it->first->pos.y) - (App->renderer->camera.y/SCREEN_SIZE) - (RTILE_HEIGHT * 1.5);
 
 
@@ -101,8 +101,8 @@ update_status ModuleParticles::Update()
 				App->player->SetWeapon(NONE);
 				it->first->anim.expired = true;
 			}
-			it->second->rect.y += (12 - (App->player->gear));
-			it->first->pos.y -= (App->player->gear + 4);
+			it->second->rect.y += (12 - (App->player->velocity));
+			it->first->pos.y -= (App->player->velocity + 4);
 			if (it->first->live.GetTime() < 30){
 				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
 			}
@@ -139,7 +139,7 @@ update_status ModuleParticles::Update()
 				it->first->anim.expired = true;
 			}
 
-			it->second->rect.y += (12 - App->player->gear);
+			it->second->rect.y += (12 - App->player->velocity);
 
 			if (it->first->live.GetTime() < 50)
 				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
@@ -182,10 +182,10 @@ update_status ModuleParticles::Update()
 			}
 			break;
 		case ANIM_BULLET_ENEMY:
-			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y - gear, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
+			//App->renderer->Blit(graphics, particle->pos.x, particle->pos.y, &(rocket.GetCurrentFrame()), 1.0f, RENDER_PLAYER);
 			break;
 		case ANIM_ROCKET:
-			it->first->pos.y -= App->player->gear + 4;
+			it->first->pos.y -= App->player->velocity + 4;
 			if (it->first->live.GetTime() < 10)
 				App->renderer->Blit(graphics, it->first->pos.x, it->first->pos.y, &((*it).first->anim.GetFrame(0)), 1.0f, RENDER_OTHER);
 			else if (it->first->live.GetTime() < 200)
@@ -206,8 +206,8 @@ update_status ModuleParticles::Update()
 			}
 			break;
 		case ANIM_BOMB:
-			it->first->pos.y -= App->player->gear;
-			it->second->rect.y -= App->player->gear;
+			it->first->pos.y -= App->player->velocity;
+			it->second->rect.y -= App->player->velocity;
 
 			if (((int)it->first->anim.current_frame % 2) == 0){
 				App->renderer->Blit(graphics, it->second->rect.x, it->first->pos.y, &(it->first->anim.GetCurrentFrame()), 1.0f, RENDER_OTHER);
@@ -372,8 +372,8 @@ bool ModuleParticles::OnColision(Collider* a, Collider *b, COLISION_STATE status
 		App->particles->runParticle(ANIM_PUDDLE);
 	}
 	if (a->type == COL_ROAD_OUT && b->type == COL_PLAYER){
-		a->rect.y += App->player->gear;
-		res = a->to_delete = true;
+		a->rect.y += App->player->velocity;
+		res = a->enabled = false;
 	}
 	return res;
 }
