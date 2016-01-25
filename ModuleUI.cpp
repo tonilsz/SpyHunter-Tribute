@@ -83,12 +83,18 @@ update_status ModuleUI::Update()
 	string str_num = to_string(App->player->score).c_str();
 
 	if (App->road->road_state == G_PLAY){
+		//Score render
 		for (int i = str_num.size(); i < 7; ++i)
 			str_num = "0" + str_num;
+
+		if (App->player->block_points){
+			str_num = "NO POINTS!";
+		}
 
 		score = SDL_CreateTextureFromSurface(App->renderer->renderer,
 			TTF_RenderText_Solid(font, str_num.c_str(), textColor));
 
+		//Live render
 		if (App->player->first_mode != 1000){
 			str_num = to_string(1000 - App->player->first_mode).c_str();
 
@@ -106,6 +112,7 @@ update_status ModuleUI::Update()
 		lives = SDL_CreateTextureFromSurface(App->renderer->renderer,
 			TTF_RenderText_Solid(font, str_num.c_str(), textColor));
 
+		//Weapon render
 		str_num = "";
 		if (App->player->truck > 0){
 			str_num = "T" + str_num;

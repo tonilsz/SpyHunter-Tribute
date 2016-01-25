@@ -31,6 +31,8 @@ public:
 	void DownGear();
 	void GodMode();
 	void GetRandWeapon();
+	void Dead();
+	int GetStartPosition();
 
 	int oil;
 	int spray;
@@ -40,6 +42,7 @@ public:
 	int pos;
 	int score;
 	int first_mode;
+	int block_points;
 	SDL_Rect turbo;
 	Timer state_timer;
 	Weapon weapon = NONE;

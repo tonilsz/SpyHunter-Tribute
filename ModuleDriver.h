@@ -25,12 +25,13 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
-	void AddCar(CARS car_type = RED_CAR, int gear = 0);
+	void AddCar(CARS car_type = RED_CAR);
 	void ClearWeapon();
 	CARS GetRandomCar();
 
 	vector<ModuleCars*>* garage;
 	int num_cars;
+	int car_generation_handler;
 	SDL_Texture* graphics = nullptr;
 	bool collision_side;
 };

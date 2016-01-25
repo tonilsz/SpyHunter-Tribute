@@ -15,18 +15,19 @@
 
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled, CARS car)
-	: ModuleCars(PLAYER, 0, start_enabled),
+	: ModuleCars(PLAYER, start_enabled),
 	pos(0),
 	lives(1), 
 	oil(0),
 	spray(0),
 	rocket(0),
 	truck(0),
+	block_points(0),
 	gun_turn(false),
 	god_mode(false)
 {
 	gear = 0;
-	position.x = RTILE_WIDTH * 9;
+	position.x = RTILE_WIDTH * 11;
 	position.y = RTILE_HEIGHT * 6;
 
 	last_position = position;
@@ -77,7 +78,14 @@ bool ModulePlayer::CleanUp()
 
 update_status ModulePlayer::PreUpdate()
 {
-	score += gear/2;
+	if (!block_points){
+		score += gear / 2;
+	}
+	else{
+		++block_points;
+		if (block_points == 100)
+			block_points = 0;
+	}
 	if (first_mode<1000)
 		++first_mode;
 	if (last_position.x == position.x)
@@ -121,11 +129,9 @@ void ModulePlayer::SetMovement(Movement new_state){
 
 	if (moving == RIGHT){
 		mask->rect.x += gear;
-		App->audio->PlayFx(AUD_TURN);
 	}
 	else if (moving == LEFT){
 		mask->rect.x -= gear;
-		App->audio->PlayFx(AUD_TURN);
 	}
 	if (mask->rect.x < 0)
 		mask->rect.x = 0;
@@ -169,8 +175,10 @@ update_status ModulePlayer::Update()
 {
 
 	if ((score > 29999 && score < 30004) || (score > 59999 && score < 60004) || (score > 89999 && score < 90004) || (score > 119999 && score < 120004)){
-		if (lives < 3)
+		if (lives < 3){
 			++lives;
+			App->audio->PlayFx(AUD_LIVE_UP);
+		}
 		if (truck < 3)
 			++truck;
 
@@ -231,29 +239,22 @@ update_status ModulePlayer::Update()
 bool ModulePlayer::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 {
 	LOG("Collision Player");
-	/*
-	if (a->type == COL_PLAYER && b->type == COL_ROAD_OUT){
-		App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
-		if ((first_mode >= 1000))
-			--App->player->lives;
-		App->player->position.x = RTILE_WIDTH * 9;
-		App->player->mask->rect.x = RTILE_WIDTH * 9 + 21;
-		App->player->gear = 0;
-	}
-	if (a->type == COL_PLAYER && b->type == COL_BOMB){
-		App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
-		gear = 0;
-		if ((first_mode>=1000))
-			--App->player->lives;
-		App->player->position.x = RTILE_WIDTH * 9;
-		App->player->mask->rect.x = RTILE_WIDTH * 9 + 21;
-		App->player->gear = 0;
-	}*/
-	/*if (a->type == COL_PLAYER && b->type == COL_CAR){
-		if (a->rect.x > b->rect.x)
+
+	if (b->type == COL_PUDDLE){
+		if (a->rect.x >= b->rect.x)
 			SetMovement(LEFT);
 		else
 			SetMovement(RIGHT);
+	}
+
+
+	//if (status == COL_START && (b->type == COL_ROAD_OUT || b->type == COL_BOMB)){
+	if (b->type == COL_ROAD_OUT || b->type == COL_BOMB){
+		Dead();
+	}
+
+	/*if (a->type == COL_PLAYER && b->type == BULLET_ENEMY){
+		state = TO_BORDER;
 	}*/
 
 	return true;
@@ -297,21 +298,65 @@ void ModulePlayer::GodMode(){
 
 
 void ModulePlayer::GetRandWeapon(){
-	int new_weapon = App->GetRand(3,1);
-	switch (new_weapon){
-	case 0:
-		App->player->oil = 99;
+	if (truck > 0){
+		--truck;
+		int new_weapon = App->GetRand(6, 1);
+		switch (new_weapon){
+		case 1:
+		case 2:
+		case 3:
+			App->player->oil = 99;
 
-	}
-	switch (new_weapon){
-	case 1:
-		App->player->spray = 49;
+		}
+		switch (new_weapon){
+		case 4:
+		case 5:
+			App->player->spray = 49;
 
-	}
-	switch (new_weapon){
-	case 2:
-		App->player->rocket = 9;
+		}
+		switch (new_weapon){
+		case 6:
+			App->player->rocket = 9;
 
+		}
 	}
+}
+
+void ModulePlayer::Dead(){
+
+	App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
+
+	if ((first_mode >= 1000))
+		--App->player->lives;
+
+	gear = 0;
+
+	position.x = GetStartPosition();
+	mask->rect.x = position.x + 21;
+}
+
+
+int ModulePlayer::GetStartPosition(){
+	int res = 0;
+
+	list<RoadLine*>::iterator start_line = App->road->screen.begin();
+	++++start_line;
+
+	for (vector<Collider*>::iterator it = (*start_line)->mask->begin(); it != (*start_line)->mask->end();){
+		if ((*it)->type == COL_ROAD_BORDER){
+			if ((*it)->rect.x > res){
+				res = (*it)->rect.x;
+				if ((*it)->rect.w == 2){
+					res -= 16;
+				}
+
+			}
+		}
+		++it;
+	}
+
+	res -= RTILE_WIDTH;
+
+	return res;
 }
 

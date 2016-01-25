@@ -42,7 +42,7 @@ enum update_status
 #define LTILE_SIZE 96
 #define SCREEN_HEIGHT 15 * RTILE_WIDTH
 #define SCREEN_WIDTH 7.5 * RTILE_HEIGHT
-#define SCREEN_SIZE 2
+#define SCREEN_SIZE 1.25
 #define SCREEN_BPP 1
 #define FULLSCREEN false
 #define VSYNC true

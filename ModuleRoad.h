@@ -43,6 +43,7 @@ public:
 	void AmbientChange(SEGMENT_AMBIENT ambient = A_NONE);
 	void SetGameState(GAME_STATE state = G_START);
 	SEGMENT_TYPE GetCurrentSegmentType();
+	int SetStartStatus();
 
 	GAME_STATE road_state;
 	SDL_Texture* graphics = nullptr;

@@ -371,6 +371,10 @@ bool ModuleParticles::OnColision(Collider* a, Collider *b, COLISION_STATE status
 	if (a->type == COL_PUDDLE && (b->type == COL_CAR || b->type == COL_PLAYER)){
 		App->particles->runParticle(ANIM_PUDDLE);
 	}
+	if (a->type == COL_ROAD_OUT && b->type == COL_PLAYER){
+		a->rect.y += App->player->gear;
+		res = a->to_delete = true;
+	}
 	return res;
 }
 

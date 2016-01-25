@@ -19,7 +19,7 @@ enum CARS { PLAYER = 0, RED_CAR = 1, BLUE_CAR = 2, MOTO = 3, TRUCK = 4, ROAD_LOR
 class ModuleCars : public Module
 {
 public:
-	ModuleCars(CARS car, int gear = 0, bool start_enabled = true);
+	ModuleCars(CARS car, bool start_enabled = true);
 	~ModuleCars();
 
 	virtual bool Start();
@@ -35,7 +35,8 @@ public:
 	fPoint GetPivot();
 	virtual void SetWeapon(Weapon new_weapon);
 	void TurnRandom();
-	static int SetCarStartPosition(bool top = false);
+	static int SetCarStartPosition( int gear = 0, bool top = false);
+	void AddCarPoints();
 
 	Weapon weapon;
 	CARS car_type;

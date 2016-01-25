@@ -65,16 +65,11 @@ bool ModuleRoad::Resume()
 {
 	LOG("Resume Road scene");
 
+	App->player->Enable();
+
 	App->audio->PlayMusic("title-song.mid", 1);
 
-	int i = 0;
-
-	for (; i < 9; ++i){
-		GenerateLine();
-		if (i!=8)
-			App->masks->DisplaceRoad();
-	}
-	return i == 9;
+	return SetStartStatus();
 }
 
 // UnLoad assets
@@ -91,9 +86,10 @@ bool ModuleRoad::Stop()
 // Update: draw Road
 update_status ModuleRoad::Update()
 {	
+	//Lunch random puddle
 	if (next_puddle == App->GetTicks()){
 		next_puddle += App->GetRand(500, 100);
-		App->particles->addParticle(ModuleCars::SetCarStartPosition(), 0, ANIM_PUDDLE);
+		App->particles->addParticle(ModuleCars::SetCarStartPosition(true), 0, ANIM_PUDDLE);
 	}
 
 	int i = 0, j = 0;
@@ -141,6 +137,7 @@ void ModuleRoad::AmbientChange(SEGMENT_AMBIENT ambient){
 	if (ambient == A_NONE)
 		ambient = road.begin()[pos_loop]->ambient;
 
+	App->textures->Unload(graphics);
 	App->ui->textColor = WHITE;
 	switch (ambient){
 		case A_FOREST:
@@ -160,6 +157,10 @@ void ModuleRoad::AmbientChange(SEGMENT_AMBIENT ambient){
 			App->ui->textColor = BLUE;
 			break;
 	}
+
+	++App->player->truck;
+	if (App->driver->car_generation_handler > 160)
+		App->driver->car_generation_handler -= 20;
 }
 
 void ModuleRoad::SetGameState(GAME_STATE state){
@@ -170,13 +171,19 @@ void ModuleRoad::SetGameState(GAME_STATE state){
 	else if (road_state == G_PLAY){
 		if (state == G_OVER){
 			road_state = state;
-			App->player->position.x = RTILE_WIDTH * 9;
-			App->player->gear = 0;
+			App->player->Dead();
 		}
 	}
 	else if (road_state == G_OVER){
 		if (state == G_PLAY){
 			road_state = state;
+
+			for (int i = 0; i < 6; ++i)
+				App->driver->AddCar(App->driver->GetRandomCar());
+
+			App->driver->car_generation_handler = 300;
+			AmbientChange(A_FOREST);
+			SetStartStatus();
 			App->player->oil = 0;
 			App->player->spray = 0;
 			App->player->rocket = 0;
@@ -185,15 +192,33 @@ void ModuleRoad::SetGameState(GAME_STATE state){
 			App->player->lives = 1;
 			App->player->pos = 0;
 			App->player->first_mode = 0;
+			App->player->position.x = RTILE_WIDTH * 11;
+			App->player->mask->rect.x = App->player->position.x + 21;
 
-			for (int i = 0; i < 6; ++i)
-				App->driver->AddCar(App->driver->GetRandomCar(), App->GetRand(5, 4));
-
-			App->player->position.x = RTILE_WIDTH * 9;
 		}
 	}
 }
 
 SEGMENT_TYPE ModuleRoad::GetCurrentSegmentType(){
 	return road.begin()[pos_loop]->loop.begin()[pos_segment]->type;
+}
+
+int ModuleRoad::SetStartStatus(){
+	next_puddle = pos_line = pos_segment = pos_loop = 0;
+	road_state = G_START;
+
+	int i = 0;
+
+	for (; i < 9; ++i){
+		GenerateLine();
+		if (i != 8)
+			App->masks->DisplaceRoad();
+	}
+
+	while (screen.size() > 9){
+		screen.pop_front();
+		App->masks->DisplaceRoad();
+		App->masks->DeleteBottomRoad();
+	}
+	return i == 9;
 }

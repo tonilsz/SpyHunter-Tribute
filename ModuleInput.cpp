@@ -118,8 +118,10 @@ update_status ModuleInput::PreUpdate()
 					}
 					else if (keyboard[SDL_SCANCODE_F10]) {
 						//LIVES ++
-						if (++App->player->lives < 4)
+						if (App->player->lives < 3){
+							++App->player->lives;
 							App->audio->PlayFx(AUD_LIVE_UP);
+						}
 					}
 					else if (keyboard[SDL_SCANCODE_F11]) {
 						//LIVES --
@@ -156,8 +158,12 @@ update_status ModuleInput::PreUpdate()
 		}
 		else
 		{
-			if(keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
+			if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN){
 				keyboard[i] = KEY_UP;
+				if (App->player->gear != 0 && (keyboard[SDL_SCANCODE_A] || keyboard[SDL_SCANCODE_D])) {
+					App->audio->PlayFx(AUD_TURN);
+				}
+			}
 			else
 				keyboard[i] = KEY_IDLE;
 		}

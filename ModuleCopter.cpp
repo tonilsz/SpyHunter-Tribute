@@ -16,7 +16,7 @@
 #include "SDL/include/SDL.h"
 
 ModuleCopter::ModuleCopter(CARS car_type, int gear, bool start_enabled)
-	: ModuleCars(car_type, gear, start_enabled),
+	: ModuleCars(car_type, start_enabled),
 	seeker(0)
 {
 
@@ -164,9 +164,6 @@ update_status ModuleCopter::Update()
 {
 
 	fPoint dif(position.x - mask->rect.x, position.y - mask->rect.y);
-	App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame(orientation * 2)), 1.0f, RENDER_ROAD, dist);
-	App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame((orientation * 2) + 1)), 1.0f, RENDER_ROAD, dist);
-	App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(helix.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
 
 	if (state == EXPLOTE){
 
@@ -174,15 +171,21 @@ update_status ModuleCopter::Update()
 		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
 		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(crash.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
 		
-		if (crash.current_frame > 3){
+		if (crash.current_frame == 0){
 			gear = 0;
 			App->audio->StopFx();
 			App->audio->PlayFx(AUD_EXPLOSION);
+			App->player->score += 750;
 		}
 		
 		if (crash.Finished()){
 			to_delete = true;
 		}
+	}
+	else{
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame(orientation * 2)), 1.0f, RENDER_ROAD, dist);
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame((orientation * 2) + 1)), 1.0f, RENDER_ROAD, dist);
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(helix.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
 	}
 
 	last_position = position;

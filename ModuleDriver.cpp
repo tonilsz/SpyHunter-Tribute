@@ -14,7 +14,10 @@
 #include "ModulePlayer.h"
 #include "SDL/include/SDL.h"
 
-ModuleDriver::ModuleDriver(bool start_enabled) : Module(start_enabled), collision_side(true)
+ModuleDriver::ModuleDriver(bool start_enabled) : 
+Module(start_enabled), 
+collision_side(true),
+car_generation_handler(300)
 {
 	garage = new vector<ModuleCars*>;
 }
@@ -41,7 +44,7 @@ bool ModuleDriver::Resume()
 	GetRandomCar();
 
 	for(int i = 0; i < 6; ++i){
-		AddCar(GetRandomCar(), App->GetRand(5,4));
+		AddCar(GetRandomCar());
 	}
 
 	return true;
@@ -114,21 +117,21 @@ update_status ModuleDriver::PostUpdate()
 		}
 	}
 
-	if (App->GetTicks() % 300 == 0)
+	if (App->GetTicks() % car_generation_handler == 0)
 		insert = true;
 
 	if (insert && App->driver->garage->size() < 6){
-		AddCar(GetRandomCar(), App->GetRand(3,4));
+		AddCar(GetRandomCar());
 	}
 
 	return ret;
 }
 
-void ModuleDriver::AddCar(CARS car_type, int gear){
+void ModuleDriver::AddCar(CARS car_type){
 	if (car_type == MAD_BOMBER)
-		garage->push_back(new ModuleCopter(car_type, gear, true));
+		garage->push_back(new ModuleCopter(car_type, true));
 	else
-		garage->push_back(new ModuleCars(car_type, gear, true));
+		garage->push_back(new ModuleCars(car_type, true));
 }
 
 void ModuleDriver::ClearWeapon(){
@@ -151,6 +154,7 @@ CARS ModuleDriver::GetRandomCar(){
 
 	if (res == 7)
 		++++++res;
+	//Skip truck and empty row
 	if (res == 4 || res == 5)
 		++++res;
 

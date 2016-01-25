@@ -894,11 +894,20 @@ RoadLine* RoadSegment::GenerateSegment(const LINE_TYPE &type){
 		right_mask = GenerateCurveColliders(3, 1, 0, 1, COL_ROAD_OUT);
 		mask = GenerateCurveColliders(3, 3, 12, -1, COL_ROAD_BORDER);
 		mask->insert(mask->end(), right_mask->begin(), right_mask->end());
-		mask->push_back(new Collider({ RTILE_WIDTH * 7, 0, RTILE_WIDTH, RTILE_HEIGHT }, COL_ROAD_OUT, App->road));
+		mask->push_back(new Collider({ RTILE_WIDTH * 7, 0, RTILE_WIDTH, RTILE_HEIGHT }, COL_ROAD_BORDER, App->road));
+		right_mask = GenerateCurveColliders(2, 1, 6, 1, COL_ROAD_BORDER);
+		mask->insert(mask->end(), right_mask->begin(), right_mask->end());
+		right_mask = GenerateCurveColliders(2, 1, 7, -1, COL_ROAD_OUT);
+		mask->insert(mask->end(), right_mask->begin(), right_mask->end());
 		break;
 	case  S_BIF_5:
 		right_mask = GenerateCurveColliders(3, 2, 0, 1, COL_ROAD_OUT);
 		mask = GenerateCurveColliders(3, 2, 12, -1, COL_ROAD_BORDER);
+		mask->insert(mask->end(), right_mask->begin(), right_mask->end());
+		mask->push_back(new Collider({ RTILE_WIDTH * 7, 0, RTILE_WIDTH, RTILE_HEIGHT }, COL_ROAD_BORDER, App->road));
+		right_mask = GenerateCurveColliders(2, 2, 6, 1, COL_ROAD_BORDER);
+		mask->insert(mask->end(), right_mask->begin(), right_mask->end());
+		right_mask = GenerateCurveColliders(2, 2, 7, -1, COL_ROAD_OUT);
 		mask->insert(mask->end(), right_mask->begin(), right_mask->end());
 		break;
 	case  S_BIF_4:

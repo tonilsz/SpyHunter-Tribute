@@ -13,29 +13,29 @@
 #include "ModuleAudio.h"
 #include "SDL/include/SDL.h"
 
-ModuleCars::ModuleCars(CARS car_type, int gear, bool start_enabled)
+ModuleCars::ModuleCars(CARS car_type, bool start_enabled)
 	: Module(start_enabled),
-	gear(gear),
 	dist(0),
 	car_type(car_type),
 	weapon(NONE),
 	to_delete(false)
 {
-
+	if (car_type!= PLAYER)
+		gear = App->GetRand(7, 1);
 
 	position.x = RTILE_WIDTH * 7;
 	position.y = RTILE_HEIGHT * 6.5;
 
 	if (car_type != PLAYER){
 
-		if (App->player->gear < 5){
+		if (App->player->gear < gear){
 			position.y = RTILE_HEIGHT * 9;
 		}
 		else{
 			position.y = RTILE_HEIGHT * 0;
 		}
 
-		position.x = SetCarStartPosition();
+		position.x = SetCarStartPosition(gear);
 		position.y -= App->player->pos;
 	}
 
@@ -161,6 +161,7 @@ update_status ModuleCars::Update()
 		if (crash.current_frame > 8 && crash.current_frame < 9){
 			gear = 0;
 			App->audio->PlayFx(AUD_EXPLOSION);
+			AddCarPoints();
 		}
 		if (crash.Finished()){
 			state = DEAD;
@@ -210,6 +211,17 @@ void ModuleCars::SetState(Status new_state){
 	}
 
 }
+
+void ModuleCars::AddCarPoints(){
+	if (car_type == RED_CAR || car_type == BLUE_CAR || car_type == MOTO){
+		App->player->block_points = 1;
+	}
+	else{
+		App->player->score += 250;
+		if (car_type == ROAD_LORD)
+			App->player->score += 250;
+	}
+}
 bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 {
 	LOG("Collision Car");
@@ -254,6 +266,7 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 			state = DEAD;
 			to_delete = true;
 			gear = 0;
+			AddCarPoints();
 		}
 		if (b->type == COL_SPRAY){
 			state = TO_BORDER;
@@ -309,13 +322,13 @@ void ModuleCars::TurnRandom(){
 		SetMovement(LEFT);
 }
 
-int ModuleCars::SetCarStartPosition(bool top){
+int ModuleCars::SetCarStartPosition(int gear, bool top ){
 
 	int left = SCREEN_WIDTH;
 	int right = 0;
 
 	RoadLine * startLine = App->road->screen.back();
-	if (App->player->gear < 5){
+	if (!top && App->player->gear < gear){
 		startLine = *App->road->screen.begin();
 	}
 
