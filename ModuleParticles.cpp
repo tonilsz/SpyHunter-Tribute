@@ -387,3 +387,11 @@ void ModuleParticles::runParticle(ANIMATION_TYPE animation){
 		}
 	}
 }
+
+void ModuleParticles::DeleteParticles(){
+	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end(); ++it)
+	{
+		(*it).second->to_delete = true;
+	}
+}
+

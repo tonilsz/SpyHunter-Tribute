@@ -144,6 +144,7 @@ update_status ModuleCars::PreUpdate()
 		moving = STRAIGHT;
 
 	mask->rect.y -= velocity;
+	//position.y = mask->rect.y + (App->player->pos / SCREEN_SIZE);
 	position.y = mask->rect.y + (App->player->pos / SCREEN_SIZE);
 	//mask->rect.y = position.y - ((pos) / SCREEN_SIZE) - velocity;
 
@@ -191,10 +192,12 @@ void ModuleCars::SetMovement(Movement new_state){
 
 	int dif = position.x - mask->rect.x;
 
+	int movement = 4;
+
 	if (moving == LEFT)
-		mask->rect.x += velocity * 2;
+		mask->rect.x += movement;
 	else if (moving == RIGHT)
-		mask->rect.x -= velocity * 2;
+		mask->rect.x -= movement;
 
 	if (mask->rect.x < 0)
 		mask->rect.x = 0;

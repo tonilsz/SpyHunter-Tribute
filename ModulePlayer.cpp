@@ -99,16 +99,16 @@ update_status ModulePlayer::PreUpdate()
 	else if (last_position.x > position.x)
 		moving = LEFT;
 
-	App->renderer->camera.y += velocity * SCREEN_SIZE;
+	App->renderer->camera.y += velocity;
 	pos += velocity;
-	if (pos > (RTILE_HEIGHT)-1){
-		pos -= ((RTILE_HEIGHT) );
-		App->renderer->camera.y = -1.5 * RTILE_HEIGHT * SCREEN_SIZE;
+	if (pos > (RTILE_HEIGHT * SCREEN_SIZE)-1){
+		pos -= ((RTILE_HEIGHT * SCREEN_SIZE));
+		App->renderer->camera.y = -1.5 * RTILE_HEIGHT * SCREEN_SIZE + velocity;
 		App->road->AddLine();
 	}
 
 	last_position = position;
-	mask->rect.y = position.y - ((pos)) - velocity;
+	mask->rect.y = position.y - ((pos / SCREEN_SIZE)) - velocity;
 
 	rumble = 0;
 
@@ -134,11 +134,13 @@ void ModulePlayer::SetMovement(Movement new_state){
 
 	int dif = position.x - mask->rect.x;
 
+	int movement = 2;
+
 	if (moving == RIGHT){
-		mask->rect.x += velocity;
+		mask->rect.x += movement;
 	}
 	else if (moving == LEFT){
-		mask->rect.x -= velocity;
+		mask->rect.x -= movement;
 	}
 	if (mask->rect.x < 0)
 		mask->rect.x = 0;
@@ -188,7 +190,6 @@ update_status ModulePlayer::Update()
 		}
 		if (truck < 3)
 			++truck;
-
 	}
 
 	switch (state){
@@ -272,8 +273,7 @@ bool ModulePlayer::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 }
 void ModulePlayer::UpGear(){
 
-	if (App->GetTicks() % 10 == 0 && gear < 6 && !(gear == 0 && turbo_gear == 2)){
-	//if ( gear < 6 && !(gear == 0 && turbo_gear == 2)){
+	if (App->GetTicks() % 10 == 0 && gear < 8 && !(gear == 0 && turbo_gear == 2)){
 		gear += 1;
 		state = TURBO;
 		state_timer.Start();
@@ -351,17 +351,19 @@ void ModulePlayer::GetRandWeapon(){
 
 void ModulePlayer::Dead(){
 
-	App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
+	if (App->road->road_state != G_OVER && App->road->road_state != G_PAUSE){
+		App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
 
-	if ((first_mode >= 1000))
-		--App->player->lives;
+		if ((first_mode >= 1000))
+			--App->player->lives;
 
-	velocity = 0;
+		velocity = 0;
 
-	if (lives == 0)
-		App->road->road_state = G_OVER;
-	else
-		App->road->road_state = G_PAUSE;
+		if (lives <= 0)
+			App->road->road_state = G_OVER;
+		else
+			App->road->road_state = G_PAUSE;
+	}
 }
 
 void ModulePlayer::Alive(){

@@ -51,7 +51,7 @@ update_status ModuleCopter::PreUpdate()
 	dist += (App->player->GetPivot().y - 100) > GetPivot().y;
 
 	if (App->player->velocity != 0 && seeker < 5){
-		if (state != EXPLOTE)
+		if (state != EXPLOTE )
 			Seek();
 	}else{
 		SetMovement(N);

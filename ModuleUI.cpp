@@ -114,6 +114,11 @@ update_status ModuleUI::Update()
 
 		//Weapon render
 		str_num = "";
+		if (App->player->turbo_gear == 1){
+			str_num = " G1" + str_num;
+		}
+		else
+			str_num = " G2" + str_num;
 		if (App->player->truck > 0){
 			str_num = "T" + str_num;
 		}
@@ -150,6 +155,7 @@ update_status ModuleUI::Update()
 		App->renderer->Blit(score, 20, 100, &test, 1.0f, RENDER_OTHER);
 		test = { 0, 0, 50, 16 };
 		App->renderer->Blit(lives, SCREEN_WIDTH / 2 - 25, 100, &test, 1.0f, RENDER_OTHER);
+		test = { 0, 0, 80, 16 };
 		App->renderer->Blit(weapons, SCREEN_WIDTH - 120, 100, &test, 1.0f, RENDER_OTHER);
 	}
 	else if (App->road->road_state == G_START){
@@ -183,7 +189,7 @@ update_status ModuleUI::Update()
 			TTF_RenderText_Solid(font, "PRESS SPACE TO START", textColor));
 
 		test = { 0, 0, SCREEN_WIDTH - 40, 20 };
-		App->renderer->Blit(text, 20, (SCREEN_HEIGHT / 2) - 10, &test, 1.0f, RENDER_OTHER);
+		App->renderer->Blit(text, 20, (SCREEN_HEIGHT / 2) - 10 , &test, 1.0f, RENDER_OTHER);
 
 	}
 

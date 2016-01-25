@@ -171,7 +171,6 @@ void ModuleRoad::SetGameState(GAME_STATE state){
 	else if (road_state == G_PLAY){
 		if (state == G_OVER){
 			road_state = state;
-			App->player->Dead();
 		}
 	}
 	else if (road_state == G_OVER){
@@ -194,6 +193,8 @@ void ModuleRoad::SetGameState(GAME_STATE state){
 			App->player->first_mode = 0;
 			App->player->position.x = RTILE_WIDTH * 11;
 			App->player->mask->rect.x = App->player->position.x + 21;
+
+			App->particles->DeleteParticles();
 
 		}
 	}

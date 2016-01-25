@@ -54,6 +54,7 @@ public:
 	bool deleteParticle(int id);
 	void runParticle(ANIMATION_TYPE animation);
 	bool OnColision(Collider* a, Collider *b, COLISION_STATE status);
+	void DeleteParticles();
 
 	std::vector<pair<Particle*, Collider*>> particles;
 	std::vector<pair<Particle*, Collider*>> background;
