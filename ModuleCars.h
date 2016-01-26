@@ -53,6 +53,7 @@ public:
 	Collider* mask;
 	float velocity;
 	bool to_delete;
+	bool pushed;
 
 private:
 };

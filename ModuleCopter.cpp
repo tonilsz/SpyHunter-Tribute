@@ -17,7 +17,8 @@
 
 ModuleCopter::ModuleCopter(CARS car_type, int velocity, bool start_enabled)
 	: ModuleCars(car_type, start_enabled),
-	seeker(0)
+	seeker(0),
+	bomb_lapsus(0)
 {
 
 		for (int i = 0; i < 8; ++i){
@@ -50,12 +51,20 @@ update_status ModuleCopter::PreUpdate()
 {
 	dist += (App->player->GetPivot().y - 100) > GetPivot().y;
 
-	if (App->player->velocity != 0 && seeker < 5){
+	if (weapon == WORKING){
+		++bomb_lapsus;
+		if (bomb_lapsus == 150){
+			bomb_lapsus = 0;
+			weapon = NONE;
+		}
+	}
+
+	if (App->player->velocity != 0 && seeker < App->driver->seek_max){
 		if (state != EXPLOTE )
 			Seek();
 	}else{
 		SetMovement(N);
-		velocity = 9;
+		velocity = 7;
 	}
 
 	last_position = position;
@@ -65,22 +74,18 @@ update_status ModuleCopter::PreUpdate()
 
 void ModuleCopter::Seek(){
 
-	if ((App->player->GetPivot().x) > GetPivot().x - 5 && (App->player->GetPivot().x ) < GetPivot().x + 5){
+ 		if ((App->player->GetPivot().x) > GetPivot().x - 8 && (App->player->GetPivot().x) < GetPivot().x + 8){
 		if ((App->player->GetPivot().y) < GetPivot().y + 105 && (App->player->GetPivot().y) > GetPivot().y + 95){
 			//IDLE
-			if (App->player->velocity > velocity)
-				++velocity;
-
-			if (App->player->velocity < velocity)
-				--velocity;
-
+			--velocity;
+			SetMovement(N);
 			ThrowBomb();
 		}
-		else if ((App->player->GetPivot().y - 106) < GetPivot().y - 10){
+		else if ((App->player->GetPivot().y) < GetPivot().y + 105){
 			SetMovement(N);
 
 		}
-		else if ((App->player->GetPivot().y - 94) > GetPivot().y + 10){
+		else if ((App->player->GetPivot().y) > GetPivot().y + 95){
 			SetMovement(S);
 		}
 	}

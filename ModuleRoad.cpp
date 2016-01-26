@@ -136,6 +136,7 @@ void ModuleRoad::AmbientChange(SEGMENT_AMBIENT ambient){
 
 	if (ambient == A_NONE)
 		ambient = road.begin()[pos_loop]->ambient;
+	++App->driver->seek_max;
 
 	App->textures->Unload(graphics);
 	App->ui->textColor = WHITE;
@@ -193,7 +194,12 @@ void ModuleRoad::SetGameState(GAME_STATE state){
 			App->player->first_mode = 0;
 			App->player->position.x = RTILE_WIDTH * 11;
 			App->player->mask->rect.x = App->player->position.x + 21;
-
+			App->player->state = IDLE;
+			App->renderer->camera.y = -1.5 * RTILE_HEIGHT * SCREEN_SIZE;
+			App->driver->seek_max = 3;
+			for (int i = 0; i < 6; ++i){
+				App->driver->AddCar(App->driver->GetRandomCar());
+			}
 			App->particles->DeleteParticles();
 
 		}

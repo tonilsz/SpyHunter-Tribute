@@ -18,10 +18,11 @@ ModuleCars::ModuleCars(CARS car_type, bool start_enabled)
 	dist(0),
 	car_type(car_type),
 	weapon(NONE),
-	to_delete(false)
+	to_delete(false),
+	pushed(false)
 {
 	if (car_type!= PLAYER)
-		velocity = App->GetRand(7, 1);
+		velocity = App->GetRand(6, 2);
 
 	position.x = RTILE_WIDTH * 7;
 	position.y = RTILE_HEIGHT * 6.5;
@@ -155,6 +156,7 @@ update_status ModuleCars::PreUpdate()
 
 update_status ModuleCars::Update()
 {
+	pushed = false;
 	if (state == EXPLOTE){
 		if (crash.current_frame < 8)
 			App->renderer->Blit(App->driver->graphics, position.x, position.y, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER, dist);
@@ -175,10 +177,10 @@ update_status ModuleCars::Update()
 		case STRAIGHT:
 			App->renderer->Blit(App->driver->graphics, position.x, position.y, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER, dist);
 			break;
-		case RIGHT:
+		case LEFT:
 			App->renderer->Blit(App->driver->graphics, position.x, position.y, &right, 1.0f, RENDER_OTHER, dist);
 			break;
-		case LEFT:
+		case RIGHT:
 			App->renderer->Blit(App->driver->graphics, position.x, position.y, &left, 1.0f, RENDER_OTHER, dist);
 			break;
 	}
@@ -243,7 +245,10 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 
 	}
 
-	if (b->type == COL_ROAD_BORDER || b->type == COL_PUDDLE){
+	if (b->type == COL_PLAYER)
+		pushed = true;
+
+	if ((b->type == COL_ROAD_BORDER || b->type == COL_PUDDLE) && !pushed){
 		if (state != TO_BORDER)
 			if (a->rect.x >= b->rect.x)
 				SetMovement(LEFT);

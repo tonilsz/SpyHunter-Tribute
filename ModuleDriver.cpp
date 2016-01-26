@@ -17,7 +17,8 @@
 ModuleDriver::ModuleDriver(bool start_enabled) : 
 Module(start_enabled), 
 collision_side(true),
-car_generation_handler(300)
+car_generation_handler(300),
+seek_max(3)
 {
 	garage = new vector<ModuleCars*>;
 }
@@ -132,18 +133,6 @@ void ModuleDriver::AddCar(CARS car_type){
 		garage->push_back(new ModuleCopter(car_type, true));
 	else
 		garage->push_back(new ModuleCars(car_type, true));
-}
-
-void ModuleDriver::ClearWeapon(){
-	bool finded = false;
-
-	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && !finded; ++it){
-		if ((*it)->car_type == MAD_BOMBER){
-			finded = true;
-			(*it)->SetWeapon(NONE);
-		}
-
-	}
 }
 
 CARS ModuleDriver::GetRandomCar(){

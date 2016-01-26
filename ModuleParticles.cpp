@@ -219,7 +219,6 @@ update_status ModuleParticles::Update()
 
 			if (it->first->live.GetTime() > 500){
 				it->second->to_delete = true;
-				App->driver->ClearWeapon();
 				App->particles->addParticleBackground(it->second->rect.x, it->second->rect.y, ANIM_ROAD_HOLE);
 			}
 

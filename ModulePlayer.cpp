@@ -136,11 +136,13 @@ void ModulePlayer::SetMovement(Movement new_state){
 
 	int movement = 2;
 
-	if (moving == RIGHT){
-		mask->rect.x += movement;
-	}
-	else if (moving == LEFT){
-		mask->rect.x -= movement;
+	if (gear != 0){
+		if (moving == RIGHT){
+			mask->rect.x += movement;
+		}
+		else if (moving == LEFT){
+			mask->rect.x -= movement;
+		}
 	}
 	if (mask->rect.x < 0)
 		mask->rect.x = 0;
@@ -258,12 +260,23 @@ bool ModulePlayer::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 
 	//if (status == COL_START && (b->type == COL_ROAD_OUT || b->type == COL_BOMB)){
 	if (b->type == COL_ROAD_OUT || b->type == COL_BOMB){
+		state = EXPLOTE;
 		Dead();
 	}
 
 	/*if (a->type == COL_PLAYER && b->type == BULLET_ENEMY){
 		state = TO_BORDER;
 	}*/
+
+	if (b->type == COL_CAR){
+		if (last_position.x == position.x){
+			if (a->rect.y + a->rect.h + App->player->velocity  < b->rect.y
+				|| a->rect.y + App->player->velocity  > b->rect.y + b->rect.h){
+				state = EXPLOTE;
+				Dead();
+			}
+		}
+	}
 
 	if (b->type == COL_ROAD_BORDER && App->player->velocity > 2){
 		rumble = App->GetRand(30, -15);
@@ -351,6 +364,7 @@ void ModulePlayer::GetRandWeapon(){
 
 void ModulePlayer::Dead(){
 
+	DownGear();
 	if (App->road->road_state != G_OVER && App->road->road_state != G_PAUSE){
 		App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
 
@@ -371,6 +385,7 @@ void ModulePlayer::Alive(){
 	position.x = GetStartPosition();
 	mask->rect.x = position.x + 21;
 	App->road->road_state = G_PLAY;
+	state = IDLE;
 }
 
 

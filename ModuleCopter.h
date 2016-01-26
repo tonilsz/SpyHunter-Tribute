@@ -27,6 +27,7 @@ public:
 	void Seek();
 	void ThrowBomb();
 
+	int bomb_lapsus;
 	int seeker;
 	bool seeking;
 	Animation helix;
