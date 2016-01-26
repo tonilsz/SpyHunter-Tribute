@@ -262,7 +262,7 @@ bool ModulePlayer::OnColision(Collider* a, Collider *b)
 		Dead();
 	}
 
-	if (b->type == COL_CAR){
+	if (b->type == COL_CAR || b->type == COL_ROAD_LORD){
 		if (last_position.x == position.x){
 			if (a->rect.y + a->rect.h + App->player->velocity  < b->rect.y
 				|| a->rect.y + App->player->velocity  > b->rect.y + b->rect.h){
