@@ -49,8 +49,7 @@ ModuleCopter::~ModuleCopter()
 
 update_status ModuleCopter::PreUpdate()
 {
-	dist += (App->player->GetPivot().y - 100) > GetPivot().y;
-
+	//Weapon counter
 	if (weapon == WORKING){
 		++bomb_lapsus;
 		if (bomb_lapsus == 150){
@@ -59,6 +58,7 @@ update_status ModuleCopter::PreUpdate()
 		}
 	}
 
+	//IA seek
 	if (App->player->velocity != 0 && seeker < App->driver->seek_max){
 		if (state != EXPLOTE )
 			Seek();
@@ -72,6 +72,7 @@ update_status ModuleCopter::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
+//IA Seek
 void ModuleCopter::Seek(){
 
  		if ((App->player->GetPivot().x) > GetPivot().x - 8 && (App->player->GetPivot().x) < GetPivot().x + 8){
@@ -91,7 +92,6 @@ void ModuleCopter::Seek(){
 	}
 	else if ((App->player->GetPivot().x) < GetPivot().x){
 		if ((App->player->GetPivot().y) < GetPivot().y + 105 && (App->player->GetPivot().y) > GetPivot().y + 95){
-			//IDLE
 			SetMovement(W);
 		}
 		else if ((App->player->GetPivot().y - 106) < GetPivot().y - 10){
@@ -104,7 +104,6 @@ void ModuleCopter::Seek(){
 	}
 	else if ((App->player->GetPivot().x) > GetPivot().x){
 		if ((App->player->GetPivot().y) < GetPivot().y + 105 && (App->player->GetPivot().y) > GetPivot().y + 95){
-			//IDLE
 			SetMovement(E);
 		}
 		else if ((App->player->GetPivot().y - 106) < GetPivot().y - 10){
@@ -124,6 +123,7 @@ void ModuleCopter::Seek(){
 
 }
 
+//Movement orientation
 void ModuleCopter::SetMovement(ORIENTATION_TYPE new_dir){
 
 	orientation = new_dir;
@@ -172,9 +172,9 @@ update_status ModuleCopter::Update()
 
 	if (state == EXPLOTE){
 
-		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
-		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
-		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(crash.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetCurrentFrame()), 1.0f, RENDER_ROAD);
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetCurrentFrame()), 1.0f, RENDER_ROAD);
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(crash.GetCurrentFrame()), 1.0f, RENDER_ROAD);
 		
 		if (crash.current_frame == 0){
 			velocity = 0;
@@ -188,9 +188,10 @@ update_status ModuleCopter::Update()
 		}
 	}
 	else{
-		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame(orientation * 2)), 1.0f, RENDER_ROAD, dist);
-		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame((orientation * 2) + 1)), 1.0f, RENDER_ROAD, dist);
-		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(helix.GetCurrentFrame()), 1.0f, RENDER_ROAD, dist);
+		//Spin up
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame(orientation * 2)), 1.0f, RENDER_ROAD);
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(idle.GetFrame((orientation * 2) + 1)), 1.0f, RENDER_ROAD);
+		App->renderer->Blit(App->driver->graphics, mask->rect.x - 31, mask->rect.y - 26, &(helix.GetCurrentFrame()), 1.0f, RENDER_ROAD);
 	}
 
 	last_position = position;
@@ -203,7 +204,7 @@ bool ModuleCopter::CleanUp(){
 	return ModuleCars::CleanUp();
 }
 
-bool ModuleCopter::OnColision(Collider* a, Collider *b, COLISION_STATE status)
+bool ModuleCopter::OnColision(Collider* a, Collider *b)
 {
 	LOG("Collision Copter");
 
@@ -216,7 +217,7 @@ bool ModuleCopter::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 void ModuleCopter::ThrowBomb()
 {
 	if (weapon != WORKING){
-		App->particles->addParticleBackground(mask->rect.x, mask->rect.y + (mask->rect.h / 2), ANIM_BOMB);
+		App->particles_top->addParticleBackground(mask->rect.x, mask->rect.y + (mask->rect.h / 2), ANIM_BOMB);
 		++seeker;
 		weapon = WORKING;
 	}

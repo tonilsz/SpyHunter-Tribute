@@ -24,13 +24,6 @@ enum COLLIDER_TYPE
 	COL_MAX = 14
 };
 
-enum COLISION_STATE
-{
-	COL_START,
-	COL_DURING,
-	COL_END
-};
-
 using namespace std;
 #include<list>
 
@@ -43,7 +36,6 @@ public:
 	COLLIDER_TYPE type;
 	Module* callback;
 	bool enabled;
-	list<Collider *> collisions;
 
 	Collider::Collider(SDL_Rect rectangle, COLLIDER_TYPE type, Module* callback = NULL) :
 		rect(rectangle),
@@ -68,30 +60,6 @@ public:
 	{
 		return SDL_HasIntersection(&rect, &r);
 	}
-
-	bool IsCollising(Collider * crash){
-		bool res = false;
-
-		for (list<Collider *>::iterator it = collisions.begin(); it != collisions.end(); ++it)
-			if (*it == crash)
-				res = true;
-
-		return res;
-	}
-
-	bool HasCollision(){
-		return (bool)collisions.size();
-	}
-
-	void AddCollision(Collider * crash){
-		collisions.push_back(crash);
-	}
-
-	void RemoveCollision(Collider * crash){
-		collisions.remove(crash);
-	}
-
-
 };
 
 #endif // __COLLIDER_H__

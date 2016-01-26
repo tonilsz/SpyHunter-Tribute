@@ -51,7 +51,9 @@ enum LINE_TYPE
 	class RoadSegment
 	{
 	public:
+		//A segment is a vector of lines
 		vector<RoadLine*> segment;
+		//Current line pos in segment
 		int pos;
 		SEGMENT_TYPE type;
 
@@ -59,20 +61,16 @@ enum LINE_TYPE
 
 		~RoadSegment();
 
-		void AddRoadLine(RoadLine* line);
-
-		RoadLine* GetCourrentLine();
-
 		void GenerateSegment(const SEGMENT_TYPE &type);
 
-		RoadLine* RoadSegment::GenerateSegment(const LINE_TYPE &type);
+		RoadLine* GenerateSegmentLine(const LINE_TYPE &type);
 	
 		int GetSize();
 
 	private:
 		void CleanSegment();
 
-		vector<Collider*>* RoadSegment::GenerateCurveColliders(const int &height, const int &piece, const int &pos, const int &dir, const COLLIDER_TYPE &collider_left);
+		vector<Collider*>* GenerateCurveColliders(const int &height, const int &piece, const int &pos, const int &dir, const COLLIDER_TYPE &collider_left);
 	};
 
 #endif // __ROADSEGMENT_H__

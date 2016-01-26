@@ -23,24 +23,26 @@ debug_mode(true)
 	matrix[COL_CAR][COL_OIL] = true;
 	matrix[COL_CAR][COL_SPRAY] = true;
 	matrix[COL_CAR][COL_BULLET] = true;
-	matrix[COL_CAR][COL_ROAD_BORDER] = false;
+	matrix[COL_CAR][COL_ROAD_BORDER] = true;
+	matrix[COL_CAR][COL_ROAD_OUT] = true;
 	matrix[COL_CAR][COL_BOMB] = true;
 	matrix[COL_CAR][COL_PUDDLE] = true;
 	matrix[COL_CAR][COL_BULLET_ENEMY] = true;
 
-	matrix[COL_CAR][COL_CAR] = true;
-	matrix[COL_CAR][COL_TRUCK] = true;
-	matrix[COL_CAR][COL_ROAD_LORD] = true;
-	matrix[COL_CAR][COL_ROAD_OUT] = true;
-	matrix[COL_CAR][COL_ROAD_BORDER] = true;
-	matrix[COL_CAR][COL_BOMB] = true;
-	matrix[COL_CAR][COL_PUDDLE] = true;
-	matrix[COL_CAR][COL_BULLET_ENEMY] = true;
+	matrix[COL_PLAYER][COL_CAR] = true;
+	matrix[COL_PLAYER][COL_TRUCK] = true;
+	matrix[COL_PLAYER][COL_ROAD_LORD] = true;
+	matrix[COL_PLAYER][COL_ROAD_OUT] = true;
+	matrix[COL_PLAYER][COL_ROAD_BORDER] = true;
+	matrix[COL_PLAYER][COL_BOMB] = true;
+	matrix[COL_PLAYER][COL_PUDDLE] = true;
+	matrix[COL_PLAYER][COL_BULLET_ENEMY] = true;
 
 	matrix[COL_TRUCK][COL_CAR] = true;
 	matrix[COL_TRUCK][COL_PLAYER] = true;
 	matrix[COL_TRUCK][COL_TRUCK] = true;
 	matrix[COL_TRUCK][COL_ROAD_LORD] = true;
+	matrix[COL_TRUCK][COL_ROAD_OUT] = true;
 	matrix[COL_TRUCK][COL_OIL] = true;
 	matrix[COL_TRUCK][COL_SPRAY] = true;
 	matrix[COL_TRUCK][COL_BULLET] = true;
@@ -57,11 +59,19 @@ debug_mode(true)
 	matrix[COL_ROAD_LORD][COL_SPRAY] = true;
 	matrix[COL_ROAD_LORD][COL_BULLET] = true;
 	matrix[COL_ROAD_LORD][COL_ROAD_BORDER] = true;
+	matrix[COL_ROAD_LORD][COL_ROAD_OUT] = true;
 	matrix[COL_ROAD_LORD][COL_BOMB] = true;
 	matrix[COL_ROAD_LORD][COL_PUDDLE] = true;
 	matrix[COL_ROAD_LORD][COL_BULLET_ENEMY ] = true;
 
 	matrix[COL_MAD_BOMBER][COL_ROCKET] = true;
+
+	matrix[COL_BULLET][COL_CAR] = true;
+	matrix[COL_BULLET][COL_ROAD_LORD] = true;
+	matrix[COL_ROCKET][COL_MAD_BOMBER] = true;
+	matrix[COL_PUDDLE][COL_CAR] = true;
+	matrix[COL_PUDDLE][COL_PLAYER] = true;
+	matrix[COL_ROAD_OUT][COL_PLAYER] = true;
 }
 
 // Destructor
@@ -207,16 +217,7 @@ void ModuleCollision::AddColliderGroup(vector<Collider*>* mask)
 void ModuleCollision::CollisionTratement(Collider* c1, Collider* c2){
 	if (c1->enabled && c2->enabled){
 		if (matrix[c1->type][c2->type] && c1->callback){
-			if (!c1->IsCollising(c2)){
-				c1->AddCollision(c2);
-				c1->callback->OnColision(c1, c2, COL_START);
-			}
-			else
-				c1->callback->OnColision(c1, c2, COL_DURING);
-		}
-		else {
-			c1->RemoveCollision(c2);
-			c1->callback->OnColision(c1, c2, COL_END);
+				c1->callback->OnColision(c1, c2);
 		}
 	}
 }

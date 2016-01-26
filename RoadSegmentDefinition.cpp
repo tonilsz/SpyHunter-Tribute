@@ -5,7 +5,8 @@
 #include "ModuleRoad.h"
 
 
-RoadLine* RoadSegment::GenerateSegment(const LINE_TYPE &type){
+//Generate specific Road Line
+RoadLine* RoadSegment::GenerateSegmentLine(const LINE_TYPE &type){
 
 	//generate tiles
 	vector<SDL_Rect>* tiles = nullptr;
@@ -964,10 +965,10 @@ RoadLine* RoadSegment::GenerateSegment(const LINE_TYPE &type){
 		break;
 
 		/*
-			case  S_END_1:
-				tiles = new;
-				break;
-			S_END_1, S_END_2, S_END_3, S_END_4, S_END_5, S_END_6, S_END_7, S_END_8, S_END_9, S_END_10, S_END_11, S_END_12, S_END_13, S_END_14, S_END_15, S_END_16, S_END_17, S_END_18, S_END_19, S_END_20, S_END_21,
+		case  S_END_1:
+			tiles = new;
+			break;
+		S_END_1, S_END_2, S_END_3, S_END_4, S_END_5, S_END_6, S_END_7, S_END_8, S_END_9, S_END_10, S_END_11, S_END_12, S_END_13, S_END_14, S_END_15, S_END_16, S_END_17, S_END_18, S_END_19, S_END_20, S_END_21,
 		*/
 	default:
 		LOG("RoadSegmentDefinition - Cannot generate line collider \n");
@@ -978,6 +979,7 @@ RoadLine* RoadSegment::GenerateSegment(const LINE_TYPE &type){
 	return res;
 }
 
+//Generate Grup colliders for a road line
 vector<Collider*>* RoadSegment::GenerateCurveColliders(const int &height, const int &piece, const int &pos, const int &dir, const COLLIDER_TYPE &collider_left){
 	
 	vector<Collider*>* res = nullptr;

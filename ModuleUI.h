@@ -21,9 +21,7 @@ public:
 	update_status Update();
 	bool Stop();
 
-	SDL_Texture* const Load(const char* path);
-	void Unload(SDL_Texture* texture);
-
+	//Displays
 	SDL_Texture *score = NULL;
 	SDL_Texture *lives = NULL;
 	SDL_Texture *weapons = NULL;

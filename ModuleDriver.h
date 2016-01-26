@@ -25,15 +25,20 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
+
 	void AddCar(CARS car_type = RED_CAR);
 	CARS GetRandomCar();
 
+	//Contains the cars
 	vector<ModuleCars*>* garage;
-	int num_cars;
+
+	//Number of bombs throwed by copter
 	int seek_max;
+
+	//Car Generation Handler
 	int car_generation_handler;
+
 	SDL_Texture* graphics = nullptr;
-	bool collision_side;
 };
 
 #endif // __MODULEDRIVER_H__

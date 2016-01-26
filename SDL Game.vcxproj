@@ -36,7 +36,6 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Animation.cpp" />
-    <ClInclude Include="AnimationMultiple.h" />
     <ClInclude Include="AnimationMultiple.cpp" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Collider.cpp" />

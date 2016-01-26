@@ -26,7 +26,8 @@ bool ModuleParticles::Start()
 {
 	LOG("Loading particules");
 
-	App->particles->Enable();
+	App->particles_top->Enable();
+	App->particles_bottom->Enable();
 
 	return true;
 }
@@ -51,7 +52,8 @@ bool ModuleParticles::CleanUp()
 		delete (*it).first;
 	}
 	App->textures->Unload(graphics);
-	App->particles->Disable();
+	App->particles_top->Disable();
+	App->particles_bottom->Disable();
 
 	return true;
 }
@@ -219,7 +221,7 @@ update_status ModuleParticles::Update()
 
 			if (it->first->live.GetTime() > 500){
 				it->second->to_delete = true;
-				App->particles->addParticleBackground(it->second->rect.x, it->second->rect.y, ANIM_ROAD_HOLE);
+				App->particles_bottom->addParticleBackground(it->second->rect.x, it->second->rect.y, ANIM_ROAD_HOLE);
 			}
 
 			break;
@@ -345,7 +347,8 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 	if (type == ANIM_PUDDLE)
 		particle->anim.loop = false;
 
-	Collider* mask = App->masks->AddCollider(col_area, col_type, App->particles);
+	//Dudas
+	Collider* mask = App->masks->AddCollider(col_area, col_type, App->particles_top);
 
 	if (type == ANIM_ROCKET)
 		mask->SetEnabled(false);
@@ -355,7 +358,7 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 	return res;
 }
 
-bool ModuleParticles::OnColision(Collider* a, Collider *b, COLISION_STATE status)
+bool ModuleParticles::OnColision(Collider* a, Collider *b)
 {
 	LOG("Collision Particules");
 
@@ -368,7 +371,7 @@ bool ModuleParticles::OnColision(Collider* a, Collider *b, COLISION_STATE status
 		res = a->to_delete = true;
 	}
 	if (a->type == COL_PUDDLE && (b->type == COL_CAR || b->type == COL_PLAYER)){
-		App->particles->runParticle(ANIM_PUDDLE);
+		App->particles_bottom->runParticle(ANIM_PUDDLE);
 	}
 	if (a->type == COL_ROAD_OUT && b->type == COL_PLAYER){
 		a->rect.y += App->player->velocity;

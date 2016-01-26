@@ -102,9 +102,6 @@
     <ClInclude Include="Animation.cpp">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationMultiple.h">
-      <Filter>Main</Filter>
-    </ClInclude>
     <ClInclude Include="AnimationMultiple.cpp">
       <Filter>Utils</Filter>
     </ClInclude>

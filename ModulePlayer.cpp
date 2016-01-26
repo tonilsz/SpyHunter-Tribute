@@ -81,7 +81,7 @@ bool ModulePlayer::CleanUp()
 
 update_status ModulePlayer::PreUpdate()
 {
-
+	//if a civilian is killed
 	if (!block_points){
 		score += velocity / 2;
 	}
@@ -90,8 +90,12 @@ update_status ModulePlayer::PreUpdate()
 		if (block_points == 100)
 			block_points = 0;
 	}
+
+	//if we are in first mode
 	if (first_mode<1000)
 		++first_mode;
+
+	//is moving to side?
 	if (last_position.x == position.x)
 		moving = STRAIGHT;
 	else if (last_position.x < position.x)
@@ -99,6 +103,7 @@ update_status ModulePlayer::PreUpdate()
 	else if (last_position.x > position.x)
 		moving = LEFT;
 
+	//reallocate camera
 	App->renderer->camera.y += velocity;
 	pos += velocity;
 	if (pos > (RTILE_HEIGHT * SCREEN_SIZE)-1){
@@ -107,7 +112,10 @@ update_status ModulePlayer::PreUpdate()
 		App->road->AddLine();
 	}
 
+
 	last_position = position;
+
+	//reallocate mask
 	mask->rect.y = position.y - ((pos / SCREEN_SIZE)) - velocity;
 
 	rumble = 0;
@@ -115,27 +123,15 @@ update_status ModulePlayer::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-void ModulePlayer::SetState(int new_state){
-	/*if (state != HADOUKEN && state != JUMP && state != WON){
-		state = new_state;
-		if (state == JUMP)
-			jump_live.Start();
-		if (state == HADOUKEN)
-			hado_live.Start();
-		if (state == WON)
-			won_live.Start();
-	}*/
-
-}
-
 void ModulePlayer::SetMovement(Movement new_state){
 
 	moving = new_state;
 
+	//get relative dist
 	int dif = position.x - mask->rect.x;
 
+	//turn side
 	int movement = 2;
-
 	if (gear != 0){
 		if (moving == RIGHT){
 			mask->rect.x += movement;
@@ -144,15 +140,19 @@ void ModulePlayer::SetMovement(Movement new_state){
 			mask->rect.x -= movement;
 		}
 	}
+
+	//Control don't go out of the screen
 	if (mask->rect.x < 0)
 		mask->rect.x = 0;
 
 	if (mask->rect.x >(App->window->screen_surface->w - STILE_SIZE))
 		mask->rect.x = (App->window->screen_surface->w - STILE_SIZE);
 
+	//set relative dist
 	position.x = mask->rect.x + dif;
 }
 
+//Set the weapon
 void ModulePlayer::SetWeapon(Weapon new_weapon){
 	if (weapon != WORKING || weapon == ROCKET || new_weapon == NONE){
 		switch (new_weapon){
@@ -218,22 +218,22 @@ update_status ModulePlayer::Update()
 	switch (weapon){
 	case GUN:
 		if (gun_turn)
-			App->particles->addParticle(position.x + 13, position.y - STILE_SIZE/SCREEN_SIZE, ANIM_BULLET);
+			App->particles_top->addParticle(position.x + 13, position.y - STILE_SIZE / SCREEN_SIZE, ANIM_BULLET);
 		else
-			App->particles->addParticle(position.x + 21, position.y - STILE_SIZE, ANIM_BULLET);
+			App->particles_top->addParticle(position.x + 21, position.y - STILE_SIZE, ANIM_BULLET);
 		gun_turn = !gun_turn;
 		weapon = WORKING;
 		break;
 	case OIL:
-		App->particles->addParticle(position.x + 17, position.y + mask->rect.h, ANIM_OIL);
+		App->particles_bottom->addParticle(position.x + 17, position.y + mask->rect.h, ANIM_OIL);
 		weapon = WORKING;
 		break;
 	case SPRAY:
-		App->particles->addParticle(position.x + 17, position.y + mask->rect.h, ANIM_SPRAY);
+		App->particles_top->addParticle(position.x + 17, position.y + mask->rect.h, ANIM_SPRAY);
 		weapon = WORKING;
 		break;
 	case ROCKET:
-		App->particles->addParticle(position.x + 17, position.y - STILE_SIZE, ANIM_ROCKET);
+		App->particles_top->addParticle(position.x + 17, position.y - STILE_SIZE, ANIM_ROCKET);
 		weapon = NONE;
 		break;
 	}
@@ -246,27 +246,21 @@ update_status ModulePlayer::Update()
 	return UPDATE_CONTINUE;
 }
 
-bool ModulePlayer::OnColision(Collider* a, Collider *b, COLISION_STATE status)
+bool ModulePlayer::OnColision(Collider* a, Collider *b)
 {
 	LOG("Collision Player");
 
 	if (b->type == COL_PUDDLE){
 		if (a->rect.x >= b->rect.x)
-			SetMovement(LEFT);
-		else
 			SetMovement(RIGHT);
+		else
+			SetMovement(LEFT);
 	}
 
-
-	//if (status == COL_START && (b->type == COL_ROAD_OUT || b->type == COL_BOMB)){
 	if (b->type == COL_ROAD_OUT || b->type == COL_BOMB){
 		state = EXPLOTE;
 		Dead();
 	}
-
-	/*if (a->type == COL_PLAYER && b->type == BULLET_ENEMY){
-		state = TO_BORDER;
-	}*/
 
 	if (b->type == COL_CAR){
 		if (last_position.x == position.x){
@@ -284,6 +278,8 @@ bool ModulePlayer::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 
 	return true;
 }
+
+//Acceleration
 void ModulePlayer::UpGear(){
 
 	if (App->GetTicks() % 10 == 0 && gear < 8 && !(gear == 0 && turbo_gear == 2)){
@@ -294,6 +290,7 @@ void ModulePlayer::UpGear(){
 	velocity = gear * turbo_gear;
 }
 
+//Deceleration
 void ModulePlayer::DownGear(){
 
 	if (App->GetTicks() % 10 == 0 && gear > 0){
@@ -302,16 +299,19 @@ void ModulePlayer::DownGear(){
 	velocity = gear * turbo_gear;
 }
 
+//Turbo On
 void ModulePlayer::UpTurboGear(){
 	turbo_gear = 2;
 	velocity = gear * turbo_gear;
 }
 
+//Turbo Of
 void ModulePlayer::DownTurboGear(){
 	turbo_gear = 1;
 	velocity = gear * turbo_gear;
 }
 
+//invencible mode
 void ModulePlayer::GodMode(){
 	if (god_mode){
 		idle.frames.clear();
@@ -336,7 +336,7 @@ void ModulePlayer::GodMode(){
 	god_mode = !god_mode;
 }
 
-
+//Generate a random weapon
 void ModulePlayer::GetRandWeapon(){
 	if (truck > 0){
 		--truck;
@@ -362,11 +362,12 @@ void ModulePlayer::GetRandWeapon(){
 	}
 }
 
+//Player Dead
 void ModulePlayer::Dead(){
 
 	DownGear();
 	if (App->road->road_state != G_OVER && App->road->road_state != G_PAUSE){
-		App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
+		App->particles_top->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
 
 		if ((first_mode >= 1000))
 			--App->player->lives;
@@ -380,6 +381,7 @@ void ModulePlayer::Dead(){
 	}
 }
 
+//resurrect
 void ModulePlayer::Alive(){
 
 	position.x = GetStartPosition();
@@ -388,10 +390,11 @@ void ModulePlayer::Alive(){
 	state = IDLE;
 }
 
-
+//Get the position where player have to appear
 int ModulePlayer::GetStartPosition(){
 	int res = 0;
 
+	//positionate on thirth road line
 	list<RoadLine*>::iterator start_line = App->road->screen.begin();
 	++++start_line;
 

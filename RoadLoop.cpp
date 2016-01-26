@@ -11,14 +11,7 @@ RoadLoop::~RoadLoop(){
 	CleanLoop();
 }
 
-void RoadLoop::AddRoadSegment(RoadSegment *line){
-	loop.push_back(line);
-}
-
-RoadSegment* RoadLoop::GetCourrentSegment(){
-	return loop[pos];
-}
-
+//Generate specific Road Loop
 void RoadLoop::GenerateLoop(vector<SEGMENT_TYPE>* loop_template, const SEGMENT_AMBIENT &ambient){
 	this->ambient = ambient;
 	CleanLoop();

@@ -67,7 +67,7 @@ public:
 		return true;
 	}
 
-	virtual bool OnColision(Collider* a, Collider *b, COLISION_STATE status)
+	virtual bool OnColision(Collider* a, Collider *b)
 	{
 		//LOG("Collision not controled between: %s and  %s\n", (char)a->type, (char)b->type);
 		return true;

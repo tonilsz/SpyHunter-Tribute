@@ -16,6 +16,7 @@ RoadLine::~RoadLine(){
 	line->clear();
 }
 
+//Set a specific tile in line pos
 void RoadLine::SetTile(const int &pos,const SDL_Rect &tile)
 {
 	if (pos < 15){
@@ -25,6 +26,7 @@ void RoadLine::SetTile(const int &pos,const SDL_Rect &tile)
 	}
 }
 
+//Get current Tile
 SDL_Rect* RoadLine::GetCourrentTile(){
 	SDL_Rect* res = &((*line)[pos]);
 	++pos;

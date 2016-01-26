@@ -39,7 +39,8 @@ public:
 	ModuleRoad* road;
 	ModuleDriver* driver;
 	ModuleCollision* masks;
-	ModuleParticles* particles;
+	ModuleParticles* particles_top;
+	ModuleParticles* particles_bottom;
 	ModuleUI* ui;
 
 	int GetTicks();

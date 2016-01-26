@@ -92,7 +92,7 @@ bool ModuleRender::Stop()
 }
 
 // Blit to screen
-bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed, RENDER_TYPE type, int dist)
+bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed, RENDER_TYPE type)
 {
 	bool ret = true;
 	if (printer_mode){
@@ -102,8 +102,6 @@ bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, f
 
 		if (type != RENDER_ROAD)
 			rect.y -= App->player->pos;
-		//if (type == RENDER_OTHER)
-			//rect.y -= dist;
 
 		if (section != NULL)
 		{

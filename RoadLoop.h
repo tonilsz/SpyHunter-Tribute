@@ -30,17 +30,15 @@ enum SEGMENT_AMBIENT
 class RoadLoop
 {
 public:
+	//A loop is a vector of segments
 	vector<RoadSegment*> loop;
-	SEGMENT_AMBIENT ambient;
+	//Current segment pos in loop
 	int pos;
+	SEGMENT_AMBIENT ambient;
 
 	RoadLoop(vector<SEGMENT_TYPE>* loop_template, SEGMENT_AMBIENT ambient);
 
 	~RoadLoop();
-
-	void AddRoadSegment(RoadSegment *line);
-
-	RoadSegment* GetCourrentSegment();
 
 	void GenerateLoop(vector<SEGMENT_TYPE>* loop_template, const SEGMENT_AMBIENT &ambient);
 	

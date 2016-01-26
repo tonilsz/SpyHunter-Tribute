@@ -16,7 +16,6 @@
 
 ModuleDriver::ModuleDriver(bool start_enabled) : 
 Module(start_enabled), 
-collision_side(true),
 car_generation_handler(300),
 seek_max(3)
 {
@@ -34,15 +33,11 @@ bool ModuleDriver::Start()
 	return true;
 }
 
-// Load assets
-// Load Colliders
 bool ModuleDriver::Resume()
 {
 	LOG("Init Cars");
 
-	graphics = App->textures->Load("cars.png"); // arcade version
-
-	GetRandomCar();
+	graphics = App->textures->Load("cars.png");
 
 	for(int i = 0; i < 6; ++i){
 		AddCar(GetRandomCar());
@@ -110,17 +105,21 @@ update_status ModuleDriver::PostUpdate()
 
 	bool insert = false;
 
+	// schedule colliders for deletion
 	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && ret == UPDATE_CONTINUE; ++it){
 		if ((*it)->mask->rect.y > SCREEN_HEIGHT + 200 || (*it)->mask->rect.y < -200){
 			(*it)->state = DEAD;
 			(*it)->to_delete = true;
+			//if the animation hasn't end we have to restore the Player Weapon
 			App->player->SetWeapon(NONE);
 		}
 	}
 
+	//Add new car?
 	if (App->GetTicks() % car_generation_handler == 0)
 		insert = true;
 
+	//if car counter < max
 	if (insert && App->driver->garage->size() < 6){
 		AddCar(GetRandomCar());
 	}
@@ -128,31 +127,38 @@ update_status ModuleDriver::PostUpdate()
 	return ret;
 }
 
+//Add new car
 void ModuleDriver::AddCar(CARS car_type){
+	//if copter, use especific constructor
 	if (car_type == MAD_BOMBER)
 		garage->push_back(new ModuleCopter(car_type, true));
 	else
 		garage->push_back(new ModuleCars(car_type, true));
 }
 
+//Generate a random car
 CARS ModuleDriver::GetRandomCar(){
 	bool find = false;
 	unsigned int res = MOTO;
 
 	res = App->GetRand(8,1);
 
+
+	//Skip explosion anim
 	if (res == 7)
 		++++++res;
 	//Skip truck and empty row
 	if (res == 4 || res == 5)
 		++++res;
 
+	//do not have more than 1 copter in screen
 	if (res == 10)
 		for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end() && !find; ++it)
 			find = ((*it)->car_type == MAD_BOMBER);
 
+	//if there is a copter, change it for a civilian
 	if (find)
-		res = 1;
+		res = App->GetRand(3, 1);
 
 	return (CARS)res;
 }

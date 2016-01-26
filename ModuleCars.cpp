@@ -15,7 +15,6 @@
 
 ModuleCars::ModuleCars(CARS car_type, bool start_enabled)
 	: Module(start_enabled),
-	dist(0),
 	car_type(car_type),
 	weapon(NONE),
 	to_delete(false),
@@ -73,11 +72,10 @@ ModuleCars::ModuleCars(CARS car_type, bool start_enabled)
 		mask = App->masks->AddCollider(SDL_Rect{ position.x + 23, position.y, 19, 32 }, COL_CAR, this);
 		break;
 	case TRUCK:
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 17, position.y, 32, 64 }, COL_CAR, this);
-		//mask = App->masks->AddCollider(SDL_Rect{ position.x + 17, position.y, 32, 64 }, COL_TRUCK, this);
+		//it will never be used!!
+		mask = App->masks->AddCollider(SDL_Rect{ position.x + 17, position.y, 32, 64 }, COL_TRUCK, this);
 		break;
 	case ROAD_LORD:
-		//mask = App->masks->AddCollider(SDL_Rect{ position.x + 18, position.y, 28, 41 }, COL_CAR, this);
 		mask = App->masks->AddCollider(SDL_Rect{ position.x + 18, position.y, 28, 41 }, COL_ROAD_LORD, this);
 		break;
 	case SWITCH_BLADE:
@@ -101,8 +99,6 @@ bool ModuleCars::Start()
 	return true;
 }
 
-// Load assets
-// Load Colliders
 bool ModuleCars::Resume()
 {
 	LOG("Init Cars");
@@ -110,7 +106,6 @@ bool ModuleCars::Resume()
 	return true;
 }
 
-// Unload assets
 bool ModuleCars::CleanUp()
 {
 	LOG("Unloading Cars");
@@ -124,14 +119,7 @@ bool ModuleCars::CleanUp()
 
 update_status ModuleCars::PreUpdate()
 {
-	dist = 0;
-
-	if (state == TO_BORDER){
-		if (mask->rect.x > SCREEN_WIDTH / 2)
-			SetMovement(LEFT);
-		else
-			SetMovement(RIGHT);
-	}
+	//is moving to side?
 	if (last_position.x == position.x)
 		moving = STRAIGHT;
 	else if (last_position.x < position.x)
@@ -139,15 +127,22 @@ update_status ModuleCars::PreUpdate()
 	else if (last_position.x > position.x)
 		moving = LEFT;
 
-	if (App->GetTicks() % 200 == 0 && mask->collisions.size() == 0 )
+	//is going to border?
+	if (state == TO_BORDER){
+		if (mask->rect.x > SCREEN_WIDTH / 2)
+			SetMovement(LEFT);
+		else
+			SetMovement(RIGHT);
+	} 
+	// if random turn
+	else if (App->GetTicks() % 200 == 0 )
 		TurnRandom();
 	else
 		moving = STRAIGHT;
 
+	//actualize position
 	mask->rect.y -= velocity;
-	//position.y = mask->rect.y + (App->player->pos / SCREEN_SIZE);
 	position.y = mask->rect.y + (App->player->pos / SCREEN_SIZE);
-	//mask->rect.y = position.y - ((pos) / SCREEN_SIZE) - velocity;
 
 	last_position = position;
 
@@ -159,8 +154,8 @@ update_status ModuleCars::Update()
 	pushed = false;
 	if (state == EXPLOTE){
 		if (crash.current_frame < 8)
-			App->renderer->Blit(App->driver->graphics, position.x, position.y, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER, dist);
-		App->renderer->Blit(App->driver->graphics, position.x, position.y, &(crash.GetCurrentFrame()), 1.0f, RENDER_OTHER, dist);
+			App->renderer->Blit(App->driver->graphics, position.x, position.y, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER);
+		App->renderer->Blit(App->driver->graphics, position.x, position.y, &(crash.GetCurrentFrame()), 1.0f, RENDER_OTHER);
 		if (crash.current_frame > 8 && crash.current_frame < 9){
 			velocity = 0;
 			App->audio->PlayFx(AUD_EXPLOSION);
@@ -175,13 +170,13 @@ update_status ModuleCars::Update()
 	{
 		switch (moving){
 		case STRAIGHT:
-			App->renderer->Blit(App->driver->graphics, position.x, position.y, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER, dist);
+			App->renderer->Blit(App->driver->graphics, position.x, position.y, &(idle.GetFrame(0)), 1.0f, RENDER_OTHER);
 			break;
 		case LEFT:
-			App->renderer->Blit(App->driver->graphics, position.x, position.y, &right, 1.0f, RENDER_OTHER, dist);
+			App->renderer->Blit(App->driver->graphics, position.x, position.y, &right, 1.0f, RENDER_OTHER);
 			break;
 		case RIGHT:
-			App->renderer->Blit(App->driver->graphics, position.x, position.y, &left, 1.0f, RENDER_OTHER, dist);
+			App->renderer->Blit(App->driver->graphics, position.x, position.y, &left, 1.0f, RENDER_OTHER);
 			break;
 	}
 }
@@ -189,6 +184,7 @@ update_status ModuleCars::Update()
 	return UPDATE_CONTINUE;
 }
 
+//Execute movement
 void ModuleCars::SetMovement(Movement new_state){
 	moving = new_state;
 
@@ -210,6 +206,7 @@ void ModuleCars::SetMovement(Movement new_state){
 	position.x = mask->rect.x + dif;
 }
 
+//Change car state
 void ModuleCars::SetState(Status new_state){
 	if (state != TO_BORDER ){
 		state = new_state;
@@ -217,6 +214,7 @@ void ModuleCars::SetState(Status new_state){
 
 }
 
+//Actualize score on car kill
 void ModuleCars::AddCarPoints(){
 	if (car_type == RED_CAR || car_type == BLUE_CAR || car_type == MOTO){
 		App->player->block_points = 1;
@@ -227,7 +225,8 @@ void ModuleCars::AddCarPoints(){
 			App->player->score += 250;
 	}
 }
-bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
+
+bool ModuleCars::OnColision(Collider* a, Collider *b)
 {
 	LOG("Collision Car");
 
@@ -245,6 +244,7 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 
 	}
 
+	//if being pushed
 	if (b->type == COL_PLAYER)
 		pushed = true;
 
@@ -256,60 +256,33 @@ bool ModuleCars::OnColision(Collider* a, Collider *b, COLISION_STATE status)
 				SetMovement(RIGHT);
 	}
 
-	int i;
-	if (a->type == COL_ROAD_LORD){
-		if (b->type == COL_ROAD_OUT){
-			App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
-			state = DEAD;
-			to_delete = true;
-			velocity = 0;
-		}
-		i = 0;
-
+	//crash
+	if (b->type == COL_ROAD_OUT){
+		App->particles_top->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
+		state = DEAD;
+		to_delete = true;
+		velocity = 0;
+		AddCarPoints();
 	}
 
-	if (status == COL_START){
-		if (b->type == COL_ROAD_OUT){
-			App->particles->addParticle(mask->rect.x, mask->rect.y + mask->rect.h, ANIM_EXPLOTE);
-			state = DEAD;
-			to_delete = true;
-			velocity = 0;
-			AddCarPoints();
-		}
-		if (b->type == COL_SPRAY){
-			state = TO_BORDER;
-		}
-		if (b->type == COL_OIL){
-			state = TO_BORDER;
-		}
-		if (b->type == COL_BULLET && a->type != COL_ROAD_LORD){
-			state = EXPLOTE;
-		}
-		if (b->type == COL_BOMB){
-			state = EXPLOTE;
-		}
+	//weapons tratement
+	if (b->type == COL_SPRAY){
+		state = TO_BORDER;
+	}
+	if (b->type == COL_OIL){
+		state = TO_BORDER;
+	}
+	if (b->type == COL_BULLET && a->type != COL_ROAD_LORD){
+		state = EXPLOTE;
+	}
+	if (b->type == COL_BOMB){
+		state = EXPLOTE;
 	}
 
-	if (status == COL_DURING){
-		/*if (a->type == COL_CAR && b->type == COL_PLAYER){
-			if (a->rect.x > b->rect.x)
-				SetMovement(LEFT);
-			else
-				SetMovement(RIGHT);
-		}*/
-	}
 	return true;
 }
-void ModuleCars::UpVelocity(){
-	if (velocity != 8)
-		velocity += 4;
-}
 
-void ModuleCars::DownVelocity(){
-	if (velocity != 0)
-		velocity -= 4;
-}
-
+//get front middle position
 fPoint ModuleCars::GetPivot(){
 	fPoint res;
 	res.x = mask->rect.x + mask->rect.w / 2;
@@ -317,11 +290,13 @@ fPoint ModuleCars::GetPivot(){
 	return res;
 }
 
+//Set weapon status
 void ModuleCars::SetWeapon(Weapon new_weapon){
 	if (weapon != WORKING || new_weapon == NONE)
 		weapon = new_weapon;
 }
 
+//turn to random side
 void ModuleCars::TurnRandom(){
 	int random = App->GetRand(10);
 	if (random < 5)
@@ -330,16 +305,19 @@ void ModuleCars::TurnRandom(){
 		SetMovement(LEFT);
 }
 
+//Get car start position, depend of the velocity getted
 int ModuleCars::SetCarStartPosition(int velocity, bool top){
 
 	int left = SCREEN_WIDTH;
 	int right = 0;
 
+	//Get first or last road line
 	RoadLine * startLine = App->road->screen.back();
 	if (!top && App->player->velocity < velocity){
 		startLine = *App->road->screen.begin();
 	}
 
+	//Get borders
 	for (vector<Collider*>::iterator it = startLine->mask->begin(); it != startLine->mask->end();){
 		if ((*it)->type == COL_ROAD_BORDER){
 			if ((*it)->rect.x < left)
@@ -350,12 +328,13 @@ int ModuleCars::SetCarStartPosition(int velocity, bool top){
 		++it;
 	}
 
+	//reajust borders
 	left += RTILE_WIDTH * 1;
 	right -= RTILE_WIDTH;
-
 	if (left == right)
 		right += RTILE_WIDTH;
 
+	//special tratement to 2 roads segments
 	if (App->road->GetCurrentSegmentType() == S_2_BR || App->road->GetCurrentSegmentType() == S_2_ROADS)
 		if (App->GetRand(2)){
 			left = 2 * RTILE_WIDTH;

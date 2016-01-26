@@ -40,6 +40,7 @@ public:
 	bool Resume();
 	update_status Update();
 	bool Stop();
+
 	void AddLine();
 	void AmbientChange(SEGMENT_AMBIENT ambient = A_NONE);
 	void SetGameState(GAME_STATE state = G_START);
@@ -48,11 +49,18 @@ public:
 
 	GAME_STATE road_state;
 	SDL_Texture* graphics = nullptr;
+
+	//Acutual position
 	int pos_loop;
 	int pos_segment;
 	int pos_line;
+
+	//puddle handler
 	int next_puddle;
+
+	//The Road is here
 	vector<RoadLoop*> road;
+	//What we have to print on screen
 	list<RoadLine*> screen;
 
 private:

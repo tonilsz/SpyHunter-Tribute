@@ -27,20 +27,18 @@ public:
 	virtual update_status PreUpdate();
 	virtual update_status Update();
 	virtual bool CleanUp();
-	virtual bool OnColision(Collider* a, Collider *b, COLISION_STATE status);
+	virtual bool OnColision(Collider* a, Collider *b);
+
 	virtual void SetMovement(Movement new_state);
 	virtual void SetState(Status new_state);
-	virtual void UpVelocity();
-	virtual void DownVelocity();
-	fPoint GetPivot();
 	virtual void SetWeapon(Weapon new_weapon);
-	void TurnRandom();
-	static int SetCarStartPosition(int velocity = 0, bool top = false);
 	void AddCarPoints();
+	static int SetCarStartPosition(int velocity = 0, bool top = false);
+	fPoint GetPivot();
+	void TurnRandom();
 
 	Weapon weapon;
 	CARS car_type;
-	int dist;
 	Animation idle;
 	SDL_Rect right;
 	SDL_Rect left;
@@ -53,6 +51,7 @@ public:
 	Collider* mask;
 	float velocity;
 	bool to_delete;
+	//if is pushed by player
 	bool pushed;
 
 private:

@@ -46,6 +46,6 @@ enum update_status
 #define SCREEN_BPP 1
 #define FULLSCREEN false
 #define VSYNC true
-#define TITLE "Spy Hunter SDL Tribute by Toni Lopez (UPC Tech Talent)"
+#define TITLE "Spy Hunter SDL Tribute by Toni Lopez (UPC Tech Talent MVJ)"
 
 #endif //__GLOBALS_H__

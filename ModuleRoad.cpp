@@ -55,7 +55,7 @@ bool ModuleRoad::Start()
 
 	App->player->Enable();
 
-	next_puddle += App->GetRand(500, 100);
+	SetStartStatus();
 
 	return graphics != NULL;
 }
@@ -69,7 +69,7 @@ bool ModuleRoad::Resume()
 
 	App->audio->PlayMusic("title-song.mid", 1);
 
-	return SetStartStatus();
+	return true;
 }
 
 // UnLoad assets
@@ -89,7 +89,7 @@ update_status ModuleRoad::Update()
 	//Lunch random puddle
 	if (next_puddle == App->GetTicks()){
 		next_puddle += App->GetRand(500, 100);
-		App->particles->addParticle(ModuleCars::SetCarStartPosition(true), 0, ANIM_PUDDLE);
+		App->particles_bottom->addParticle(ModuleCars::SetCarStartPosition(true), 0, ANIM_PUDDLE);
 	}
 
 	int i = 0, j = 0;
@@ -100,6 +100,7 @@ update_status ModuleRoad::Update()
 	return i == 9 && j == 15 ? UPDATE_CONTINUE : UPDATE_ERROR;
 }
 
+// Add new line to the screen and delete the bottom line
 void ModuleRoad::AddLine(){
 	screen.pop_front();
 	App->masks->DisplaceRoad();
@@ -109,6 +110,7 @@ void ModuleRoad::AddLine(){
 
 }
 
+//Generates the next line of the road
 void ModuleRoad::GenerateLine(){
 
 	RoadLine *ptr_line = road.begin()[pos_loop]->loop.begin()[pos_segment]->segment.begin()[pos_line];
@@ -121,6 +123,7 @@ void ModuleRoad::GenerateLine(){
 		pos_line = 0;
 		++pos_segment;
 		if (pos_segment == 2)
+			//On change loop
 			AmbientChange();
 		if (pos_segment == road.begin()[pos_loop]->loop.size()){
 			pos_segment = 0;
@@ -132,12 +135,22 @@ void ModuleRoad::GenerateLine(){
 	}
 }
 
+//Change the ambient of the road and increase dificulty
 void ModuleRoad::AmbientChange(SEGMENT_AMBIENT ambient){
+	//increase boombs throwed by copter
+	++App->driver->seek_max;
+
+	//Get a new truck item
+	++App->player->truck;
+
+	// increase car generation handler
+	if (App->driver->car_generation_handler > 160)
+		App->driver->car_generation_handler -= 20;
 
 	if (ambient == A_NONE)
 		ambient = road.begin()[pos_loop]->ambient;
-	++App->driver->seek_max;
 
+	//reload texture
 	App->textures->Unload(graphics);
 	App->ui->textColor = WHITE;
 	switch (ambient){
@@ -159,15 +172,15 @@ void ModuleRoad::AmbientChange(SEGMENT_AMBIENT ambient){
 			break;
 	}
 
-	++App->player->truck;
-	if (App->driver->car_generation_handler > 160)
-		App->driver->car_generation_handler -= 20;
 }
 
+//Change the state of the game
 void ModuleRoad::SetGameState(GAME_STATE state){
 	if (road_state == G_START){
-		if (state == G_PLAY)
-			road_state = state;
+		if (state == G_PLAY){
+			road_state = state;			
+			next_puddle = App->GetTicks() + App->GetRand(500, 100);
+		}
 	}
 	else if (road_state == G_PLAY){
 		if (state == G_OVER){
@@ -177,6 +190,8 @@ void ModuleRoad::SetGameState(GAME_STATE state){
 	else if (road_state == G_OVER){
 		if (state == G_PLAY){
 			road_state = state;
+
+			//Set all the values like the start and generate some cars
 
 			for (int i = 0; i < 6; ++i)
 				App->driver->AddCar(App->driver->GetRandomCar());
@@ -200,18 +215,22 @@ void ModuleRoad::SetGameState(GAME_STATE state){
 			for (int i = 0; i < 6; ++i){
 				App->driver->AddCar(App->driver->GetRandomCar());
 			}
-			App->particles->DeleteParticles();
+			next_puddle = App->GetTicks() + App->GetRand(500, 100);
+			App->particles_top->DeleteParticles();
+			App->particles_bottom->DeleteParticles();
 
 		}
 	}
 }
 
+//Get the road segment type of current segment
 SEGMENT_TYPE ModuleRoad::GetCurrentSegmentType(){
 	return road.begin()[pos_loop]->loop.begin()[pos_segment]->type;
 }
 
+// Put the road on start
 int ModuleRoad::SetStartStatus(){
-	next_puddle = pos_line = pos_segment = pos_loop = 0;
+	pos_line = pos_segment = pos_loop = 0;
 	road_state = G_START;
 
 	int i = 0;

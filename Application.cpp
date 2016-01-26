@@ -26,9 +26,10 @@ Application::Application() : ticks(0), r_first(1), r_second(1)
 
 	// Game Modules
 	modules.push_back(road = new ModuleRoad());
+	modules.push_back(particles_bottom = new ModuleParticles());
 	modules.push_back(player = new ModulePlayer(false));
 	modules.push_back(driver = new ModuleDriver());
-	modules.push_back(particles = new ModuleParticles());
+	modules.push_back(particles_top = new ModuleParticles());
 	modules.push_back(ui = new ModuleUI());
 }
 

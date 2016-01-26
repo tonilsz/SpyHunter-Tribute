@@ -53,7 +53,7 @@ public:
 	bool addParticleBackground(float x, float y, ANIMATION_TYPE type);
 	bool deleteParticle(int id);
 	void runParticle(ANIMATION_TYPE animation);
-	bool OnColision(Collider* a, Collider *b, COLISION_STATE status);
+	bool OnColision(Collider* a, Collider *b);
 	void DeleteParticles();
 
 	std::vector<pair<Particle*, Collider*>> particles;

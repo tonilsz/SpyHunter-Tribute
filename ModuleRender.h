@@ -22,7 +22,7 @@ public:
 	update_status PostUpdate();
 	bool Stop();
 
-	bool Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed = 1.0f, RENDER_TYPE type = RENDER_ROAD, int dist = 0);
+	bool Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed = 1.0f, RENDER_TYPE type = RENDER_ROAD);
 	bool Shadow(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera = true);
 
 public:
