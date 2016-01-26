@@ -25,8 +25,16 @@ TRIBUTE TO SPY HUNTER
 -AUTHOR:
 	- ANTONIO LÓPEZ SÁNCHEZ
 	
--LINK ON GITHUB:
+-MY LINK ON GITHUB:
 	- https://github.com/toniSoftiberia/SpyHunter
 	
--LINK ON YOUTUBE:
-	-
+-MY LINK ON YOUTUBE:
+	- https://www.youtube.com/watch?v=Etz2eNpORKg
+	
+-LINK OF THE ORIGINAL ON YOUTUBE:
+	-https://www.youtube.com/watch?v=h34MviiKXXc
+
+-IF IT DON'T FOUND THE IMAGES
+	Go to
+		Project properties/Configuration Properties/Working Diirectory = $(ProjectDir)Game\
+		
