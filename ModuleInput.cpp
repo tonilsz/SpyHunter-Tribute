@@ -249,6 +249,7 @@ bool ModuleInput::Stop()
 {
 	LOG("Quitting SDL event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
+	delete keyboard;
 	return true;
 }
 

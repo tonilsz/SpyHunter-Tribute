@@ -47,7 +47,7 @@ bool ModuleDriver::Resume()
 }
 
 // Unload assets
-bool ModuleDriver::CleanUp()
+bool ModuleDriver::Stop()
 {
 	bool ret = true;
 	LOG("Unloading Cars");
@@ -55,7 +55,7 @@ bool ModuleDriver::CleanUp()
 	App->textures->Unload(graphics);
 
 	for (vector<ModuleCars*>::iterator it = garage->begin(); it != garage->end(); ++it)
-		ret = ret || (*it)->CleanUp();
+		ret = ret || (*it)->Stop();
 
 	return ret;
 }

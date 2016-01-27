@@ -48,7 +48,7 @@ public:
 	bool Resume();
 	update_status PreUpdate();
 	update_status Update();
-	bool CleanUp();
+	bool Stop();
 	bool addParticle(float x, float y, ANIMATION_TYPE type);
 	bool addParticleBackground(float x, float y, ANIMATION_TYPE type);
 	bool deleteParticle(int id);

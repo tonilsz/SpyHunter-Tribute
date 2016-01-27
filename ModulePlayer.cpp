@@ -71,11 +71,11 @@ bool ModulePlayer::Resume()
 }
 
 // Unload assets
-bool ModulePlayer::CleanUp()
+bool ModulePlayer::Stop()
 {
 	LOG("Unloading player");
 
-	return ModuleCars::CleanUp();
+	return ModuleCars::Stop();
 }
 
 

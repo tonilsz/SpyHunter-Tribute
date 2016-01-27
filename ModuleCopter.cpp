@@ -198,10 +198,12 @@ update_status ModuleCopter::Update()
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleCopter::CleanUp(){
+bool ModuleCopter::Stop(){
 	App->audio->StopFx();
 
-	return ModuleCars::CleanUp();
+	helix.frames.clear();
+
+	return ModuleCars::Stop();
 }
 
 bool ModuleCopter::OnColision(Collider* a, Collider *b)

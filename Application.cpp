@@ -15,7 +15,6 @@ using namespace std;
 
 Application::Application() : ticks(0), r_first(1), r_second(1)
 {
-
 	// Core Modules
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(window = new ModuleWindow());
@@ -27,7 +26,7 @@ Application::Application() : ticks(0), r_first(1), r_second(1)
 	// Game Modules
 	modules.push_back(road = new ModuleRoad());
 	modules.push_back(particles_bottom = new ModuleParticles());
-	modules.push_back(player = new ModulePlayer(false));
+	modules.push_back(player = new ModulePlayer());
 	modules.push_back(driver = new ModuleDriver());
 	modules.push_back(particles_top = new ModuleParticles());
 	modules.push_back(ui = new ModuleUI());
@@ -35,7 +34,7 @@ Application::Application() : ticks(0), r_first(1), r_second(1)
 
 Application::~Application() 
 {
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
+	for(list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
 		RELEASE(*it);
 }
 

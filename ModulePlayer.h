@@ -22,7 +22,7 @@ public:
 	bool Resume();
 	update_status PreUpdate();
 	update_status Update();
-	bool CleanUp();
+	bool Stop();
 	bool OnColision(Collider* a, Collider *bs);
 
 	void SetState(int new_state);

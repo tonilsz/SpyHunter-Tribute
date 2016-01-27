@@ -43,17 +43,20 @@ bool ModuleParticles::Resume()
 }
 
 // Unload assets
-bool ModuleParticles::CleanUp()
+bool ModuleParticles::Stop()
 {
 	LOG("Unloading particules");
 
 	for (vector<pair<Particle*, Collider*>>::iterator it = particles.begin(); it != particles.end(); ++it)
 	{
-		delete (*it).first;
+		RELEASE ((*it).first);
 	}
 	App->textures->Unload(graphics);
-	App->particles_top->Disable();
-	App->particles_bottom->Disable();
+	/*App->particles_top->Disable();
+	App->particles_bottom->Disable();*/
+
+	particles.clear();
+	background.clear();
 
 	return true;
 }

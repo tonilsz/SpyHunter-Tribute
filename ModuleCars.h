@@ -26,7 +26,7 @@ public:
 	virtual bool Resume();
 	virtual update_status PreUpdate();
 	virtual update_status Update();
-	virtual bool CleanUp();
+	virtual bool Stop();
 	virtual bool OnColision(Collider* a, Collider *b);
 
 	virtual void SetMovement(Movement new_state);

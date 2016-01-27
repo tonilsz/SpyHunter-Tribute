@@ -106,11 +106,15 @@ bool ModuleCars::Resume()
 	return true;
 }
 
-bool ModuleCars::CleanUp()
+bool ModuleCars::Stop()
 {
 	LOG("Unloading Cars");
 
-	delete(mask);
+	idle.frames.clear();
+	crash.frames.clear();
+
+	RELEASE(mask);
+
 	App->masks->colliders.remove(mask);
 
 	return true;

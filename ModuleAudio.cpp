@@ -92,7 +92,7 @@ bool ModuleAudio::Resume()
 }
 
 // Called before quitting
-bool ModuleAudio::CleanUp()
+bool ModuleAudio::Stop()
 {
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
@@ -101,7 +101,7 @@ bool ModuleAudio::CleanUp()
 		Mix_FreeMusic(music);
 	}
 
-	for(vector<Mix_Chunk*>::iterator it = fx.begin(); it != fx.end(); ++it)
+	for (vector<Mix_Chunk*>::reverse_iterator it = fx.rbegin(); it != fx.rend(); ++it)
 		Mix_FreeChunk(*it);
 
 	fx.clear();

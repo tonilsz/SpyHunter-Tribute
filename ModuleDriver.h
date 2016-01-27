@@ -24,7 +24,7 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	update_status PostUpdate();
-	bool CleanUp();
+	bool Stop();
 
 	void AddCar(CARS car_type = RED_CAR);
 	CARS GetRandomCar();

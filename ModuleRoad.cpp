@@ -77,8 +77,14 @@ bool ModuleRoad::Stop()
 {
 	LOG("Unloading Road scene");
 
+	for (vector<RoadLoop*>::iterator it = road.begin(); it != road.end(); ++it){
+		(*it)->CleanLoop();
+		RELEASE(*it);
+	}
+
+	road.clear();
+
 	App->textures->Unload(graphics);
-	App->player->Disable();
 	
 	return true;
 }

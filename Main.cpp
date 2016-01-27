@@ -66,10 +66,10 @@ int main(int argc, char ** argv)
 
 		case MAIN_FINISH:
 
-			LOG("Application CleanUp --------------");
+			LOG("Application Stop --------------");
 			if (App->Stop() == false)
 			{
-				LOG("Application CleanUp exits with error -----");
+				LOG("Application Stop exits with error -----");
 			}
 			else
 				main_return = EXIT_SUCCESS;

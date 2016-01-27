@@ -67,9 +67,9 @@ enum LINE_TYPE
 	
 		int GetSize();
 
-	private:
 		void CleanSegment();
 
+	private:
 		vector<Collider*>* GenerateCurveColliders(const int &height, const int &piece, const int &pos, const int &dir, const COLLIDER_TYPE &collider_left);
 	};
 

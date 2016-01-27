@@ -17,7 +17,7 @@ RoadSegment::~RoadSegment(){
 
 //Generate specific Road Segment
 void RoadSegment::GenerateSegment(const SEGMENT_TYPE &type){
-	CleanSegment();
+	segment.clear();
 
 	//generate new road
 	switch (type){
@@ -295,8 +295,10 @@ int RoadSegment::GetSize(){
 }
 
 void RoadSegment::CleanSegment(){
+	for (vector<RoadLine*>::iterator it = segment.begin(); it != segment.end(); ++it){
+		(*it)->CleanLine();
+		RELEASE(*it);
+	}
 
-	for (vector<RoadLine*>::iterator it = segment.begin(); it != segment.end(); ++it)
-		delete(*it);
 	segment.clear();
 }

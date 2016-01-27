@@ -44,7 +44,6 @@ public:
 	
 	int GetSize();
 
-private:
 	void CleanLoop();
 };
 

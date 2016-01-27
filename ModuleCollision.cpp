@@ -72,6 +72,8 @@ debug_mode(true)
 	matrix[COL_PUDDLE][COL_CAR] = true;
 	matrix[COL_PUDDLE][COL_PLAYER] = true;
 	matrix[COL_ROAD_OUT][COL_PLAYER] = true;
+
+	colliders = list<Collider*>();
 }
 
 // Destructor
@@ -195,7 +197,10 @@ bool ModuleCollision::Stop()
 	LOG("Freeing all colliders");
 
 	for (list<Collider*>::reverse_iterator it = colliders.rbegin(); it != colliders.rend(); ++it)
-		RELEASE(*it);
+		if (*it != nullptr){
+			//RELEASE(*it);
+		}
+
 
 	colliders.clear();
 	return true;

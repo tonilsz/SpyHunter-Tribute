@@ -6,6 +6,7 @@
 #include "Globals.h"
 
 struct SDL_Texture;
+using namespace std;
 
 class ModuleTextures : public Module
 {
@@ -20,7 +21,7 @@ public:
 	void Unload(SDL_Texture* texture);
 
 private:
-	std::list<SDL_Texture*> textures;
+	list<SDL_Texture*> textures;
 };
 
 #endif // __MODULETEXTURES_H__

@@ -982,7 +982,7 @@ RoadLine* RoadSegment::GenerateSegmentLine(const LINE_TYPE &type){
 //Generate Grup colliders for a road line
 vector<Collider*>* RoadSegment::GenerateCurveColliders(const int &height, const int &piece, const int &pos, const int &dir, const COLLIDER_TYPE &collider_left){
 	
-	vector<Collider*>* res = nullptr;
+	vector<Collider*>* res = new vector<Collider*>{};
 
 	COLLIDER_TYPE collider_right;
 	if (collider_left == COL_ROAD_BORDER)
@@ -1004,7 +1004,6 @@ vector<Collider*>* RoadSegment::GenerateCurveColliders(const int &height, const 
 			if (piece == 4) despl += (2 * dir);
 			if (piece == 6 || piece == 7) despl += (4 * dir);
 
-			res = new vector<Collider*>{};
 			for (int i = 0; i < 2; ++i)
 				res->push_back(new Collider({ (RTILE_WIDTH * (pos)) + (start + despl) + (2 * dir* i), (RTILE_HEIGHT / 2) * i, 2, RTILE_HEIGHT / 2 }, collider_left, App->road));
 			for (int i = 0; i < 2; ++i)
@@ -1012,15 +1011,15 @@ vector<Collider*>* RoadSegment::GenerateCurveColliders(const int &height, const 
 		}
 		else{
 			if (piece == 5) despl += (2 * dir);
-			res = new vector<Collider*>{
-				new Collider({ RTILE_WIDTH * pos + (start + despl), 0, 2, 21 }, collider_left, App->road),
-				new Collider({ RTILE_WIDTH * pos + (start + despl) + (2 * dir), 21, 2, 22 }, collider_left, App->road),
-				new Collider({ RTILE_WIDTH * pos + (start + despl) + (4 * dir), 43, 2, 21 }, collider_left, App->road),
+			
+			res->push_back(new Collider({ RTILE_WIDTH * pos + (start + despl), 0, 2, 21 }, collider_left, App->road));
+			res->push_back(new Collider({ RTILE_WIDTH * pos + (start + despl) + (2 * dir), 21, 2, 22 }, collider_left, App->road));
+			res->push_back(new Collider({ RTILE_WIDTH * pos + (start + despl) + (4 * dir), 43, 2, 21 }, collider_left, App->road));
 
-				new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl), 0, 2, 21 }, collider_right, App->road),
-				new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (2 * dir), 21, 2, 22 }, collider_right, App->road),
-				new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (4 * dir), 43, 2, 21 }, collider_right, App->road)
-			};
+			res->push_back(new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl), 0, 2, 21 }, collider_right, App->road));
+			res->push_back(new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (2 * dir), 21, 2, 22 }, collider_right, App->road));
+			res->push_back(new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (4 * dir), 43, 2, 21 }, collider_right, App->road));
+			
 		}
 	}
 
@@ -1031,19 +1030,17 @@ vector<Collider*>* RoadSegment::GenerateCurveColliders(const int &height, const 
 			if (piece == 5) despl += 42;
 			if (dir == -1) despl += 10;
 
-			res = new vector<Collider*>{
-				new Collider({ RTILE_WIDTH * pos + (start + despl), 0, 2, 13 }, collider_left, App->road),
-				new Collider({ RTILE_WIDTH * pos + (start + despl) + (2 * dir), 13, 2, 13 }, collider_left, App->road),
-				new Collider({ RTILE_WIDTH * pos + (start + despl) + (4 * dir), 26, 2, 12 }, collider_left, App->road),
-				new Collider({ RTILE_WIDTH * pos + (start + despl) + (6 * dir), 38, 2, 13 }, collider_left, App->road),
-				new Collider({ RTILE_WIDTH * pos + (start + despl) + (8 * dir), 51, 2, 13 }, collider_left, App->road),
+			res->push_back(new Collider({ RTILE_WIDTH * pos + (start + despl), 0, 2, 13 }, collider_left, App->road));
+			res->push_back(new Collider({ RTILE_WIDTH * pos + (start + despl) + (2 * dir), 13, 2, 13 }, collider_left, App->road));
+			res->push_back(new Collider({ RTILE_WIDTH * pos + (start + despl) + (4 * dir), 26, 2, 12 }, collider_left, App->road));
+			res->push_back(new Collider({ RTILE_WIDTH * pos + (start + despl) + (6 * dir), 38, 2, 13 }, collider_left, App->road));
+			res->push_back(new Collider({ RTILE_WIDTH * pos + (start + despl) + (8 * dir), 51, 2, 13 }, collider_left, App->road));
 
-				new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl), 0, 2, 13 }, collider_right, App->road),
-				new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (2 * dir), 13, 2, 13 }, collider_right, App->road),
-				new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (4 * dir), 26, 2, 12 }, collider_right, App->road),
-				new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (6 * dir), 38, 2, 13 }, collider_right, App->road),
-				new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (8 * dir), 51, 2, 13 }, collider_right, App->road),
-			};
+			res->push_back(new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl), 0, 2, 13 }, collider_right, App->road));
+			res->push_back(new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (2 * dir), 13, 2, 13 }, collider_right, App->road));
+			res->push_back(new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (4 * dir), 26, 2, 12 }, collider_right, App->road));
+			res->push_back(new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (6 * dir), 38, 2, 13 }, collider_right, App->road));
+			res->push_back(new Collider({ (RTILE_WIDTH * (pos + 1)) + (start + despl) + (8 * dir), 51, 2, 13 }, collider_right, App->road));
 	}
 
 	if (height == 2){

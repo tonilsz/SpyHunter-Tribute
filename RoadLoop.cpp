@@ -24,5 +24,10 @@ int RoadLoop::GetSize(){
 }
 
 void RoadLoop::CleanLoop(){
+	for (vector<RoadSegment*>::iterator it = loop.begin(); it != loop.end(); ++it){
+		(*it)->CleanSegment();
+		RELEASE(*it);
+	}
+
 	loop.clear();
 }

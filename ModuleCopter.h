@@ -21,7 +21,7 @@ public:
 
 	update_status PreUpdate();
 	update_status Update();
-	bool CleanUp();
+	bool Stop();
 	bool OnColision(Collider* a, Collider *b);
 	void SetMovement(ORIENTATION_TYPE new_dir);
 	void Seek();

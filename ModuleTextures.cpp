@@ -11,6 +11,7 @@ using namespace std;
 
 ModuleTextures::ModuleTextures()
 {
+	textures = list<SDL_Texture*>();
 }
 
 // Destructor
@@ -43,8 +44,10 @@ bool ModuleTextures::Stop()
 {
 	LOG("Freeing textures and Image library");
 
-	for(list<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it)
+	for (list<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it){
 		SDL_DestroyTexture(*it);
+		RELEASE(*it);
+	}
 
 	textures.clear();
 	return true;

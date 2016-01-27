@@ -199,6 +199,8 @@ public:
 	void SetTile(const int &pos, const SDL_Rect &tile);
 
 	SDL_Rect* GetCourrentTile();
+
+	void CleanLine();
 };
 
 #endif // __ROADLINE_H__
