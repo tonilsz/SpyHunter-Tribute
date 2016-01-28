@@ -10,7 +10,7 @@ RoadLine::~RoadLine(){
 }
 
 //Set a specific tile in line pos
-void RoadLine::SetTile(const int &pos,const SDL_Rect &tile)
+void RoadLine::SetTile(int pos,const SDL_Rect &tile)
 {
 	if (pos < 15){
 		(*line)[pos] = tile;

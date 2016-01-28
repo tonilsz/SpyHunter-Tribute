@@ -4,12 +4,14 @@ TRIBUTE TO SPY HUNTER
 
 	In this game we have to stay the most time alive in the road.
 	To control the car we have the following buttons:
-	- A & S: Move left & right
-	- W & S: Up & Down Gear
+	- A & D: Move left & right
+	- W: Accelerarte
+	- Q & E: Up & Down Turbo Gear
 	- H: Gun Shot
 	- j: Throw Oil
 	- K: Throw Spray
 	- L: Lunch rocket
+	- Y: Tuck spend (Give random Weapon)
 	- F1: Show Colliders
 	- F2: Show Road
 	- F3: God Mode
@@ -21,6 +23,8 @@ TRIBUTE TO SPY HUNTER
 	- F9: Ambient Snow
 	- F10: Live Up
 	- F11: Live Down
+
+	You can find more information about the game in the file "Spyhunter.pdf"
 	
 -AUTHOR:
 	- ANTONIO LÓPEZ SÁNCHEZ

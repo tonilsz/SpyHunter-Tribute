@@ -1,27 +1,3 @@
-/*#ifndef __ANIMATION_H__
-#define __ANIMATION_H__
-#include <vector>
-
-using namespace std;
-
-class Animation
-{
-public:
-	float speed;
-	vector<SDL_Rect> frames;
-
-	Animation();
-
-	SDL_Rect& GetCurrentFrame();
-
-	SDL_Rect& GetFrame(int frame);
-
-	void SetFrame(int frame);
-
-private:
-	float current_frame;
-};
-#endif // __ANIMATION_H__*/
 #ifndef __ANIMATION_H__
 #define __ANIMATION_H__
 

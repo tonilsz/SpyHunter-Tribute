@@ -980,7 +980,7 @@ RoadLine* RoadSegment::GenerateSegmentLine(const LINE_TYPE &type){
 }
 
 //Generate Grup colliders for a road line
-vector<Collider*>* RoadSegment::GenerateCurveColliders(const int &height, const int &piece, const int &pos, const int &dir, const COLLIDER_TYPE &collider_left){
+vector<Collider*>* RoadSegment::GenerateCurveColliders(int height, int piece, int pos, int dir, const COLLIDER_TYPE &collider_left){
 	
 	vector<Collider*>* res = new vector<Collider*>{};
 

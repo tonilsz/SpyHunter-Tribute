@@ -196,7 +196,7 @@ public:
 
 	~RoadLine();
 
-	void SetTile(const int &pos, const SDL_Rect &tile);
+	void SetTile(int pos, const SDL_Rect &tile);
 
 	SDL_Rect* GetCourrentTile();
 
