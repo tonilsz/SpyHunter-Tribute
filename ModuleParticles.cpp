@@ -26,9 +26,6 @@ bool ModuleParticles::Start()
 {
 	LOG("Loading particules");
 
-	App->particles_top->Enable();
-	App->particles_bottom->Enable();
-
 	return true;
 }
 
@@ -52,8 +49,6 @@ bool ModuleParticles::Stop()
 		RELEASE ((*it).first);
 	}
 	App->textures->Unload(graphics);
-	/*App->particles_top->Disable();
-	App->particles_bottom->Disable();*/
 
 	particles.clear();
 	background.clear();

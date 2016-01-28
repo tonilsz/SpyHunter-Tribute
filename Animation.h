@@ -35,8 +35,14 @@ private:
 	int loops = 0;
 
 public:
+
 	Animation(bool repeat = true) : frames(), speed(1.0f), current_frame(0.0f), repeat(repeat)
 	{}
+
+	~Animation()
+	{
+		frames.clear();
+	}
 
 	void SetCurrentFrame(const float &pos){
 		current_frame = pos;

@@ -29,15 +29,17 @@ SDL_Rect* RoadLine::GetCourrentTile(){
 
 void RoadLine::CleanLine(){
 	if (mask != NULL){
-		for (vector<Collider*>::iterator it = mask->begin(); it != mask->end(); ++it)
+		/*for (vector<Collider*>::iterator it = mask->begin(); it != mask->end(); ++it){
 			RELEASE(*it);
+			App->mask->DropCollider();
+		}*/
 
 		mask->clear();
+		RELEASE(mask);
 	}
 
-	mask->clear();
-	line->clear();
-	
-	RELEASE(line);
-	RELEASE(mask);
+	if (line != NULL){
+		line->clear();
+		RELEASE(line);
+	}
 }

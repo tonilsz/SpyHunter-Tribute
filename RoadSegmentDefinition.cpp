@@ -974,8 +974,19 @@ RoadLine* RoadSegment::GenerateSegmentLine(const LINE_TYPE &type){
 		LOG("RoadSegmentDefinition - Cannot generate line collider \n");
 	}
 
+	RELEASE(right_mask);
+
 	//generate new line
 	RoadLine* res = new RoadLine(tiles, mask);
+
+	//free memory
+	//if (right_mask != nullptr)
+	//	right_mask->clear();
+	//RELEASE(right_mask);
+
+	//if (mask != nullptr)
+	//	mask->clear();
+	//RELEASE(mask);
 	return res;
 }
 

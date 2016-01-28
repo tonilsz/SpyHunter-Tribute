@@ -44,14 +44,7 @@ public:
 		to_delete(false),
 		to_erase(false),
 		enabled(true)
-	{}
-
-	Collider::~Collider()
-	{
-		RELEASE(callback);
-	}
-
-	
+	{}	
 
 	void Collider::SetPos(fPoint pos)
 	{

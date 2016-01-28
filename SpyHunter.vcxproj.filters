@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleAudio.cpp">
+      <Filter>CoreModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCollision.cpp">
+      <Filter>CoreModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleInput.cpp">
+      <Filter>CoreModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCars.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCopter.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleDriver.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleRender.cpp">
+      <Filter>CoreModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleTextures.cpp">
+      <Filter>CoreModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleWindow.cpp">
+      <Filter>CoreModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleParticles.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulePlayer.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleRoad.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleUI.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadLine.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadLoop.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadSegment.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadSegmentDefinition.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Animation.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleAudio.h">
+      <Filter>CoreModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleCollision.h">
+      <Filter>CoreModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleInput.h">
+      <Filter>CoreModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleCars.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleCopter.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleDriver.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleRender.h">
+      <Filter>CoreModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleTextures.h">
+      <Filter>CoreModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleWindow.h">
+      <Filter>CoreModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleParticles.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulePlayer.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleRoad.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleUI.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadLoop.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadSegment.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.cpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Module.h">
+      <Filter>CoreModules</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadLine.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CoreModules">
+      <UniqueIdentifier>{a92de391-2780-4256-b71e-2effa5ada451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameModules">
+      <UniqueIdentifier>{7afaa947-3cb4-4f59-912f-ddcb109135ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{de236f59-8fb1-4546-8a74-51ba4bb79b08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{fd7dbb02-6992-4741-89ae-a1591ab5ac7c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
