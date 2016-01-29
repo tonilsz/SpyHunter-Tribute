@@ -1,11 +1,11 @@
-TRIBUTE TO SPY HUNTER
+TRIBUTE TO SPY HUNTER by Toni Lopez (UPC-MVJ)
 
 - HOW TO PLAY
 
 	In this game we have to stay the most time alive in the road.
 	To control the car we have the following buttons:
-	- A & D: Move left & right
-	- W: Accelerarte
+	- A & D or LEFT_ARROW & RIGHT_ARROW: Move left & right
+	- W or UP_ARROW: Accelerarte
 	- Q & E: Up & Down Turbo Gear
 	- H: Gun Shot
 	- j: Throw Oil
@@ -40,5 +40,8 @@ TRIBUTE TO SPY HUNTER
 
 -IF IT DON'T FOUND THE IMAGES
 	Go to
-		Project properties/Configuration Properties/Working Diirectory = $(ProjectDir)Game\
+		Project properties/Configuration Properties/Working Directory = $(ProjectDir)Game\
+
+-IF YOU GET DLL ERROR
+	INSTALL: vcredist_x86.exe
 		
