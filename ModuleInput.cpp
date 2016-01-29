@@ -66,11 +66,11 @@ update_status ModuleInput::PreUpdate()
 			if (keyboard[i] == KEY_IDLE){
 				keyboard[i] = KEY_DOWN;
 				if (App->road->road_state == G_PLAY){
-					if (keyboard[SDL_SCANCODE_Q]) {
+					if (keyboard[SDL_SCANCODE_Q] || keyboard[SDL_SCANCODE_RCTRL]) {
 						//up velocity
 						App->player->DownTurboGear();
 					}
-					if (keyboard[SDL_SCANCODE_E]) {
+					if (keyboard[SDL_SCANCODE_E] || keyboard[SDL_SCANCODE_RSHIFT]) {
 						//up velocity
 						App->player->UpTurboGear();
 					}
@@ -142,7 +142,7 @@ update_status ModuleInput::PreUpdate()
 				keyboard[i] = KEY_REPEAT;
 
 				if (App->road->road_state == G_PLAY){
-					if (keyboard[SDL_SCANCODE_W]) {
+					if (keyboard[SDL_SCANCODE_W] || keyboard[SDL_SCANCODE_UP]) {
 						//up velocity
 						App->player->UpGear();
 						w_pulsed = true;
@@ -156,10 +156,10 @@ update_status ModuleInput::PreUpdate()
 					else if (keyboard[SDL_SCANCODE_K] && App->player->velocity != 0) {
 						App->player->SetWeapon(SPRAY);
 					}
-					if (keyboard[SDL_SCANCODE_D]) {
+					if (keyboard[SDL_SCANCODE_D] || keyboard[SDL_SCANCODE_RIGHT]) {
 						App->player->SetMovement(RIGHT);
 					}
-					else if (keyboard[SDL_SCANCODE_A]) {
+					if (keyboard[SDL_SCANCODE_A] || keyboard[SDL_SCANCODE_LEFT]) {
 						App->player->SetMovement(LEFT);
 					}
 				}
