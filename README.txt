@@ -30,10 +30,11 @@ TRIBUTE TO SPY HUNTER by Toni Lopez (UPC-MVJ)
 	- ANTONIO LÓPEZ SÁNCHEZ
 	
 -MY LINK ON GITHUB:
-	- https://github.com/toniSoftiberia/SpyHunter
+	- https://github.com/toniSoftiberia/SpyHunter-Tribute/releases
 	
 -MY LINK ON YOUTUBE:
-	- https://www.youtube.com/watch?v=Etz2eNpORKg
+	- https://youtu.be/u8DmPN3KR7A
+	- https://youtu.be/kTlkA1V__MI
 	
 -LINK OF THE ORIGINAL ON YOUTUBE:
 	-https://www.youtube.com/watch?v=h34MviiKXXc
