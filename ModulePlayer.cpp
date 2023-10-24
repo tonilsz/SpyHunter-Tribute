@@ -65,7 +65,7 @@ bool ModulePlayer::Resume()
 
 	score = 0;
 
-	mask = App->masks->AddCollider(SDL_Rect{ position.x + 21, position.y, 24, 41 }, COL_PLAYER, this);
+	mask = App->masks->AddCollider(SDL_Rect{ (int)position.x + 21, (int)position.y, 24, 41 }, COL_PLAYER, this);
 
 	return true;
 }
@@ -324,8 +324,8 @@ void ModulePlayer::GodMode(){
 	}
 	else{
 		idle.frames.clear();
-		idle.frames.push_back({ MTILE_SIZE * 0, MTILE_SIZE * 14.5, MTILE_SIZE, MTILE_SIZE });
-		idle.frames.push_back({ MTILE_SIZE * 1, MTILE_SIZE * 14.5, MTILE_SIZE, MTILE_SIZE });
+		idle.frames.push_back({ MTILE_SIZE * 0, (int)(MTILE_SIZE * 14.5), MTILE_SIZE, MTILE_SIZE });
+		idle.frames.push_back({ MTILE_SIZE * 1, (int)(MTILE_SIZE * 14.5), MTILE_SIZE, MTILE_SIZE });
 
 		right.y = MTILE_SIZE * 14.5;
 

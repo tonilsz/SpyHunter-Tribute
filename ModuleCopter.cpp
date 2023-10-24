@@ -35,7 +35,7 @@ ModuleCopter::ModuleCopter(CARS car_type, int velocity, bool start_enabled)
 			crash.frames.push_back({ LTILE_SIZE * i, MTILE_SIZE * 10 + (LTILE_SIZE * 2), LTILE_SIZE, LTILE_SIZE });
 		crash.speed = 0.05f;
 
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 31, position.y + 26, 32, 64 }, COL_MAD_BOMBER, this);
+		mask = App->masks->AddCollider(SDL_Rect{ (int)position.x + 31, (int)position.y + 26, 32, 64 }, COL_MAD_BOMBER, this);
 
 		App->audio->PlayFx(AUD_COPTER, -1);
 	

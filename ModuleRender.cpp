@@ -36,6 +36,7 @@ bool ModuleRender::Start()
 
 	if (renderer == nullptr)
 	{
+		string x = SDL_GetError();
 		LOG("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}

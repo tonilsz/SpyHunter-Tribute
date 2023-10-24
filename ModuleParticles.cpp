@@ -281,7 +281,7 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 
 	particle->anim.repeat = false;
 
-	SDL_Rect col_area = SDL_Rect{ x, y, STILE_SIZE, STILE_SIZE };
+	SDL_Rect col_area = SDL_Rect{ (int)x, (int)y, STILE_SIZE, STILE_SIZE };
 
 	int total_frames = 3;
 	COLLIDER_TYPE col_type = COL_NONE;
@@ -290,7 +290,7 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 	case ANIM_BULLET:
 		App->audio->PlayFx(AUD_BULLET);
 		col_type = COL_BULLET;
-		col_area = SDL_Rect{ x + 16, y + 50, 2, 7 };
+		col_area = SDL_Rect{ (int)x + 16, (int)y + 50, 2, 7 };
 		break;
 	case ANIM_SPRAY:
 		App->audio->PlayFx(AUD_SPRAY);
@@ -330,7 +330,7 @@ pair<Particle*, Collider*> * ModuleParticles::add(float x, float y, ANIMATION_TY
 		total_frames = 4;
 		//col_area = SDL_Rect{ x, y + 50, 6, 22 };
 		//2//
-		col_area = SDL_Rect{ x, y + 50, 2, 7 };
+		col_area = SDL_Rect{ (int)x, (int)y + 50, 2, 7 };
 		break;
 	}
 

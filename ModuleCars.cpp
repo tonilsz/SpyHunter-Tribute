@@ -63,26 +63,26 @@ ModuleCars::ModuleCars(CARS car_type, bool start_enabled)
 
 	switch (car_type){
 	case RED_CAR:
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 20, position.y, 25, 40 }, COL_CAR, this);
+		mask = App->masks->AddCollider(SDL_Rect{ (int)position.x + 20, (int)position.y, 25, 40 }, COL_CAR, this);
 		break;
 	case BLUE_CAR:
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 20, position.y, 23, 32 }, COL_CAR, this);
+		mask = App->masks->AddCollider(SDL_Rect{ (int)position.x + 20, (int)position.y, 23, 32 }, COL_CAR, this);
 		break;
 	case MOTO:
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 23, position.y, 19, 32 }, COL_CAR, this);
+		mask = App->masks->AddCollider(SDL_Rect{ (int)position.x + 23, (int)position.y, 19, 32 }, COL_CAR, this);
 		break;
 	case TRUCK:
 		//it will never be used!!
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 17, position.y, 32, 64 }, COL_TRUCK, this);
+		mask = App->masks->AddCollider(SDL_Rect{ (int)position.x + 17, (int)position.y, 32, 64 }, COL_TRUCK, this);
 		break;
 	case ROAD_LORD:
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 18, position.y, 28, 41 }, COL_ROAD_LORD, this);
+		mask = App->masks->AddCollider(SDL_Rect{ (int)position.x + 18, (int)position.y, 28, 41 }, COL_ROAD_LORD, this);
 		break;
 	case SWITCH_BLADE:
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 19, position.y, 24, 41 }, COL_CAR, this);
+		mask = App->masks->AddCollider(SDL_Rect{ (int)position.x + 19, (int)position.y, 24, 41 }, COL_CAR, this);
 		break;
 	case ENFORCER:
-		mask = App->masks->AddCollider(SDL_Rect{ position.x + 17, position.y, 28, 58 }, COL_CAR, this);
+		mask = App->masks->AddCollider(SDL_Rect{ (int)position.x + 17, (int)position.y, 28, 58 }, COL_CAR, this);
 		break;
 	}
 

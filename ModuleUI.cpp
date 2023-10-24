@@ -188,7 +188,7 @@ update_status ModuleUI::Update()
 			SDL_CreateTextureFromSurface(App->renderer->renderer,
 			TTF_RenderText_Solid(font, "PRESS SPACE TO START", textColor));
 
-		test = { 0, 0, SCREEN_WIDTH - 40, 20 };
+		test = { 0, 0, (int)SCREEN_WIDTH - 40, 20 };
 		App->renderer->Blit(text, 20, (SCREEN_HEIGHT / 2) - 10 , &test, 1.0f, RENDER_OTHER);
 
 	}
