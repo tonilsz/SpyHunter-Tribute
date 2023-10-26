@@ -32,11 +32,11 @@ bool ModuleRender::Start()
 		flags |= SDL_RENDERER_PRESENTVSYNC;
 	}
 
-	renderer = SDL_CreateRenderer(App->window->window, -1, flags);
+	renderer = SDL_CreateSoftwareRenderer(App->window->screen_surface);
+	//renderer = SDL_CreateRenderer(App->window->window, -1, flags);
 
 	if (renderer == nullptr)
 	{
-		string x = SDL_GetError();
 		LOG("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
